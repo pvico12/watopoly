@@ -5,7 +5,7 @@
 #include "property.h"
 
 class Board {
-  std::vector<Property> v;
+  std::vector<Property> properties;
 };
 
 #endif
