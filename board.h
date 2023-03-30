@@ -2,10 +2,10 @@
 #define BOARD_H
 
 #include <vector>
-#include "property.h"
+#include "block.h"
 
 class Board {
-  std::vector<Property> properties;
+  std::vector<Block> blocks;
 };
 
 #endif

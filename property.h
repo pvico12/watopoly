@@ -2,9 +2,10 @@
 #define PROPERTY_H
 
 #include <string>
+#include "block.h"
 
 const int MAX_UPGRADES = 5;  // define max_upgrades here as a constant variable
-class Property {
+class Property : public Block {
   std::string block;  // may need block.cc/block.h
 
   int purchaseCost, impCost;
