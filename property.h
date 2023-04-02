@@ -6,21 +6,16 @@
 
 #include "block.h"
 
-extern const int MAX_UPGRADES;
-extern const std::string DASHED_LINE;
-
 class Property : public Block {
-  int improvLvl, purchaseCost, improvCost;
-  std::vector<int> fees;
+ protected:
+  int improvLvl, purchaseCost;
 
  public:
-  Property(std::string name, std::vector<int> fees, int purchaseCost, int improvCost, int improvLvl);
+  Property(std::string name, int purchaseCost, int improvLvl);
   int getLvl();
   int getPurCost();
-  int getImpCost();
-  bool upgrade();
-  bool isMaxUpgrade();
-  int getFee();
+  virtual bool upgrade() = 0;
+  virtual int getFee() = 0;
 };
 
 #endif
