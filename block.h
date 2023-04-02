@@ -3,14 +3,18 @@
 
 #include <string>
 
+extern const std::string EMPTY_LINE;
+
 class Block {
  protected:
   std::string name;
-  std::string displayName[5]; // For visual display
+  static const int displayLength = 5;
+  std::string displayName[displayLength];  // For visual display
 
  public:
+  Block(std::string name);
   std::string getName();
-  virtual std::string *getDisplayName();
+  std::string *getDisplayName();
 };
 
 #endif
