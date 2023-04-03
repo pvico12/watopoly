@@ -10,17 +10,25 @@ void Player::move(int n) {
   position = (position + n) % 40;
 }
 
+bool Player::hasMoney(int amount) {
+  return money >= amount;
+}
+
 void Player::addMoney(int amount) {
   money += amount;
 }
 
 bool Player::removeMoney(int amount) {
-  if (money < amount) {
-    // add print
+  if (!hasMoney(amount)) {
     return false;
   }
   money -= amount;
   return true;
+}
+
+int Player::hasProperty(Property &prop) {
+  // to be implemented
+  return -1;
 }
 
 void Player::addProperty(Property &prop) {
@@ -28,8 +36,11 @@ void Player::addProperty(Property &prop) {
 }
 
 bool Player::removeProperty(Property &prop) {
-  // to be implemented
-  return false;
+  int index = hasProperty(prop);
+  if (index == -1) {
+    return false;
+  }
+  properties.erase(properties.begin() + index);
 }
 
 bool Player::buy(Property &prop) {
@@ -50,4 +61,35 @@ bool Player::improve(Academic &prop) {
   prop.upgrade();
 }
 
-bool trade(Player &p);  // to be implemented
+bool Player::trade(Player &p2, Property &prop1, Property &prop2) {
+  if (hasProperty(prop1) && p2.hasProperty(prop2)) {
+    removeProperty(prop1);
+    p2.removeProperty(prop2);
+    addProperty(prop2);
+    p2.addProperty(prop1);
+    return true;
+  }
+  return false;
+}
+
+bool Player::trade(Player &p2, int amount, Property &prop2) {
+  if (hasMoney(amount) && p2.hasProperty(prop2)) {
+    removeMoney(amount);
+    p2.removeProperty(prop2);
+    addProperty(prop2);
+    p2.addMoney(amount);
+    return true;
+  }
+  return false;
+}
+
+bool Player::trade(Player &p2, Property &prop1, int amount) {
+  if (hasProperty(prop1) && p2.hasMoney(amount)) {
+    removeProperty(prop1);
+    p2.removeMoney(amount);
+    addMoney(amount);
+    p2.addProperty(prop1);
+    return true;
+  }
+  return false;
+}
