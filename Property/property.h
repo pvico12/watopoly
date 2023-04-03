@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "block.h"
+#include "../block.h"
 
 class Property : public Block {
  protected:
