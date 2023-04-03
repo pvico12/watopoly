@@ -5,6 +5,8 @@
 #include <vector>
 
 #include "observer.h"
+#include "info.h"
+#include "state.h"
 
 class TextDisplay: public Observer {
 	std::vector(std::vector<char>> theDisplay;

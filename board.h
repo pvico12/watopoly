@@ -2,6 +2,7 @@
 #define BOARD_H
 
 #include <vector>
+#include <iostream>
 
 #include "block.h"
 
@@ -18,6 +19,7 @@ class Board {
 	int getCupCount();
   void setBlock(int index, Block block);
   std::vector<Block> *getBlocks();
+	friend std::ostream &operator<<(std::ostream &out, const Grid &g);
 };
 
 #endif

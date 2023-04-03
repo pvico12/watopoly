@@ -52,13 +52,34 @@ TextDisplay::TextDisplay(int n, std::vector<Block>): numSquares{n} {
 	}
 
 	// Watopoly Logo
-	
+	// add watoply logo code here !!!!!!
 
 	// Top row of blocks
-	theDisplay[0][0] = '_';
 	for (int i = 0; i < numRowBlocks; i++) {
 		Block currBlock = blocks[i];
-		std::string name = currBloc
+		std::string name = currBlock.getName();
+		int startNameIndex = i*(blockWidth+1) + 1;
+		int endNameIndex = (i+1)*(blockWidth+1);
+		for (int j = startNameIndex; j < endNameIndex; j++) {
+			theDisplay[1][j] = name[startNameIndex - j];
+		}
+	}
+
+	// Right column of blocks
+	for (int i = numRowBlocks; i < numRowBlocks + numColBlocks; i++) {
+		Block currBlock = blocks[i];
+		std::string name = currBlock.getName();
+		int startNameIndex = maxWidth-blockWidth-1;
+		int endNameIndex = maxWidth-1;
+		for (int j = 0; j < numColBlocks; j++) {
+			// insert code
+		}
+	}
+	
+	// Bottom row of blocks
+
+	// Left column of blocks
+
 }
 
 void TextDisplay::notify(Subject &whoNotified) override {
