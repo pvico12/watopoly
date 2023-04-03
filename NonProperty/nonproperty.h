@@ -2,7 +2,7 @@
 #define NONPROPERTY_H
 
 #include <string>
-#include "block.h"
+#include "../block.h"
 
 class NonProperty : public Block {
   // Decorator Pattern

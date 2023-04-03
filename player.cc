@@ -1,36 +1,44 @@
 #include "player.h"
 
-void move(int n);
+const int BOARD_SIZE = 40;  // temporarily here before structure is determined
+
+Player::Player(std::string name, Token token, int position = 0, int money = 0, std::vector<Property> properties = {})
+    : name{name}, token{token}, position{position}, money{money}, properties{properties} {}
+
+void Player::move(int n) {
+  // need to add $200 when passing through Collect OSAP
+  position = (position + n) % 40;
+}
 
 void Player::add(int amount) {
-  total += amount;
+  money += amount;
 }
 
 bool Player::remove(int amount) {
-  if (total < amount) {
+  if (money < amount) {
     // add print
     return false;
   }
-  total -= amount;
+  money -= amount;
   return true;
 }
 
 bool Player::buy(Property &prop) {
-  if (total < prop.getPurCost()) {
+  if (money < prop.getPurCost()) {
     // add print
     return false;
   }
-  total -= prop.getPurCost();
+  money -= prop.getPurCost();
   properties.emplace_back(prop);
 }
 
-bool Player::improve(Property &prop) {
-  if (total < prop.getImpCost() && !prop.isMaxUpgrade()) {
+bool Player::improve(Academic &prop) {
+  if (money < prop.getImpCost() && !prop.isMaxUpgrade()) {
     // add print
     return false;
   }
-  total -= prop.getImpCost();
+  money -= prop.getImpCost();
   prop.upgrade();
 }
 
-bool trade(Player &p); // to be implemented
+bool trade(Player &p);  // to be implemented
