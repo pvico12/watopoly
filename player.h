@@ -32,9 +32,13 @@ class Player {
 
   void move(int n);  // may put it in board instead of here
 
-  void add(int amount);
+  void addMoney(int amount);
 
-  bool remove(int amount);  // may change to void
+  bool removeMoney(int amount);  // may change to void
+
+  void addProperty(Property &prop);
+  
+  bool removeProperty(Property &prop);
 
   bool buy(Property &prop);
 

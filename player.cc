@@ -10,17 +10,26 @@ void Player::move(int n) {
   position = (position + n) % 40;
 }
 
-void Player::add(int amount) {
+void Player::addMoney(int amount) {
   money += amount;
 }
 
-bool Player::remove(int amount) {
+bool Player::removeMoney(int amount) {
   if (money < amount) {
     // add print
     return false;
   }
   money -= amount;
   return true;
+}
+
+void Player::addProperty(Property &prop) {
+  properties.emplace_back(prop);
+}
+
+bool Player::removeProperty(Property &prop) {
+  // to be implemented
+  return false;
 }
 
 bool Player::buy(Property &prop) {
