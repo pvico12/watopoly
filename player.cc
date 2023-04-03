@@ -6,8 +6,10 @@ Player::Player(std::string name, Token token, int position = 0, int money = 0, s
     : name{name}, token{token}, position{position}, money{money}, properties{properties} {}
 
 void Player::move(int n) {
-  // need to add $200 when passing through Collect OSAP
   position = (position + n) % 40;
+  if (position - n < 0) {
+    addMoney(200);
+  }
 }
 
 bool Player::hasMoney(int amount) {
@@ -27,7 +29,13 @@ bool Player::removeMoney(int amount) {
 }
 
 int Player::hasProperty(Property &prop) {
-  // to be implemented
+  // wack implementation of hasProperty()
+  int len = properties.size();
+  for (int i = 0; i < len; i++) {
+    if (properties[i].getName() == prop.getName()) {
+      return i;
+    }
+  }
   return -1;
 }
 
@@ -41,6 +49,7 @@ bool Player::removeProperty(Property &prop) {
     return false;
   }
   properties.erase(properties.begin() + index);
+  return true;
 }
 
 bool Player::buy(Property &prop) {
@@ -50,15 +59,17 @@ bool Player::buy(Property &prop) {
   }
   money -= prop.getPurCost();
   properties.emplace_back(prop);
+  return true;
 }
 
 bool Player::improve(Academic &prop) {
-  if (money < prop.getImpCost() && !prop.isMaxUpgrade()) {
+  if (money < prop.getImpCost() && prop.isMaxUpgrade()) {
     // add print
     return false;
   }
   money -= prop.getImpCost();
   prop.upgrade();
+  return true;
 }
 
 bool Player::trade(Player &p2, Property &prop1, Property &prop2) {
