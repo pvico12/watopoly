@@ -5,20 +5,18 @@
 
 extern const std::string EMPTY_LINE;
 
-class Block {
+class Block : public Subject {
  protected:
-  bool occupiable;
   std::string name;
-  bool canOwn;
-  std::string ownedBy;
+  std::string type;
+	bool canOwn;
   static const int displayLength = 5;
   std::string displayName[displayLength];  // For visual display
-
  public:
-  Block(std::string name, bool ownable, std::string owner);
+  Block(std::string name, bool ownable);
   std::string getName();
-  std::string getOwner();
-  std::string *getDisplayName();
+	virtual std::string getType() = 0; // PVM: now an Abstract Class
+  virtual std::string *getDisplayName() = 0; // depends on property/non property
 };
 
 #endif
