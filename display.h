@@ -1,1 +1,20 @@
-// Observer of board
+#ifndef TEXTDISPLAY_H
+#define TEXTDISPLAY_H
+
+#include <iostream>
+#include <vector>
+
+#include "observer.h"
+
+class TextDisplay: public Observer {
+	std::vector(std::vector<char>> theDisplay;
+	const int numSquares;
+ public:
+	TextDisplay(int n, std::vector<Block> blocks); // intialize empty board
+
+	void notify(Subject &whoNotified) override; // block notifies change of state
+
+	friend std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
+};
+
+#endif
