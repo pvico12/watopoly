@@ -9,13 +9,26 @@
 
 extern const int BOARD_SIZE;
 
+enum class Token {
+  GOOSE,
+  GRT_BUS,
+  TIM_HORTONS,
+  DOUGHNUT,
+  PROFESSOR,
+  STUDENT,
+  MONEY,
+  LAPTOP,
+  PINK_TIE
+};
+
 class Player {
   std::string name;
+  Token token;
   int position, money;
   std::vector<Property> properties;
 
  public:
-  Player(std::string name, int position = 0, int money = 0, std::vector<Property> properties = {});
+  Player(std::string name, Token token, int position = 0, int money = 0, std::vector<Property> properties = {});
 
   void move(int n);  // may put it in board instead of here
 

@@ -2,8 +2,8 @@
 
 const int BOARD_SIZE = 40;  // temporarily here before structure is determined
 
-Player::Player(std::string name, int position = 0, int money = 0, std::vector<Property> properties = {})
-    : name{name}, position{position}, money{money}, properties{properties} {}
+Player::Player(std::string name, Token token, int position = 0, int money = 0, std::vector<Property> properties = {})
+    : name{name}, token{token}, position{position}, money{money}, properties{properties} {}
 
 void Player::move(int n) {
   // need to add $200 when passing through Collect OSAP
