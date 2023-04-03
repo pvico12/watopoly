@@ -8,7 +8,7 @@ Player::Player(std::string name, Token token, int position = 0, int money = 0, s
 void Player::move(int n) {
   position = (position + n) % 40;
   if (position - n < 0) {
-    addMoney(200);
+    money += 200;
   }
 }
 
