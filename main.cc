@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
 
 	// create the 40 blocks
 	vector<Block> blocks;
-
+	/*
 	NonAcademic gooseNest{"Goose Nesting", 0, 0, Type::Gym}; // fix
 	Academic ev1{"EV1", "Env", 220, 0, {18,90,250,700,875,1050}, 150};
 	NonAcademic needlesHall{"NEEDLES HALL", 0, 0, Type::Gym}; // fix
@@ -97,10 +97,10 @@ int main(int argc, char* argv[]) {
 	blocks.emplace_back(slc);
 	blocks.emplace_back(bmh);
 	blocks.emplace_back(opt);
-
+	*/
 	// create board and textdisplay
 	TextDisplay td{blocks};
-	Board watopoly{blocks, td};
+	Board watopoly{td};
 
 	cout << td;
 

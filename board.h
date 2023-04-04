@@ -15,7 +15,7 @@ class Board {
 	int timsCupCount;
  public:
   TextDisplay *td = nullptr;
-	Board(std::vector<Block> blocks, TextDisplay &td);
+	Board(TextDisplay &td);
 	int getCupCount();
   void setBlock(int index, Block block);
   std::vector<Block> *getBlocks();
