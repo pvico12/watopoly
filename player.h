@@ -32,15 +32,25 @@ class Player {
 
   void move(int n);  // may put it in board instead of here
 
-  void add(int amount);
+  bool hasMoney(int amount);
 
-  bool remove(int amount);  // may change to void
+  void addMoney(int amount);
+
+  bool removeMoney(int amount);  // may change to void
+
+  int hasProperty(Property &prop);
+
+  void addProperty(Property &prop);
+  
+  bool removeProperty(Property &prop);
 
   bool buy(Property &prop);
 
   bool improve(Academic &prop);
 
-  bool trade(Player &p);  // may need to add additional parameters
+  bool trade(Player &p2, Property &prop1, Property &prop2);
+  bool trade(Player &p2, int amount, Property &prop2);
+  bool trade(Player &p2, Property &prop1, int amount);
 };
 
 #endif
