@@ -8,17 +8,17 @@ const std::string vSeparator = "|";
 const std::string hSeparator = {7, '_'};
 const std::string blankSpace = {71, ' '};
 
-Board::Board() : blocks(BOARD_SIZE) {}
+TempBoard::TempBoard() : blocks(BOARD_SIZE) {}
 
-void Board::setBlock(int index, Block block) {
+void TempBoard::setBlock(int index, Block block) {
   blocks[index] = block;
 }
 
-std::vector<Block>* Board::getBlocks() {
+std::vector<Block>* TempBoard::getBlocks() {
   return &blocks;
 }
 
-std::ostream& operator<<(std::ostream& os, const Board& board) {
+std::ostream& operator<<(std::ostream& os, const TempBoard& board) {
   std::vector<Block> blocks = board.getBlocks();
 
   // Top row of blocks
