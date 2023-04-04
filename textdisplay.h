@@ -7,11 +7,21 @@
 #include "observer.h"
 class Block;
 
+extern const int NUMSQUARES;
+extern const int BLOCKWIDTH;
+extern const int BLOCKHEIGHT;
+extern const int NUMTOPBLOCKS;
+extern const int NUMBOTBLOCKS;
+extern const int NUMLEFTBLOCKS;
+extern const int NUMRIGHTBLOCKS;
+extern const int MAXWIDTH;
+extern const int MAXHEIGHT;
+
 class TextDisplay: public Observer {
 	std::vector<std::vector<char>> theDisplay;
-	const int numSquares;
  public:
-	TextDisplay(std::vector<Block> blocks); // intialize empty board
+	TextDisplay(); // intialize empty board
+	void initDisplay(std::vector<Block> &blocks); // fill in board
 
 	void notify(Subject &whoNotified) override; // block notifies change of state
 

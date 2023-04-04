@@ -6,7 +6,7 @@
 #include <iostream>
 const int BOARD_SIZE = 40;
 
-Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td} {
+Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 	// add all of these blocks to the array from block file
 	std::ifstream file{"watopolyBlocks.txt"};
 	std::string line;
@@ -18,9 +18,6 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td} {
 		while(std::getline(iss, param, '|')) {
 				blockParams.emplace_back(param);
 		}
-
-		for (auto s : blockParams) { std::cout << s; }
-		std::cout << std::endl;
 
 		if (blockParams[0] == "Academic") {
 			int purchaseCost = std::stoi(blockParams[4]);
@@ -36,6 +33,7 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td} {
 			blocks.emplace_back(tmpNonAcademic); // add to end of block list
 		}
 	}
+	td.initDisplay(blocks);
 }
 
 int Board::getCupCount() {

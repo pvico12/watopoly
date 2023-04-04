@@ -1,63 +1,51 @@
 #include "textdisplay.h"
 #include "block.h"
 
-TextDisplay::TextDisplay(std::vector<Block> blocks): numSquares{40} {
-	/*
-		This was implemented to easily increase board size,
-		where the board size must be a multiple of 4.
-		Initialize empty board:
-		-> Top row is (numSquares/4 + 1) blocks long
-		-> The following (numSquares/4 - 1) rows have a block
-			 on each end of the row, with selected rows having the
-			 WATOPOLY logo in the middle
-		-> Bottom row is (numSquares/4 + 1) blocks long
-		Note the dimensions of a block
-		8 characters wide, 5 characters tall
-		Non-Academic Buildings:      Academic Buildings:
-		|NAME1                       |
-		|NAMECTD                     |-------
-		|                    OR      |NAME
-		|                            |
-		|_______                     |_______
-	*/
+const int NUMSQUARES = 40;
+const int BLOCKWIDTH = 8;
+const int BLOCKHEIGHT = 5;
+const int NUMTOPBLOCKS = 11;
+const int NUMBOTBLOCKS = 11;
+const int NUMLEFTBLOCKS = 9;
+const int NUMRIGHTBLOCKS = 9;
+const int MAXWIDTH = 89;
+const int MAXHEIGHT = 56;
 
-	int blockWidth = 8;
-	int blockHeight = 5;
-	int rowBlocks = numSquares/4 + 1;
-	int colBlocks = numSquares/4 - 1;
-	int maxWidth = rowBlocks*(blockWidth) + 1;
-	int maxHeight = (colBlocks+2)*(blockHeight) + 1;
-
-	// Initialize empty board character vector with whitespace chars
+TextDisplay::TextDisplay() {
 	std::vector<char> emptyRowChars;
-	for (int i = 0; i < maxWidth; i++) { emptyRowChars.emplace_back(' '); }
-	for (int i = 0; i < maxHeight; i++) { theDisplay.emplace_back(emptyRowChars); }
+	for (int i = 0; i < MAXWIDTH; i++) {
+		emptyRowChars.emplace_back(' ');
+		}
+	for (int i = 0; i < MAXHEIGHT; i++) {
+		theDisplay.emplace_back(emptyRowChars);
+	}
 
-	// Set Up Empty Grid
-	for (int i = 0; i < maxWidth; i++) {
+	for (int i = 0; i < MAXWIDTH; i++) {
 		theDisplay[0][i] = '_';
-		for (int j = 1; j < maxHeight; j++) {
-			bool isLeftCol = (i <= blockWidth);
-			bool isRightCol = (i < maxWidth && i >= maxWidth-blockWidth-1);
-			bool isFirstRow = (j <= blockHeight);
-			bool isLastRow = (j < maxHeight && j >= maxHeight-blockHeight-1);
+		for (int j = 1; j < MAXHEIGHT; j++) {
+			bool isLeftCol = (i <= BLOCKWIDTH);
+			bool isRightCol = (i < MAXWIDTH && i >= MAXWIDTH-BLOCKWIDTH-1);
+			bool isFirstRow = (j <= BLOCKHEIGHT);
+			bool isLastRow = (j < MAXHEIGHT && j >= MAXHEIGHT-BLOCKHEIGHT-1);
 			if (isLeftCol || isRightCol || isFirstRow || isLastRow) {
-				if (i % blockWidth == 0) {
+				if (i % BLOCKWIDTH == 0) {
 					theDisplay[j][i] = '|';
 				} 
-				if (i % blockWidth != 0 && j % blockHeight == 0) {
+				if (i % BLOCKWIDTH != 0 && j % BLOCKHEIGHT == 0) {
 					theDisplay[j][i] = '_';
 				}
 			}
-			if (j == maxHeight-blockHeight-1 && !isLeftCol && !isRightCol) theDisplay[j][i] = '_';
+			if (j == MAXHEIGHT-BLOCKHEIGHT-1 && !isLeftCol && !isRightCol) theDisplay[j][i] = '_';
 		}
 	}
 
-	// Watopoly Logo
-	// add watopoly logo code here !!!!!!
+	// add WaterPoly Logo
+}
+
+void TextDisplay::initDisplay(std::vector<Block> &blocks) {
 
 	// Top row of blocks
-	for (int i = 0; i < rowBlocks; i++) {
+	for (int i = 0; i < NUMTOPBLOCKS; i++) {
 		std::string *dispName = blocks[i].getDisplayName();
 		for (int j = 1; j < 8; j++) {
 			theDisplay[1][i*8+j] = dispName[0][j-1];
@@ -68,10 +56,10 @@ TextDisplay::TextDisplay(std::vector<Block> blocks): numSquares{40} {
 	}
 	
 	// Right column of blocks
-	for (int i = 11; i < 11 + 9; i++) {
+	for (int i = NUMTOPBLOCKS; i < NUMTOPBLOCKS+NUMRIGHTBLOCKS; i++) {
 		std::string *dispName = blocks[i].getDisplayName();
-		int col = maxWidth-blockWidth;
-		int row = (i-10)*blockHeight+1;
+		int col = MAXWIDTH-BLOCKWIDTH;
+		int row = (i-10)*BLOCKHEIGHT+1;
 		for (int j = 1; j < 8; j++) {
 			theDisplay[row][col] = dispName[0][j-1];
 			theDisplay[row+1][col] = dispName[1][j-1];
@@ -82,11 +70,11 @@ TextDisplay::TextDisplay(std::vector<Block> blocks): numSquares{40} {
 	}
 	
 	// Bottom row of blocks
-	for (int i = 20; i < 20 + 11; i++) {
+	for (int i = NUMTOPBLOCKS+NUMRIGHTBLOCKS; i < NUMTOPBLOCKS+NUMRIGHTBLOCKS+NUMTOPBLOCKS; i++) {
 		std::string *dispName = blocks[i].getDisplayName();
-		int row = maxHeight-blockHeight;
+		int row = MAXHEIGHT-BLOCKHEIGHT;
 		for (int j = 1; j < 8; j++) {
-			int col = maxWidth - (i-20+1)*blockWidth - 1;
+			int col = MAXWIDTH - (i-20+1)*BLOCKWIDTH - 1;
 			theDisplay[row][col+j] = dispName[0][j-1];
 			theDisplay[row+1][col+j] = dispName[1][j-1];
 			theDisplay[row+2][col+j] = dispName[2][j-1];
@@ -95,9 +83,9 @@ TextDisplay::TextDisplay(std::vector<Block> blocks): numSquares{40} {
 	}
 
 	// Left column of blocks
-	for (int i = 30; i < 40; i++) {
+	for (int i = NUMTOPBLOCKS+NUMRIGHTBLOCKS+NUMTOPBLOCKS; i < NUMSQUARES; i++) {
 		std::string *dispName = blocks[i].getDisplayName();
-		int row = (40-i)*blockHeight+1;
+		int row = (40-i)*BLOCKHEIGHT+1;
 		for (int j = 1; j < 8; j++) {
 			theDisplay[row][j] = dispName[0][j-1];
 			theDisplay[row+1][j] = dispName[1][j-1];
@@ -105,6 +93,7 @@ TextDisplay::TextDisplay(std::vector<Block> blocks): numSquares{40} {
 			theDisplay[row+3][j] = dispName[3][j-1];
 		}
 	}
+	
 }
 
 void TextDisplay::notify(Subject &whoNotified) {
