@@ -1,6 +1,6 @@
 #include "block.h"
 
-const std::string EMPTY_LINE{7, ' '};
+const std::string EMPTY_LINE(7, ' ');
 
 Block::Block(std::string name) : name{name} {
   for (int i = 0; i < displayLength; i++) {
@@ -13,5 +13,5 @@ std::string Block::getName() {
 }
 
 std::string *Block::getDisplayName() {
-  return displayName;
+	return displayName;
 }

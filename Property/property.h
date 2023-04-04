@@ -8,7 +8,7 @@
 
 class Property : public Block {
  protected:
-  int improvLvl, purchaseCost;
+  int purchaseCost, improvLvl;
 
  public:
   Property(std::string name, int purchaseCost, int improvLvl);
