@@ -12,6 +12,10 @@ void Player::move(int n) {
   }
 }
 
+void Player::moveTo(int n) {
+  position = n;
+}
+
 bool Player::hasMoney(int amount) {
   return money >= amount;
 }
