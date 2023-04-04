@@ -3,9 +3,9 @@
 #include "block.h"
 #include "board.h"
 #include "textdisplay.h"
-#include "property.h"
-#include "academic.h"
-#include "nonacademic.h"
+#include "Property/property.h"
+#include "Property/academic.h"
+#include "Property/nonacademic.h"
 
 #include <iostream>
 #include <vector>
