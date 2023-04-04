@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "Property/academic.h"
+#include "academic.h"
 #include "Property/property.h"
 
 extern const int BOARD_SIZE;

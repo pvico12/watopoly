@@ -5,14 +5,13 @@
 #include <vector>
 
 #include "observer.h"
-#include "info.h"
-#include "state.h"
+class Block;
 
 class TextDisplay: public Observer {
-	std::vector(std::vector<char>> theDisplay;
+	std::vector<std::vector<char>> theDisplay;
 	const int numSquares;
  public:
-	TextDisplay(int n, std::vector<Block> blocks); // intialize empty board
+	TextDisplay(std::vector<Block> blocks); // intialize empty board
 
 	void notify(Subject &whoNotified) override; // block notifies change of state
 
