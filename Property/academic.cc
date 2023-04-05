@@ -1,16 +1,43 @@
 #include "academic.h"
+#include <sstream>
 
-extern const int MAX_UPGRADES;
-extern const std::string DASHED_LINE(7, '-');
+const int MAXUPGRADES = 5;
+const std::string DASHEDLINE(7, '-');
 
 Academic::Academic(std::string name, std::string monBlock, int purchaseCost, int improvLvl, std::vector<int> tuition, int improvCost)
-    : Property{name, purchaseCost, improvLvl},
-      improvCost{improvCost},
-			monopolyBlock{monBlock},
-			tuition{tuition} {
-  displayName[1] = DASHED_LINE;
-  name.resize(7, ' ');
-  displayName[2] = name;
+    : Property{name, purchaseCost, improvLvl},improvCost{improvCost},monopolyBlock{monBlock}, tuition{tuition} {
+
+  displayName[0] = EMPTYLINE;
+  displayName[1] = DASHEDLINE;
+
+  // partition name accordingly
+  std::vector<std::string> nameComponents;
+  std::istringstream iss{name};
+  std::string component;
+  // create vector of space seperated strings
+  while (std::getline(iss, component, ' ')) {
+    nameComponents.emplace_back(component);
+  }
+
+  // see if any two strings can fit in one line and append them
+  std::vector<std::string> displayComponents;
+  std::string line;
+  for (auto s : nameComponents) {
+    if (line.length() + s.size() > 7) {
+      displayComponents.emplace_back(line);
+      line = "";
+    }
+    line.append(s + " ");
+  }
+  displayComponents.emplace_back(line);
+
+  // finsert the lines into the displayName
+  int i = 2;
+  for (auto s : displayComponents) {
+    s.resize(7, ' ');
+    displayName[i] = s;
+    i++;
+  }
 }
 
 int Academic::getImpCost() {
@@ -22,7 +49,7 @@ std::string Academic::getMonBlock() {
 }
 
 bool Academic::upgrade() {
-  if (improvLvl >= 5 /*MAX_UPGRADES, had to change temporarily for compilation, fix it*/) {
+  if (improvLvl >= MAXUPGRADES) {
     return false;
   }
 
@@ -31,7 +58,7 @@ bool Academic::upgrade() {
 }
 
 bool Academic::isMaxUpgrade() {
-  return improvLvl >= 5 /* same thing^^ */;
+  return improvLvl >= MAXUPGRADES;
 }
 
 int Academic::getFee() {
