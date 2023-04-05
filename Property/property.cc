@@ -10,3 +10,11 @@ int Property::getLvl() {
 int Property::getPurCost() {
   return purchaseCost;
 }
+
+bool Property::isMortgaged() {
+  return mortgaged;
+}
+
+bool Property::toggleMortgage() {
+  mortgaged = !mortgaged;
+}

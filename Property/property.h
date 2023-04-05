@@ -9,11 +9,14 @@
 class Property : public Block {
  protected:
   int purchaseCost, improvLvl;
+  bool mortgaged = false;
 
  public:
   Property(std::string name, int purchaseCost, int improvLvl);
   int getLvl();
   int getPurCost();
+  bool isMortgaged();
+  bool toggleMortgage();
   virtual bool upgrade() = 0;
   virtual int getFee() = 0;
 };
