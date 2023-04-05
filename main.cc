@@ -1,20 +1,84 @@
-#include "observer.h"
-#include "subject.h"
-#include "block.h"
-#include "board.h"
-#include "textdisplay.h"
-#include "Property/property.h"
-#include "Property/academic.h"
-#include "Property/nonacademic.h"
-
 #include <iostream>
 #include <vector>
+
+#include "NonProperty/money.h"
+#include "NonProperty/movement.h"
+#include "NonProperty/nonproperty.h"
+#include "Property/academic.h"
+#include "Property/nonacademic.h"
+#include "Property/property.h"
+#include "block.h"
+#include "board.h"
+#include "observer.h"
+#include "player.h"
+#include "subject.h"
+#include "textdisplay.h"
 using namespace std;
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
+  TextDisplay td;      // initialize a board with constant size
+  Board watopoly{td};  // create board (uses .txt file for blocks)
+  cout << td;          // output text display
 
-	TextDisplay td; // initialize a board with constant size
-	Board watopoly{td}; // create board (uses .txt file for blocks)
-	cout << td; // output text display
+  vector<Player> players{};
+  int numPlayers = players.size();
+  bool rolled = false;
 
+  while (true) {
+    int i = 0;
+    while (i < players.size()) {
+      Player &player1 = players.at(i);
+
+      string cmd;
+      cin >> cmd;
+
+      if (cmd == "roll") {
+        int steps;  // roll the dice
+        player1.move(steps);
+        rolled = true;
+      } else if (cmd == "next") {
+        rolled = false;
+        i++;
+      } else if (cmd == "trade") {
+        string player2Name;
+        // find player
+        Player &player2 = players.at(i);
+        string str1;
+        string str2;
+        cin >> str1;
+        cin >> str2;
+				// find property1 & property2
+        // player1.trade(player2, str1, str2);
+      } else if (cmd == "improve") {
+        Property &property;
+        if (player1.hasProperty(property)) {
+        }
+      } else if (cmd == "mortgage") {
+      } else if (cmd == "unmortgage") {
+      } else if (cmd == "bankrupt") {
+				// reset the owners of the properties that player owns
+				// unmortgage any properties in mortgage state
+				// remove player from players vector
+      } else if (cmd == "assets") {
+        // for (Property &property : player1.getProperties) {
+        // 	 cout << property << endl;
+        // }
+      } else if (cmd == "all") {
+        for (Player &player : players) {
+          // cout << player.getName();
+          // for (Property &property : player.getProperties) {
+          // 	 cout << property << endl;
+          // }
+        }
+      } else if (cmd == "save") {
+      } else {
+        // undefined command
+				continue;
+      }
+
+      // check if the currrent player is bankrupt
+
+      // check if game is won
+    }
+  }
 }
