@@ -1,12 +1,13 @@
-#include "moneyblock.h"
+#include "money.h"
 
 MoneyBlock::MoneyBlock(std::string name, int amount, MoneyType mt)
     : NonProperty{name}, amount{amount}, mt{mt} {}
 
 void MoneyBlock::action(Player &player) {
-  if (type == ADD) {
+  if (mt == ADD) {
     player.addMoney(amount);
-  } else if (type == TO_BLOCK) {
+  } else if (mt == REMOVE) {
+    // need to set a separate case for when the player doesn't have enough money
     player.removeMoney(amount);
   }
 }

@@ -1,4 +1,4 @@
-#include "movementblock.h"
+#include "movement.h"
 
 MovementBlock::MovementBlock(std::string name, int steps, MoveType mt)
     : NonProperty{name}, steps{steps}, mt{mt} {}

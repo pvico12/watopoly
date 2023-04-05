@@ -2,7 +2,7 @@
 #define MONEYBLOCK_H
 
 #include "nonproperty.h"
-#include "player.h"
+#include "../player.h"
 
 enum MoneyType {
   ADD,
