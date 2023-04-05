@@ -2,6 +2,8 @@
 #include "subject.h"
 #include "Property/academic.h"
 #include "Property/nonacademic.h"
+#include "NonProperty/movement.h"
+#include "NonProperty/money.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -22,29 +24,47 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 			blockParams.emplace_back(param);
 		}
 
-		if (blockParams[0] == "Academic") {
+		std::string type = blockParams[0];
+		std::string name = blockParams[1];
+		std::string boardName = blockParams[2];
+
+		Info newI;
+		newI.name = boardName;
+		newI.position = currPos;
+
+		if (type == "Academic") {
 			int purchaseCost = std::stoi(blockParams[4]);
 			int improvLevel = std::stoi(blockParams[5]);
 			int improvCost = std::stoi(blockParams[7]);;
 			std::vector<int> numArr; // fix
-			Info newI;
-			newI.name = blockParams[2];
-			newI.position = currPos;
 			newI.desc = Desc::AcademicBuilding;
-			b = new Academic(blockParams[2], blockParams[3], purchaseCost, improvLevel, numArr, improvCost);
-			b->setInfo(newI);
-			blocks.emplace_back(b); // add to end of block list
-		} else {
+			b = new Academic(boardName, blockParams[3], purchaseCost, improvLevel, numArr, improvCost);
+		} else if (type == "NonAcademic") {
 			int purchaseCost = std::stoi(blockParams[3]);
 			int improvLevel = std::stoi(blockParams[4]);
-			Info newI;
-			newI.name = blockParams[2];
-			newI.position = currPos;
-			newI.desc = Desc::AcademicBuilding;
-			b = new NonAcademic(blockParams[2], purchaseCost, improvLevel, Type::Gym);
-			b->setInfo(newI);
-			blocks.emplace_back(b); // add to end of block list
+			newI.desc = Desc::NonAcademicBuilding;
+			b = new NonAcademic(boardName, purchaseCost, improvLevel, Type::Gym);
+		} else if (type == "MoneyBlock") {
+			int money = std::stoi(blockParams[3]);
+			MoneyType mt = MoneyType::ADD;
+			newI.desc = Desc::ChancePay;
+			b = new MoneyBlock(boardName, money, mt);
+		} else if (type == "MovementBlock") {
+			int move = std::stoi(blockParams[3]);
+			MoveType mt = MoveType::MOVE_N_STEPS;
+			newI.desc = Desc::ChanceMove;
+			b = new MovementBlock(boardName, move, mt);
+		} else if (type == "NonProperty") {
+			// temporarily make it a gym
+			int purchaseCost = std::stoi(blockParams[3]);
+			int improvLevel = std::stoi(blockParams[4]);
+			newI.desc = Desc::NonAcademicBuilding;
+			b = new NonAcademic(boardName, purchaseCost, improvLevel, Type::Gym);
 		}
+
+		b->setInfo(newI);
+		blocks.emplace_back(b); // add to end of block list
+
 		currPos++;
 	}
 

@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Property/academic.h"
-#include "Property/property.h"
+#include "Property/nonacademic.h"
 
 extern const int BOARD_SIZE;
 
@@ -25,11 +25,25 @@ class Player {
   std::string name;
   Token token;
   int position, money;
-  std::vector<Property> properties;
+  std::vector<Academic> academicProps;
+  std::vector<NonAcademic> nonAcademicProps;
 
  public:
-  Player(std::string name, Token token, int position = 0, int money = 0, std::vector<Property> properties = {});
+  Player(std::string name, Token token,
+        int position = 0, int money = 0,
+        std::vector<Academic> academicProps = {},
+        std::vector<NonAcademic> nonAcademicProps = {});
 
+  Player(const Player &o);
+  
+  Player(Player &&o);
+
+  std::string getName();
+
+  std::vector<Academic> getAcademicProps();
+
+  std::vector<NonAcademic> getNonAcademicProps();
+  
   void move(int n);
 
   void moveTo(int n);
