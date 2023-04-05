@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "academic.h"
 #include "Property/property.h"
+#include "academic.h"
 
 extern const int BOARD_SIZE;
 
@@ -30,6 +30,10 @@ class Player {
  public:
   Player(std::string name, Token token, int position = 0, int money = 0, std::vector<Property> properties = {});
 
+  std::string getName();
+
+  std::vector<Property> &getProperties();
+
   void move(int n);
 
   void moveTo(int n);
@@ -43,7 +47,7 @@ class Player {
   int hasProperty(Property &prop);
 
   void addProperty(Property &prop);
-  
+
   bool removeProperty(Property &prop);
 
   bool buy(Property &prop);

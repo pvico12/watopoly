@@ -60,15 +60,16 @@ int main(int argc, char *argv[]) {
 				// unmortgage any properties in mortgage state
 				// remove player from players vector
       } else if (cmd == "assets") {
-        // for (Property &property : player1.getProperties) {
-        // 	 cout << property << endl;
-        // }
+        for (Property &property : player1.getProperties()) {
+        	 cout << property << endl;
+        }
       } else if (cmd == "all") {
         for (Player &player : players) {
-          // cout << player.getName();
-          // for (Property &property : player.getProperties) {
-          // 	 cout << property << endl;
-          // }
+          cout << player.getName() << endl;
+          for (Property &property : player.getProperties()) {
+          	 cout << property << endl;
+          }
+					cout << endl;
         }
       } else if (cmd == "save") {
       } else {

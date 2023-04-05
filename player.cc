@@ -5,6 +5,14 @@ const int BOARD_SIZE = 40;  // temporarily here before structure is determined
 Player::Player(std::string name, Token token, int position = 0, int money = 0, std::vector<Property> properties = {})
     : name{name}, token{token}, position{position}, money{money}, properties{properties} {}
 
+std::string Player::getName() {
+  return name;
+}
+
+std::vector<Property> &Player::getProperties() {
+  return properties;
+}
+
 void Player::move(int n) {
   position = (position + n) % 40;
   if (position - n < 0) {
