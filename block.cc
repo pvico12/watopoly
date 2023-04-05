@@ -1,4 +1,5 @@
 #include "block.h"
+#include "info.h"
 #include <sstream>
 
 const std::string EMPTYLINE(7, ' ');

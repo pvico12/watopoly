@@ -10,14 +10,13 @@
 extern const int BOARD_SIZE;
 
 class Board {
-  std::vector<Block> blocks;
+  std::vector<Block*> blocks;
 	int timsCupCount;
   TextDisplay *td = nullptr;
  public:
 	Board(TextDisplay &td);
 	int getCupCount();
-  void setBlock(int index, Block block);
-  std::vector<Block> *getBlocks();
+  std::vector<Block*> *getBlocks();
 	friend std::ostream &operator<<(std::ostream &out, const Board &b);
 };
 

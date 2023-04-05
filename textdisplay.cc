@@ -78,13 +78,13 @@ TextDisplay::TextDisplay() {
 	// add WaterPoly Logo !!!
 }
 
-void TextDisplay::initDisplay(std::vector<Block> &blocks) {
+void TextDisplay::initDisplay(std::vector<Block*> &blocks) {
 	int i = 0;
 	for (auto b : blocks) { // loop through blocks
 		int row = blockCoords[i][0];    // get its display coordinate
 		int col = blockCoords[i][1];
 		int rowIter = 1;
-		std::string *dispName = b.getDisplayName();      // get its display name
+		std::string *dispName = b->getDisplayName();      // get its display name
 		// iterate through respective coordinates, changing the blocks display
 		for (int lineInd = 0; lineInd < BLOCKHEIGHT-1; lineInd++) { 
 			std::string line = dispName[lineInd];
@@ -99,11 +99,17 @@ void TextDisplay::initDisplay(std::vector<Block> &blocks) {
 	}
 }
 
-void TextDisplay::notify(Subject &whoNotified) {
+void TextDisplay::notify(Subject<Info, State> &whoNotified) {
 	// a block changed state,
 	// update the text display of the block
 	// perhaps a player visited
 	// perhaps an improvement was made on the piece
+	Info i = whoNotified.getInfo();
+	//State s = whoNotified.getState();
+	int pos = i.position;
+	int row = blockCoords[pos][0];
+	int col = blockCoords[pos][1];
+	theDisplay[row+4][col+3] = 'X';
 }
 
 std::ostream &operator<<(std::ostream &out, const TextDisplay &td) {

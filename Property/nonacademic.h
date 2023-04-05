@@ -1,6 +1,8 @@
 #ifndef NONACADEMIC_H
 #define NONACADEMIC_H
 
+#include "../info.h"
+#include "../state.h"
 #include "property.h"
 
 enum Type {

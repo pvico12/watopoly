@@ -1,3 +1,5 @@
+#include "state.h"
+#include "info.h"
 #include "observer.h"
 #include "subject.h"
 #include "block.h"
@@ -17,4 +19,9 @@ int main(int argc, char* argv[]) {
 	Board watopoly{td}; // create board (uses .txt file for blocks)
 	cout << td; // output text display
 
+	vector<Block*> *blocks = watopoly.getBlocks();
+	vector<Block*> &bs = *blocks;
+	bs[1]->notifyObservers();
+
+	cout << td;
 }

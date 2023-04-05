@@ -5,6 +5,9 @@
 #include <vector>
 
 #include "observer.h"
+#include "info.h"
+#include "state.h"
+
 class Block;
 
 extern const int NUMSQUARES;
@@ -17,14 +20,14 @@ extern const int NUMRIGHTBLOCKS;
 extern const int MAXWIDTH;
 extern const int MAXHEIGHT;
 
-class TextDisplay: public Observer {
+class TextDisplay: public Observer<Info, State> {
 	std::vector<std::vector<char>> theDisplay;
 	std::vector<std::vector<int>> blockCoords;
  public:
 	TextDisplay(); // intialize empty board
-	void initDisplay(std::vector<Block> &blocks); // fill in board
+	void initDisplay(std::vector<Block*> &blocks); // fill in board
 
-	void notify(Subject &whoNotified) override; // block notifies change of state
+	void notify(Subject<Info, State> &whoNotified) override; // block notifies change of state
 
 	friend std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
 };
