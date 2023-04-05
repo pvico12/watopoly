@@ -51,7 +51,9 @@ int main(int argc, char *argv[]) {
         // player1.trade(player2, str1, str2);
       } else if (cmd == "improve") {
         Property &property;
+				// intake property
         if (player1.hasProperty(property)) {
+					player1.improve(property)
         }
       } else if (cmd == "mortgage") {
       } else if (cmd == "unmortgage") {
