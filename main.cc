@@ -17,11 +17,11 @@ int main(int argc, char* argv[]) {
 
 	TextDisplay td; // initialize a board with constant size
 	Board watopoly{td}; // create board (uses .txt file for blocks)
-	cout << td; // output text display
+	cout << watopoly; // output text display
 
 	vector<Block*> *blocks = watopoly.getBlocks();
 	vector<Block*> &bs = *blocks;
 	bs[1]->notifyObservers();
 
-	cout << td;
+	cout << watopoly;
 }

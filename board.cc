@@ -65,6 +65,6 @@ std::vector<Block*> *Board::getBlocks() {
 }
 
 std::ostream &operator<<(std::ostream &out, const Board &b) {
-	out << b.td;
+	out << *(b.td);
 	return out;
 }
