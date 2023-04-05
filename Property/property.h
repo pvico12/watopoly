@@ -11,7 +11,7 @@ class Property : public Block {
   int purchaseCost, improvLvl;
 
  public:
-  Property(std::string name, int purchaseCost, int improvLvl);
+  Property(std::string name, bool canImprove, int purchaseCost, int improvLvl);
   int getLvl();
   int getPurCost();
   virtual bool upgrade() = 0;

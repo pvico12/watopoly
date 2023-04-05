@@ -1,17 +1,12 @@
 #include "academic.h"
 
-extern const int MAX_UPGRADES;
-extern const std::string DASHED_LINE(7, '-');
+extern const int MAX_UPGRADES = 5;
 
 Academic::Academic(std::string name, std::string monBlock, int purchaseCost, int improvLvl, std::vector<int> tuition, int improvCost)
-    : Property{name, purchaseCost, improvLvl},
+    : Property{name, true, purchaseCost, improvLvl},
       improvCost{improvCost},
 			monopolyBlock{monBlock},
-			tuition{tuition} {
-  displayName[1] = DASHED_LINE;
-  name.resize(7, ' ');
-  displayName[2] = name;
-}
+			tuition{tuition} {}
 
 int Academic::getImpCost() {
   return improvCost;
@@ -22,7 +17,7 @@ std::string Academic::getMonBlock() {
 }
 
 bool Academic::upgrade() {
-  if (improvLvl >= 5 /*MAX_UPGRADES, had to change temporarily for compilation, fix it*/) {
+  if (improvLvl >= MAX_UPGRADES) {
     return false;
   }
 
@@ -31,7 +26,7 @@ bool Academic::upgrade() {
 }
 
 bool Academic::isMaxUpgrade() {
-  return improvLvl >= 5 /* same thing^^ */;
+  return improvLvl >= MAX_UPGRADES;
 }
 
 int Academic::getFee() {

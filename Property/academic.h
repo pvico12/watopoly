@@ -7,7 +7,6 @@
 #include "property.h"
 
 extern const int MAX_UPGRADES;
-extern const std::string DASHED_LINE;
 
 class Academic : public Property {
   int improvCost;

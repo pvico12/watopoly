@@ -1,7 +1,7 @@
 #include "property.h"
 
-Property::Property(std::string name, int purchaseCost, int improvLvl)
-    : Block{name}, purchaseCost{purchaseCost}, improvLvl{improvLvl} {}
+Property::Property(std::string name, bool canImprove, int purchaseCost, int improvLvl)
+    : Block{name, canImprove}, purchaseCost{purchaseCost}, improvLvl{improvLvl} {}
 
 int Property::getLvl() {
   return improvLvl;
