@@ -1,7 +1,7 @@
 #include "nonacademic.h"
 
 NonAcademic::NonAcademic(std::string name, int purchaseCost, int improvLvl, Type type)
-    : Property{name, false, purchaseCost, improvLvl}, type{type} {}
+    : Property{name, purchaseCost, improvLvl}, type{type} {}
 
 bool NonAcademic::upgrade() {
   // called when a player purchases a new non-academic building

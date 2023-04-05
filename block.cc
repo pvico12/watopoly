@@ -2,9 +2,8 @@
 #include <sstream>
 
 const std::string EMPTYLINE(7, ' ');
-const std::string DASHEDLINE(7, '-');
 
-Block::Block(std::string name, bool canImprove) : name{name} {
+Block::Block(std::string name) : name{name} {
   // initialize display
   for (int i = 0; i < displayLength; i++) {
     displayName[i] = EMPTYLINE;
@@ -31,9 +30,8 @@ Block::Block(std::string name, bool canImprove) : name{name} {
   }
   displayComponents.emplace_back(line);
 
-  // finally insert the lines into the displayName, add horizontal bar if block canImprove
-  int i = canImprove ? 2 : 0;
-  displayName[1] = canImprove ? DASHEDLINE : displayName[1];
+  // finsert the lines into the displayName
+  int i = 0;
   for (auto s : displayComponents) {
     s.resize(7, ' ');
     displayName[i] = s;

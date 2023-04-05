@@ -6,7 +6,6 @@
 #include "subject.h"
 
 extern const std::string EMPTYLINE;
-extern const std::string DASHEDLINE;
 
 class Block : public Subject {
  protected:
@@ -14,7 +13,7 @@ class Block : public Subject {
   static const int displayLength = 5;
   std::string displayName[displayLength];  // For visual display
  public:
-  Block(std::string name, bool canImprove);
+  Block(std::string name);
   std::string getName();
   std::string *getDisplayName(); // depends on property/non property
 };
