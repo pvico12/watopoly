@@ -30,7 +30,9 @@ class Player {
  public:
   Player(std::string name, Token token, int position = 0, int money = 0, std::vector<Property> properties = {});
 
-  void move(int n);  // may put it in board instead of here
+  void move(int n);
+
+  void moveTo(int n);
 
   bool hasMoney(int amount);
 

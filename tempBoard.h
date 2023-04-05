@@ -7,14 +7,14 @@
 
 extern const int BOARD_SIZE;
 
-class Board {
+class TempBoard {
   std::vector<Block> blocks;
 
  public:
-  Board();
+  TempBoard();
   void setBlock(int index, Block block);
   std::vector<Block> *getBlocks();
-  friend std::ostream& operator<<(std::ostream& os, const Board& board);
+  friend std::ostream& operator<<(std::ostream& os, const TempBoard& board);
 };
 
 #endif
