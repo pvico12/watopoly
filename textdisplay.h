@@ -19,6 +19,7 @@ extern const int MAXHEIGHT;
 
 class TextDisplay: public Observer {
 	std::vector<std::vector<char>> theDisplay;
+	std::vector<std::vector<int>> blockCoords;
  public:
 	TextDisplay(); // intialize empty board
 	void initDisplay(std::vector<Block> &blocks); // fill in board

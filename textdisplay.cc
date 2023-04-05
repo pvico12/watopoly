@@ -12,6 +12,7 @@ const int MAXWIDTH = 89;
 const int MAXHEIGHT = 56;
 
 TextDisplay::TextDisplay() {
+	// create empty board
 	std::vector<char> emptyRowChars;
 	for (int i = 0; i < MAXWIDTH; i++) {
 		emptyRowChars.emplace_back(' ');
@@ -20,80 +21,82 @@ TextDisplay::TextDisplay() {
 		theDisplay.emplace_back(emptyRowChars);
 	}
 
-	for (int i = 0; i < MAXWIDTH; i++) {
-		theDisplay[0][i] = '_';
-		for (int j = 1; j < MAXHEIGHT; j++) {
-			bool isLeftCol = (i <= BLOCKWIDTH);
-			bool isRightCol = (i < MAXWIDTH && i >= MAXWIDTH-BLOCKWIDTH-1);
-			bool isFirstRow = (j <= BLOCKHEIGHT);
-			bool isLastRow = (j < MAXHEIGHT && j >= MAXHEIGHT-BLOCKHEIGHT-1);
-			if (isLeftCol || isRightCol || isFirstRow || isLastRow) {
-				if (i % BLOCKWIDTH == 0) {
-					theDisplay[j][i] = '|';
-				} 
-				if (i % BLOCKWIDTH != 0 && j % BLOCKHEIGHT == 0) {
-					theDisplay[j][i] = '_';
-				}
-			}
-			if (j == MAXHEIGHT-BLOCKHEIGHT-1 && !isLeftCol && !isRightCol) theDisplay[j][i] = '_';
+	// create block coordinate list of top right coordinate of block
+	std::vector<int> tmpCoord = {0, 0};
+	for (int i = 0; i < NUMTOPBLOCKS; i++) { // top row
+		tmpCoord[0] = 0;
+		tmpCoord[1] = i*BLOCKWIDTH;
+		blockCoords.emplace_back(tmpCoord); 
+	}
+	for (int i = 1; i < NUMRIGHTBLOCKS+1; i++) { // right column
+		tmpCoord[0] = i*BLOCKHEIGHT;
+		tmpCoord[1] = MAXWIDTH-BLOCKWIDTH-1;
+		blockCoords.emplace_back(tmpCoord);
+	}
+	for (int i = NUMBOTBLOCKS-1; i >= 0; i--) { // bottom row
+		tmpCoord[0] = MAXHEIGHT-BLOCKHEIGHT-1;
+		tmpCoord[1] = i*BLOCKWIDTH;
+		blockCoords.emplace_back(tmpCoord); 
+	}
+	for (int i = NUMRIGHTBLOCKS; i > 0; i--) { // right column
+		tmpCoord[0] = i*BLOCKHEIGHT;
+		tmpCoord[1] = 0;
+		blockCoords.emplace_back(tmpCoord);
+	}
+	
+	// draw board
+	for (auto coord : blockCoords) {
+		int row = coord[0];
+		int col = coord[1];
+		// draw sides
+		for (int i = 1; i <= BLOCKHEIGHT; i++) {
+			theDisplay[row+i][col] = '|';
+			theDisplay[row+i][col+BLOCKWIDTH] = '|';
 		}
+		// draw floor
+		for (int i = 1; i < BLOCKWIDTH; i++) {
+			theDisplay[row+BLOCKHEIGHT][col+i] = '_';
+		}
+		// draw roof
+		if (row == 0) { // top row roof must have all '_'
+			for (int i = 0; i < BLOCKWIDTH; i++) {
+				theDisplay[row][col+i] = '_';
+			}
+		} else if (row == MAXHEIGHT-BLOCKHEIGHT-1 && col > 0 && col < MAXWIDTH-2*BLOCKWIDTH-1) {
+			// bottom row roof between columns
+			for (int i = 1; i <= BLOCKWIDTH; i++) {
+				theDisplay[row][col+i] = '_';
+			}
+		} else { // remaining ones avoid those corners
+			for (int i = 1; i < BLOCKWIDTH; i++) {
+				theDisplay[row][col+i] = '_';
+			}
+		}
+		theDisplay[0][MAXWIDTH-1] = '_'; // get missing top right corner '_'
 	}
 
-	// add WaterPoly Logo
+	// add WaterPoly Logo !!!
 }
 
 void TextDisplay::initDisplay(std::vector<Block> &blocks) {
-
-	// Top row of blocks
-	for (int i = 0; i < NUMTOPBLOCKS; i++) {
-		std::string *dispName = blocks[i].getDisplayName();
-		for (int j = 1; j < 8; j++) {
-			theDisplay[1][i*8+j] = dispName[0][j-1];
-			theDisplay[2][i*8+j] = dispName[1][j-1];
-			theDisplay[3][i*8+j] = dispName[2][j-1];
-			theDisplay[4][i*8+j] = dispName[3][j-1];
+	int i = 0;
+	for (auto b : blocks) { // loop through blocks
+		int row = blockCoords[i][0];    // get its display coordinate
+		int col = blockCoords[i][1];
+		int rowIter = 1;
+		std::string *dispName = b.getDisplayName();      // get its display name
+		// iterate through respective coordinates, changing the blocks display
+		for (int lineInd = 0; lineInd < BLOCKHEIGHT-1; lineInd++) { 
+			std::string line = dispName[lineInd];
+			int colIter = 1;
+			for (auto c : line) {
+				theDisplay[row+rowIter][col+colIter] = c;
+				colIter++;
+			}
+			rowIter++;
 		}
+		i++;
 	}
-	
-	// Right column of blocks
-	for (int i = NUMTOPBLOCKS; i < NUMTOPBLOCKS+NUMRIGHTBLOCKS; i++) {
-		std::string *dispName = blocks[i].getDisplayName();
-		int col = MAXWIDTH-BLOCKWIDTH;
-		int row = (i-10)*BLOCKHEIGHT+1;
-		for (int j = 1; j < 8; j++) {
-			theDisplay[row][col] = dispName[0][j-1];
-			theDisplay[row+1][col] = dispName[1][j-1];
-			theDisplay[row+2][col] = dispName[2][j-1];
-			theDisplay[row+3][col] = dispName[3][j-1];
-			col++;
-		}
-	}
-	
-	// Bottom row of blocks
-	for (int i = NUMTOPBLOCKS+NUMRIGHTBLOCKS; i < NUMTOPBLOCKS+NUMRIGHTBLOCKS+NUMTOPBLOCKS; i++) {
-		std::string *dispName = blocks[i].getDisplayName();
-		int row = MAXHEIGHT-BLOCKHEIGHT;
-		for (int j = 1; j < 8; j++) {
-			int col = MAXWIDTH - (i-20+1)*BLOCKWIDTH - 1;
-			theDisplay[row][col+j] = dispName[0][j-1];
-			theDisplay[row+1][col+j] = dispName[1][j-1];
-			theDisplay[row+2][col+j] = dispName[2][j-1];
-			theDisplay[row+3][col+j] = dispName[3][j-1];
-		}
-	}
-
-	// Left column of blocks
-	for (int i = NUMTOPBLOCKS+NUMRIGHTBLOCKS+NUMTOPBLOCKS; i < NUMSQUARES; i++) {
-		std::string *dispName = blocks[i].getDisplayName();
-		int row = (40-i)*BLOCKHEIGHT+1;
-		for (int j = 1; j < 8; j++) {
-			theDisplay[row][j] = dispName[0][j-1];
-			theDisplay[row+1][j] = dispName[1][j-1];
-			theDisplay[row+2][j] = dispName[2][j-1];
-			theDisplay[row+3][j] = dispName[3][j-1];
-		}
-	}
-	
 }
 
 void TextDisplay::notify(Subject &whoNotified) {
