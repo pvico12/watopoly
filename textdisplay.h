@@ -19,6 +19,8 @@ extern const int NUMLEFTBLOCKS;
 extern const int NUMRIGHTBLOCKS;
 extern const int MAXWIDTH;
 extern const int MAXHEIGHT;
+extern const int LOGOROW;
+extern const int LOGOCOL;
 
 class TextDisplay: public Observer<BlockInfo, BlockState> {
 	std::vector<std::vector<char>> theDisplay;

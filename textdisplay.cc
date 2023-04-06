@@ -4,6 +4,7 @@
 #include "state.h"
 #include "player.h"
 
+#include <fstream>
 #include <iostream>
 
 const int NUMSQUARES = 40;
@@ -15,6 +16,8 @@ const int NUMLEFTBLOCKS = 9;
 const int NUMRIGHTBLOCKS = 9;
 const int MAXWIDTH = 89;
 const int MAXHEIGHT = 56;
+const int LOGOROW = 23;
+const int LOGOCOL = 20;
 
 TextDisplay::TextDisplay() {
 	// create empty board
@@ -81,6 +84,17 @@ TextDisplay::TextDisplay() {
 	}
 
 	// add WaterPoly Logo !!!
+	std::ifstream file{"watopolyLogo.txt"};
+	std::string line;
+	int currLine = 0;
+	while(std::getline(file, line)) {
+		int currInd = 0;
+		for (char c : line) {
+			theDisplay[LOGOROW+currLine][LOGOCOL+currInd] = c;
+			currInd++;
+		}
+		currLine++;
+	}
 }
 
 void TextDisplay::initDisplay(std::vector<Block*> &blocks) {
