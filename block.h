@@ -12,6 +12,8 @@ class Block : public Subject<BlockInfo, BlockState> {
  protected:
   std::string name;
   static const int displayLength = 5;
+  BlockInfo info;
+  BlockState state;
   std::string displayName[displayLength];  // For visual display
  public:
   Block(std::string name);

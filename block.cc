@@ -40,11 +40,9 @@ Block::Block(std::string name) : name{name} {
     i++;
   }
 
-  BlockInfo info;
   info.name = name;
   info.position = 0;
   info.desc = BlockDesc::Other;
-  BlockState state;
   state.type = BlockStateType::NewVisitor;
   state.desc = BlockDesc::Other;
   setInfo(info);
