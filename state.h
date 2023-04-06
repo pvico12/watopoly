@@ -1,16 +1,21 @@
 #ifndef STATE_H
 #define STATE_H
 
-/* State types are:
-   VisitorArrived - a Player has arrived here.
-   VisitorLeft - a Player has left here.
-*/
-enum class StateType { VisitorArrived, VisitorLeft };
-enum class Desc { AcademicBuilding, NonAcademicBuilding, ChanceMove, ChancePay, Other };
+class Player;
 
-struct State {
-  StateType type;
-  Desc desc;
+enum class PlayerStateType { Stable, Moved, /* add more */ };
+enum class BlockStateType { NewVisitor, VisitorLeft, Other };
+enum class BlockDesc { AcademicBuilding, NonAcademicBuilding, ChanceMove, ChancePay, Other };
+
+struct PlayerState {
+  PlayerStateType type;
+  int newPosition;
+};
+
+struct BlockState {
+  BlockStateType type;
+  Player *p = nullptr;
+  BlockDesc desc;
 };
 
 #endif

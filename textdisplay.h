@@ -20,15 +20,19 @@ extern const int NUMRIGHTBLOCKS;
 extern const int MAXWIDTH;
 extern const int MAXHEIGHT;
 
-class TextDisplay: public Observer<Info, State> {
+class TextDisplay: public Observer<BlockInfo, BlockState>, public Observer<PlayerInfo, PlayerState> {
 	std::vector<std::vector<char>> theDisplay;
 	std::vector<std::vector<int>> blockCoords;
  public:
 	TextDisplay(); // intialize empty board
 	void initDisplay(std::vector<Block*> &blocks); // fill in board
 
-	void notify(Subject<Info, State> &whoNotified) override; // block notifies change of state
-
+	// block notifies change of state
+	void notify(Subject<BlockInfo, BlockState> &whoNotified) override;
+	
+	// player notifies change of state
+	void notify(Subject<PlayerInfo, PlayerState> &whoNotified) override; 
+	
 	friend std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
 };
 

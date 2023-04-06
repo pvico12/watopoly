@@ -1,12 +1,20 @@
 #ifndef INFO_H
 #define INFO_H
 #include "state.h"
-#include <string>
 
-struct Info {
+#include <string>
+#include <vector>
+
+struct PlayerInfo {
+  std::string name;
+  char nickname;
+  int position;
+};
+
+struct BlockInfo {
   std::string name;
   int position;
-  Desc desc; // descriptor of type of block
+  BlockDesc desc;
 };
 
 #endif

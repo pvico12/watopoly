@@ -8,7 +8,7 @@
 
 extern const std::string EMPTYLINE;
 
-class Block : public Subject<Info, State> {
+class Block : public Subject<BlockInfo, BlockState> {
  protected:
   std::string name;
   static const int displayLength = 5;

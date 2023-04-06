@@ -4,24 +4,26 @@
 #include <string>
 #include <vector>
 
+#include "info.h"
+#include "state.h"
 #include "Property/academic.h"
 #include "Property/nonacademic.h"
 
 extern const int BOARD_SIZE;
 
 enum class Token {
-  GOOSE,
-  GRT_BUS,
-  TIM_HORTONS,
-  DOUGHNUT,
-  PROFESSOR,
-  STUDENT,
-  MONEY,
-  LAPTOP,
-  PINK_TIE
+  GOOSE = 'G',
+  GRT_BUS = 'B',
+  TIM_HORTONS = 'T',
+  DOUGHNUT = 'D',
+  PROFESSOR = 'P',
+  STUDENT = 'S',
+  MONEY = '$',
+  LAPTOP = 'L',
+  PINK_TIE = 'T'
 };
 
-class Player {
+class Player : public Subject<PlayerInfo, PlayerState> {
   std::string name;
   Token token;
   int position, money;
@@ -39,6 +41,8 @@ class Player {
   Player(Player &&o);
 
   std::string getName();
+
+  int getPosition();
 
   std::vector<Academic> getAcademicProps();
 

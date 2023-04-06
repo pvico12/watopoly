@@ -15,52 +15,100 @@
 
 #include <iostream>
 #include <vector>
-#include <cstdlib> // temporary randomness
-#include <ctime> // temporary randomness
+#include <cstdlib> // temporary randomness, will add shuffle.cc later
+#include <ctime> // temporary randomness for now, will add shuffle.cc later
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
   TextDisplay td;      // initialize a board with constant size
   Board watopoly{td};  // create board (uses .txt file for blocks)
-  cout << watopoly;          // output text display
 
-  vector<Player> players{};
-  Player p1{"G", Token::GOOSE};
-  Player p2{"B", Token::GRT_BUS};
-  Player p3{"D", Token::DOUGHNUT};
-  Player p4{"P", Token::PROFESSOR};
-  Player p5{"S", Token::STUDENT};
-  Player p6{"$", Token::MONEY};
-  Player p7{"L", Token::LAPTOP};
-  Player p8{"T", Token::PINK_TIE};
-  players.emplace_back(p1);
-  players.emplace_back(p2);
-  players.emplace_back(p3);
+  vector<Player*> players{};
+  Player *p;
+  p = new Player{"G", Token::GOOSE};
+  players.emplace_back(p);
+  p = new Player{"B", Token::GRT_BUS};
+  players.emplace_back(p);
+  p = new Player{"D", Token::DOUGHNUT};
+  players.emplace_back(p);
+  p = new Player{"B", Token::GRT_BUS};
+  p = new Player{"D", Token::DOUGHNUT};
+  p = new Player{"P", Token::PROFESSOR};
+  p = new Player{"S", Token::STUDENT};
+  p = new Player{"$", Token::MONEY};
+  p = new Player{"L", Token::LAPTOP};
+  p = new Player{"T", Token::PINK_TIE};
 
   int numPlayers = players.size();
   bool rolled = false;
 
+  vector<Block*> *bs = watopoly.getBlocks();
+	vector<Block*> &blocks = *bs;
+
+  for (auto player: players) {
+    player->attach(&td);
+  }
+  
+  // Starting state (game begins at Goose Nesting)
+  BlockState s = blocks[0]->getState();
+  for (Player *player : players) {
+    s.p = player;
+    blocks[0]->setState(s);
+    blocks[0]->notifyObservers();
+  }
+
+  cout << watopoly;   // output text display with starting players
+
   /*
   	vector<Block*> *blocks = watopoly.getBlocks();
-	vector<Block*> &bs = *blocks;
-	bs[1]->notifyObservers();
+	  vector<Block*> &bs = *blocks;
+	  bs[1]->notifyObservers();
   */
 
   while (true) {
     int i = 0;
     while (i < numPlayers) {
-      Player &player1 = players[i];
+      Player &player1 = *(players[i]);
 
       string cmd;
       cin >> cmd;
 
+      PlayerInfo prevI = player1.getInfo();
+      PlayerState prevS = player1.getState();
+
       if (cmd == "roll") {
 
-		srand(time(nullptr));
-        int steps = rand() % 6 + 1;  // roll the dice
-        player1.move(steps);
+		    srand(time(nullptr));
+        int roll1 = (rand() % 6 + 1);
+        int roll2 = (rand() % 6 + 1);
+        std::cout << "First Dice:  " << roll1 << std::endl;
+        std::cout << "Second Dice: " << roll2 << std::endl;
+        int steps = roll1 + roll2;
+
+        // set block state
+        BlockState s;
+        s.type = BlockStateType::VisitorLeft;
+        s.p = &player1;
+        s.desc = BlockDesc::Other;
+        blocks[prevI.position]->setState(s);
+        blocks[prevI.position]->notifyObservers();
+
+        player1.move(steps); // move
+
+        s.type = BlockStateType::NewVisitor;
+        
+        // update block state that player is moving to
+        blocks[prevI.position + steps]->setState(s);
+        blocks[prevI.position + steps]->notifyObservers();
+
+        // update player info
+        prevI.position = prevI.position + steps;
+        player1.setInfo(prevI);
+
         rolled = true;
+
+        cout << watopoly;
 		
       } else if (cmd == "next") {
 
@@ -96,28 +144,28 @@ int main(int argc, char *argv[]) {
       } else if (cmd == "assets") {
 
         vector<Academic> academicBuildings = player1.getAcademicProps();
-		vector<NonAcademic> nonAcademicBuildings = player1.getNonAcademicProps();
+		    vector<NonAcademic> nonAcademicBuildings = player1.getNonAcademicProps();
         for (Academic &property : academicBuildings) {
-			string propertyName = property.getName();
-			cout << propertyName << endl;
-		}
-		for (NonAcademic &property : nonAcademicBuildings) {
-			string propertyName = property.getName();
-			cout << propertyName << endl;
-		}
+			    string propertyName = property.getName();
+			    cout << propertyName << endl;
+		    }
+		    for (NonAcademic &property : nonAcademicBuildings) {
+			    string propertyName = property.getName();
+			    cout << propertyName << endl;
+		    }
 
       } else if (cmd == "all") {
 
-        for (Player &player : players) {
-          cout << player.getName() << endl;
-		  vector<Academic> academicBuildings = player.getAcademicProps();
-		  vector<NonAcademic> nonAcacemicBuildings = player.getNonAcademicProps();
+        for (Player *player : players) {
+          cout << player->getName() << endl;
+		      vector<Academic> academicBuildings = player->getAcademicProps();
+		      vector<NonAcademic> nonAcacemicBuildings = player->getNonAcademicProps();
           for (Academic &property : academicBuildings) {
-			string propertyName = property.getName();
+			      string propertyName = property.getName();
             cout << propertyName << endl;
           }
-		  for (NonAcademic &property : nonAcacemicBuildings) {
-			string propertyName = property.getName();
+		      for (NonAcademic &property : nonAcacemicBuildings) {
+			      string propertyName = property.getName();
             cout << propertyName << endl;
           }
         	cout << endl;
@@ -133,7 +181,7 @@ int main(int argc, char *argv[]) {
       // check if the currrent player is bankrupt
 
       // check if game is won
-	  cout << watopoly;
+	  
     }
   }
 }
