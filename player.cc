@@ -2,19 +2,10 @@
 #include "state.h"
 #include "info.h"
 
-Player::Player(std::string name, Token token, int position, int money,
+Player::Player(std::string name, char tokenChar, Token token, int position, int money,
         std::vector<Academic> academicProps, std::vector<NonAcademic> nonAcademicProps)
-    : name{name}, token{token}, position{position}, money{money}, academicProps{academicProps}, nonAcademicProps{nonAcademicProps} {
-      PlayerInfo i;
-      i.name = name;
-      i.nickname = 'A';
-      i.position = 0;
-      PlayerState s;
-      s.type = PlayerStateType::Stable;
-      s.newPosition = 0;
-      setInfo(i);
-      setState(s);
-    }
+    : name{name}, tokenChar{tokenChar}, token{token}, position{position}, money{money},
+      academicProps{academicProps}, nonAcademicProps{nonAcademicProps} {}
 
 Player::Player::Player(const Player &o)
   : name{o.name}, token{o.token}, position{o.position}, money{o.money},
@@ -28,8 +19,16 @@ std::string Player::getName() {
   return name;
 };
 
+char Player::getCharToken() {
+  return tokenChar;
+}
+
 int Player::getPosition() {
   return position;
+}
+
+void Player::setPosition(int n) {
+  position = n;
 }
 
 std::vector<Academic> Player::getAcademicProps() {

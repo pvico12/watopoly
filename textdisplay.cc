@@ -104,16 +104,14 @@ void TextDisplay::initDisplay(std::vector<Block*> &blocks) {
 	}
 }
 
+// a block changed state, update the text display accordingly
 void TextDisplay::notify(Subject<BlockInfo, BlockState> &whoNotified) {
-	// a block changed state, update the text display accordingly
-	std::cout << "BLOCK-NOTIFY" << std::endl;
 	BlockInfo i = whoNotified.getInfo();
 	BlockState s = whoNotified.getState();
 	int pos = i.position;
 	int row = blockCoords[pos][0];
 	int col = blockCoords[pos][1];
-	PlayerInfo playerI = s.p->getInfo();
-	int nickname = playerI.nickname;
+	char nickname = s.p->getCharToken();
 	if (s.type == BlockStateType::NewVisitor) {
 		for (int i = 1; i < BLOCKWIDTH; i++) {
 			char c = theDisplay[row+BLOCKHEIGHT-1][col+i];
@@ -141,35 +139,6 @@ void TextDisplay::notify(Subject<BlockInfo, BlockState> &whoNotified) {
 			theDisplay[row+BLOCKHEIGHT-1][col+i] = theDisplay[row+BLOCKHEIGHT-1][col+i+1];
 		}
 		theDisplay[row+BLOCKHEIGHT-1][col+BLOCKWIDTH-1] = ' ';
-	}
-}
-
-void TextDisplay::notify(Subject<PlayerInfo, PlayerState> &whoNotified) {
-	// a player changed state, update the text display accordingly
-	std::cout << "PLAYER-NOTIFY" << std::endl;
-	PlayerInfo i = whoNotified.getInfo();
-	PlayerState s = whoNotified.getState();
-	char nickname = i.nickname;
-	int prevPos = i.position;
-	int currPos = s.newPosition;
-	if (s.type == PlayerStateType::Stable) {
-		i.position = s.newPosition;
-		whoNotified.setInfo(i);
-	}
-	if (s.type == PlayerStateType::Moved) {
-		// remove from previous position display
-		int prevRow = blockCoords[prevPos][0];
-		int prevCol = blockCoords[prevPos][1];
-		theDisplay[prevRow+3][prevCol+1] = ' ';
-
-		// add to current position display
-		int currRow = blockCoords[currPos][0];
-		int currCol = blockCoords[currPos][1];
-		theDisplay[prevRow+3][prevCol+1] = nickname;
-
-		// change state to Stable
-		s.type = PlayerStateType::Stable;
-		whoNotified.setState(s);
 	}
 }
 

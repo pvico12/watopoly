@@ -20,7 +20,7 @@ extern const int NUMRIGHTBLOCKS;
 extern const int MAXWIDTH;
 extern const int MAXHEIGHT;
 
-class TextDisplay: public Observer<BlockInfo, BlockState>, public Observer<PlayerInfo, PlayerState> {
+class TextDisplay: public Observer<BlockInfo, BlockState> {
 	std::vector<std::vector<char>> theDisplay;
 	std::vector<std::vector<int>> blockCoords;
  public:
@@ -29,9 +29,6 @@ class TextDisplay: public Observer<BlockInfo, BlockState>, public Observer<Playe
 
 	// block notifies change of state
 	void notify(Subject<BlockInfo, BlockState> &whoNotified) override;
-	
-	// player notifies change of state
-	void notify(Subject<PlayerInfo, PlayerState> &whoNotified) override; 
 	
 	friend std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
 };

@@ -26,29 +26,25 @@ int main(int argc, char *argv[]) {
 
   vector<Player*> players{};
   Player *p;
-  p = new Player{"G", Token::GOOSE};
+  p = new Player{"Goose", 'G', Token::GOOSE};
   players.emplace_back(p);
-  p = new Player{"B", Token::GRT_BUS};
+  p = new Player{"GRT Bus", 'B', Token::GRT_BUS};
   players.emplace_back(p);
-  p = new Player{"D", Token::DOUGHNUT};
+  p = new Player{"Tim Hortons Doughnut", 'D', Token::DOUGHNUT};
   players.emplace_back(p);
-  p = new Player{"B", Token::GRT_BUS};
-  p = new Player{"D", Token::DOUGHNUT};
-  p = new Player{"P", Token::PROFESSOR};
-  p = new Player{"S", Token::STUDENT};
-  p = new Player{"$", Token::MONEY};
-  p = new Player{"L", Token::LAPTOP};
-  p = new Player{"T", Token::PINK_TIE};
+  /* use if needed
+  p = new Player{"Professor", 'P', Token::PROFESSOR};
+  p = new Player{"Student", 'S', Token::STUDENT};
+  p = new Player{"Money", '$', Token::MONEY};
+  p = new Player{"Laptop", 'L', Token::LAPTOP};
+  p = new Player{"Pink Tie", 'T', Token::PINK_TIE};
+  */
 
   int numPlayers = players.size();
   bool rolled = false;
 
   vector<Block*> *bs = watopoly.getBlocks();
 	vector<Block*> &blocks = *bs;
-
-  for (auto player: players) {
-    player->attach(&td);
-  }
   
   // Starting state (game begins at Goose Nesting)
   BlockState s = blocks[0]->getState();
@@ -60,12 +56,6 @@ int main(int argc, char *argv[]) {
 
   cout << watopoly;   // output text display with starting players
 
-  /*
-  	vector<Block*> *blocks = watopoly.getBlocks();
-	  vector<Block*> &bs = *blocks;
-	  bs[1]->notifyObservers();
-  */
-
   while (true) {
     int i = 0;
     while (i < numPlayers) {
@@ -74,8 +64,8 @@ int main(int argc, char *argv[]) {
       string cmd;
       cin >> cmd;
 
-      PlayerInfo prevI = player1.getInfo();
-      PlayerState prevS = player1.getState();
+      char playerChar = player1.getCharToken();
+      int pos = player1.getPosition();
 
       if (cmd == "roll") {
 
@@ -91,20 +81,19 @@ int main(int argc, char *argv[]) {
         s.type = BlockStateType::VisitorLeft;
         s.p = &player1;
         s.desc = BlockDesc::Other;
-        blocks[prevI.position]->setState(s);
-        blocks[prevI.position]->notifyObservers();
+        blocks[pos]->setState(s);
+        blocks[pos]->notifyObservers();
 
         player1.move(steps); // move
 
         s.type = BlockStateType::NewVisitor;
         
         // update block state that player is moving to
-        blocks[prevI.position + steps]->setState(s);
-        blocks[prevI.position + steps]->notifyObservers();
+        blocks[pos + steps]->setState(s);
+        blocks[pos + steps]->notifyObservers();
 
         // update player info
-        prevI.position = prevI.position + steps;
-        player1.setInfo(prevI);
+        player1.setPosition(pos + steps);
 
         rolled = true;
 

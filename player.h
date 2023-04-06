@@ -12,26 +12,27 @@
 extern const int BOARD_SIZE;
 
 enum class Token {
-  GOOSE = 'G',
-  GRT_BUS = 'B',
-  TIM_HORTONS = 'T',
-  DOUGHNUT = 'D',
-  PROFESSOR = 'P',
-  STUDENT = 'S',
-  MONEY = '$',
-  LAPTOP = 'L',
-  PINK_TIE = 'T'
+  GOOSE,
+  GRT_BUS,
+  TIM_HORTONS,
+  DOUGHNUT,
+  PROFESSOR,
+  STUDENT,
+  MONEY,
+  LAPTOP,
+  PINK_TIE
 };
 
-class Player : public Subject<PlayerInfo, PlayerState> {
+class Player {
   std::string name;
+  char tokenChar;
   Token token;
   int position, money;
   std::vector<Academic> academicProps;
   std::vector<NonAcademic> nonAcademicProps;
 
  public:
-  Player(std::string name, Token token,
+  Player(std::string name, char tokenChar, Token token,
         int position = 0, int money = 0,
         std::vector<Academic> academicProps = {},
         std::vector<NonAcademic> nonAcademicProps = {});
@@ -42,7 +43,11 @@ class Player : public Subject<PlayerInfo, PlayerState> {
 
   std::string getName();
 
+  char getCharToken();
+
   int getPosition();
+
+  void setPosition(int n);
 
   std::vector<Academic> getAcademicProps();
 
