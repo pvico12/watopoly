@@ -6,8 +6,9 @@
 
 #include "info.h"
 #include "state.h"
-#include "Property/academic.h"
-#include "Property/nonacademic.h"
+#include "Property/property.h"
+//#include "Property/academic.h"
+//#include "Property/nonacademic.h"
 
 extern const int BOARD_SIZE;
 
@@ -28,18 +29,16 @@ class Player {
   char tokenChar;
   Token token;
   int position, money;
-  std::vector<Academic> academicProps;
-  std::vector<NonAcademic> nonAcademicProps;
+  std::vector<Property*> props;
 
  public:
   Player(std::string name, char tokenChar, Token token,
         int position = 0, int money = 0,
-        std::vector<Academic> academicProps = {},
-        std::vector<NonAcademic> nonAcademicProps = {});
+        std::vector<Property*> props = {});
 
-  Player(const Player &o);
+  //Player(const Player &o);
   
-  Player(Player &&o);
+  //Player(Player &&o);
 
   std::string getName();
 
@@ -51,9 +50,7 @@ class Player {
 
   void setPosition(int n);
 
-  std::vector<Academic> getAcademicProps();
-
-  std::vector<NonAcademic> getNonAcademicProps();
+  std::vector<Property*> getProperties();
   
   void move(int n);
 
@@ -73,7 +70,7 @@ class Player {
 
   bool buy(Property &prop);
 
-  bool improve(Academic &prop);
+  bool improve(Property &prop);
 
   bool trade(Player &p2, Property &prop1, Property &prop2);
   bool trade(Player &p2, int amount, Property &prop2);

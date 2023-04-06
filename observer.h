@@ -2,7 +2,6 @@
 #define _OBSERVER_H_
 
 template <typename InfoType, typename StateType> class Subject;
-class Cell;
 
 template <typename InfoType, typename StateType> class Observer {
  public:

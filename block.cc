@@ -7,6 +7,23 @@
 
 const std::string EMPTYLINE(7, ' ');
 
+BlockInfo Block::getInfo() {
+  return info;
+}
+
+BlockState Block::getState() {
+  return state;
+}
+
+void Block::setInfo(BlockInfo newI) {
+  info = newI;
+}
+
+void Block::setState(BlockState newS) {
+  state = newS;
+  notifyObservers();
+}
+
 Block::Block(std::string name) : name{name} {
   // initialize display
   for (int i = 0; i < displayLength; i++) {
@@ -42,11 +59,10 @@ Block::Block(std::string name) : name{name} {
     i++;
   }
 
-  info = BlockInfo{name, 0, BlockDesc::Other};
-  state = BlockState{BlockStateType::NewVisitor, BlockDesc::Other};
+  BlockInfo info{name, 0, BlockDesc::Other};
+  BlockState state{BlockStateType::NewVisitor, BlockDesc::Other};
   setInfo(info);
   setState(state);
-  notifyObservers();
 }
 
 std::string Block::getName() {
