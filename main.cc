@@ -26,21 +26,19 @@ using namespace std;
 const int MORTGAGE_RATE = 0.5;
 const int UNMORTGAGE_RATE = 0.6;
 
-int toInteger(string str) {
-  istringstream iss(str);
-  int result;
-  if (iss >> result) {
-    if (result >= 0) {
-      return result;
-    } else {
-      return -1;
-    }
-  } else {
-    return -1;
+bool isPosInt(const string str) {
+  if (str[0] == '0') {
+    return false;
   }
+  for (char c : str) {
+    if (!isdigit(c)) {
+      return false;
+    }
+  }
+  return true;
 }
 
-void modifyProperty(Player &player, const string &cmd, function<void(Property *)> lambda) {
+void modifyProperty(Player &player, const string cmd, function<void(Property *)> lambda) {
   string propertyName;
   cin >> propertyName;
   Property *property = player.getProperty(propertyName);
@@ -171,23 +169,22 @@ int main(int argc, char *argv[]) {
         }
         Player &player2 = *player2ptr;
 
-        string str1;
-        string str2;
+        string str1, str2;
         cin >> str1 >> str2;
-        int amount1 = toInteger(str1);
-        int amount2 = toInteger(str2);
+        bool b1 = isPosInt(str1);
+        bool b2 = isPosInt(str2);
 
         // check if both are money
-        if (amount1 != -1 && amount2 != -1) {
+        if (b1 && b2) {
           continue;
         }
 
-        if (amount1 != -1) {
+        if (b1) {
           Property *property2 = player2.getProperty(str1);
-          player1.trade(player2, amount1, property2);
-        } else if (amount2 != -1) {
+          player1.trade(player2, stoi(str1), property2);
+        } else if (b2) {
           Property *property1 = player1.getProperty(str1);
-          player1.trade(player2, property1, amount2);
+          player1.trade(player2, property1, stoi(str2));
         } else {
           Property *property1 = player1.getProperty(str1);
           Property *property2 = player2.getProperty(str1);
