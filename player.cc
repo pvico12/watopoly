@@ -3,17 +3,17 @@
 #include "info.h"
 
 Player::Player(std::string name, char tokenChar, Token token, int position, int money,
-        std::vector<Academic> academicProps, std::vector<NonAcademic> nonAcademicProps)
-    : name{name}, tokenChar{tokenChar}, token{token}, position{position}, money{money},
-      academicProps{academicProps}, nonAcademicProps{nonAcademicProps} {}
+        std::vector<Property*> props)
+    : name{name}, tokenChar{tokenChar}, token{token}, position{position}, money{money}, props{props} {}
 
-Player::Player::Player(const Player &o)
-  : name{o.name}, token{o.token}, position{o.position}, money{o.money},
-    academicProps{o.academicProps}, nonAcademicProps{o.nonAcademicProps} {}
+/*
+Player::Player(const Player &o)
+  : name{o.name}, tokenChar{o.tokenChar}, token{o.token}, position{o.position}, money{o.money}, props{o.props} {}
+
 
 Player::Player(Player &&o)
-  : name{o.name}, token{o.token}, position{o.position}, money{o.money},
-    academicProps{o.academicProps}, nonAcademicProps{o.nonAcademicProps} {}
+  : name{o.name}, tokenChar{o.tokenChar}, token{o.token}, position{o.position}, money{o.money}, props{o.props} {}
+*/
 
 std::string Player::getName() {
   return name;
@@ -31,12 +31,8 @@ void Player::setPosition(int n) {
   position = n;
 }
 
-std::vector<Academic> Player::getAcademicProps() {
-  return academicProps;
-};
-
-std::vector<NonAcademic> Player::getNonAcademicProps() {
-  return nonAcademicProps;
+std::vector<Property*> Player::getProperties() {
+  return props;
 };
 
 void Player::move(int n) {

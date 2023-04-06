@@ -12,6 +12,8 @@ struct BlockInfo {
   BlockInfo();
   BlockInfo(std::string name, int position);
   BlockInfo(std::string name, int position, BlockDesc desc);
+
+  BlockInfo(const BlockInfo &o);
 };
 
 #endif

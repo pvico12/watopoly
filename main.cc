@@ -51,7 +51,6 @@ int main(int argc, char *argv[]) {
   for (Player *player : players) {
     s.p = player;
     blocks[0]->setState(s);
-    blocks[0]->notifyObservers();
   }
 
   cout << watopoly;   // output text display with starting players
@@ -64,7 +63,6 @@ int main(int argc, char *argv[]) {
       string cmd;
       cin >> cmd;
 
-      char playerChar = player1.getCharToken();
       int pos = player1.getPosition();
 
       if (cmd == "roll") {
@@ -77,9 +75,8 @@ int main(int argc, char *argv[]) {
         int steps = roll1 + roll2;
 
         // set block state
-        BlockState s{BlockStateType::VisitorLeft, BlockDesc::Other, &player1};
+        BlockState s(BlockStateType::VisitorLeft, BlockDesc::Other, &player1);
         blocks[pos]->setState(s);
-        blocks[pos]->notifyObservers();
 
         player1.move(steps); // move
 
@@ -87,7 +84,6 @@ int main(int argc, char *argv[]) {
         
         // update block state that player is moving to
         blocks[pos + steps]->setState(s);
-        blocks[pos + steps]->notifyObservers();
 
         // update player info
         player1.setPosition(pos + steps);
@@ -129,14 +125,9 @@ int main(int argc, char *argv[]) {
         // remove player from players vector
       } else if (cmd == "assets") {
 
-        vector<Academic> academicBuildings = player1.getAcademicProps();
-		    vector<NonAcademic> nonAcademicBuildings = player1.getNonAcademicProps();
-        for (Academic &property : academicBuildings) {
-			    string propertyName = property.getName();
-			    cout << propertyName << endl;
-		    }
-		    for (NonAcademic &property : nonAcademicBuildings) {
-			    string propertyName = property.getName();
+        vector<Property*> properties = player1.getProperties();
+        for (Property *property : properties) {
+			    string propertyName = property->getName();
 			    cout << propertyName << endl;
 		    }
 
@@ -144,14 +135,9 @@ int main(int argc, char *argv[]) {
 
         for (Player *player : players) {
           cout << player->getName() << endl;
-		      vector<Academic> academicBuildings = player->getAcademicProps();
-		      vector<NonAcademic> nonAcacemicBuildings = player->getNonAcademicProps();
-          for (Academic &property : academicBuildings) {
-			      string propertyName = property.getName();
-            cout << propertyName << endl;
-          }
-		      for (NonAcademic &property : nonAcacemicBuildings) {
-			      string propertyName = property.getName();
+		      vector<Property*> properties = player->getProperties();
+          for (Property *property : properties) {
+			      string propertyName = property->getName();
             cout << propertyName << endl;
           }
         	cout << endl;

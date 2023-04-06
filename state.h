@@ -19,11 +19,13 @@ enum class BlockDesc {
 struct BlockState {
   BlockStateType type;
   BlockDesc desc;
-  Player *p = nullptr;
+  Player *p;
 
   BlockState();
   BlockState(BlockStateType type, BlockDesc desc);
   BlockState(BlockStateType type, BlockDesc desc, Player *p);
+
+  BlockState(const BlockState &o);
 };
 
 #endif
