@@ -47,6 +47,16 @@ std::vector<Property> &Player::getProperties() {
   return properties;
 }
 
+Property *Player::getProperty(std::string propertyName) {
+  int len = properties.size();
+  for (int i = 0; i < len; i++) {
+    if (properties.at(i).getName() == propertyName) {
+      return &properties.at(i);
+    }
+  }
+  return nullptr;
+}
+
 void Player::move(int n) {
   position = (position + n) % 40;
   if (position - n < 0) {

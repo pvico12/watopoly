@@ -43,6 +43,8 @@ class Player {
 
   std::string getName();
 
+  Property *getProperty(std::string propertyName);
+
   char getCharToken();
 
   int getPosition();
