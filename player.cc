@@ -39,15 +39,15 @@ std::string Player::getName() {
   return name;
 }
 
-std::vector<Property> &Player::getProperties() {
-  return properties;
-}
+std::vector<Property*> Player::getProperties() {
+  return props;
+};
 
 Property *Player::getProperty(std::string propertyName) {
-  int len = properties.size();
+  int len = props.size();
   for (int i = 0; i < len; i++) {
-    if (properties.at(i).getName() == propertyName) {
-      return &properties.at(i);
+    if (props.at(i)->getName() == propertyName) {
+      return props.at(i);
     }
   }
   return nullptr;

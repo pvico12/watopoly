@@ -52,6 +52,15 @@ void modifyProperty(Player &player, const string &cmd, function<void(Property *)
   lambda(property);
 }
 
+void printProperties(Player *player) {
+  vector<Property *> properties = player->getProperties();
+
+  for (Property *property : properties) {
+    string propertyName = property->getName();
+    cout << propertyName << endl;
+  }
+}
+
 int main(int argc, char *argv[]) {
   TextDisplay td;      // initialize a board with constant size
   Board watopoly{td};  // create board (uses .txt file for blocks)
@@ -93,6 +102,7 @@ int main(int argc, char *argv[]) {
       Player &player1 = *(players[i]);
       int pos = player1.getPosition();
 
+      // cmd intake
       string cmd;
       cin >> cmd;
 
@@ -148,23 +158,22 @@ int main(int argc, char *argv[]) {
       } else if (cmd == "trade") {
         string player2Name;
         cin >> player2Name;
-        Player *player2;
+        Player *player2ptr;
         for (int i = 0; i < numPlayers; i++) {
           if (players[1]->getName() == player2Name) {
-            player2 = players[i];
+            player2ptr = players[i];
             break;
           }
         }
 
-        if (player2 == nullptr) {
+        if (player2ptr == nullptr) {
           continue;
         }
+        Player &player2 = *player2ptr;
 
         string str1;
         string str2;
-        cin >> str1;
-        cin >> str2;
-
+        cin >> str1 >> str2;
         int amount1 = toInteger(str1);
         int amount2 = toInteger(str2);
 
@@ -173,8 +182,17 @@ int main(int argc, char *argv[]) {
           continue;
         }
 
-        // find property1 & property2
-        // player1.trade(player2, str1, str2);
+        if (amount1 != -1) {
+          Property *property2 = player2.getProperty(str1);
+          player1.trade(player2, amount1, property2);
+        } else if (amount2 != -1) {
+          Property *property1 = player1.getProperty(str1);
+          player1.trade(player2, property1, amount2);
+        } else {
+          Property *property1 = player1.getProperty(str1);
+          Property *property2 = player2.getProperty(str1);
+          player1.trade(player2, property1, property2);
+        }
 
       } else if (cmd == "improve") {
         modifyProperty(player1, cmd, [&player1](Property *property) {
@@ -213,20 +231,12 @@ int main(int argc, char *argv[]) {
         // remove player from players vector
 
       } else if (cmd == "assets") {
-        vector<Property *> properties = player1.getProperties();
-        for (Property *property : properties) {
-          string propertyName = property->getName();
-          cout << propertyName << endl;
-        }
+        printProperties(&player1);
 
       } else if (cmd == "all") {
         for (Player *player : players) {
           cout << player->getName() << endl;
-          vector<Property *> properties = player->getProperties();
-          for (Property *property : properties) {
-            string propertyName = property->getName();
-            cout << propertyName << endl;
-          }
+          printProperties(player);
           cout << endl;
         }
 
