@@ -77,10 +77,7 @@ int main(int argc, char *argv[]) {
         int steps = roll1 + roll2;
 
         // set block state
-        BlockState s;
-        s.type = BlockStateType::VisitorLeft;
-        s.p = &player1;
-        s.desc = BlockDesc::Other;
+        BlockState s{BlockStateType::VisitorLeft, BlockDesc::Other, &player1};
         blocks[pos]->setState(s);
         blocks[pos]->notifyObservers();
 
