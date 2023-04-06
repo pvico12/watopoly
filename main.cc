@@ -1,6 +1,8 @@
 #include <cstdlib>  // temporary randomness, will add shuffle.cc later
 #include <ctime>    // temporary randomness for now, will add shuffle.cc later
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <vector>
 
 #include "NonProperty/money.h"
@@ -19,6 +21,23 @@
 #include "textdisplay.h"
 
 using namespace std;
+
+const int MORTGAGE_RATE = 0.5;
+const int UNMORTGAGE_RATE = 0.6;
+
+int toInteger(string str) {
+  istringstream iss(str);
+  int result;
+  if (iss >> result) {
+    if (result >= 0) {
+      return result;
+    } else {
+      return -1;
+    }
+  } else {
+    return -1;
+  }
+}
 
 int main(int argc, char *argv[]) {
   TextDisplay td;      // initialize a board with constant size
@@ -60,19 +79,19 @@ int main(int argc, char *argv[]) {
     int i = 0;
     while (i < numPlayers) {
       Player &player1 = *(players[i]);
+      char playerChar = player1.getCharToken();
+      int pos = player1.getPosition();
+      vector<Academic> academic1 = player1.getAcademicProps();
+      vector<Academic> academic2 = player1.getAcademicProps();
 
       string cmd;
       cin >> cmd;
-
-      char playerChar = player1.getCharToken();
-      int pos = player1.getPosition();
 
       if (cmd == "roll") {
         if (rolled == true) {
           continue;
         }
         rolled = true;
-
 
         srand(time(nullptr));
         int roll1 = (rand() % 6 + 1);
@@ -98,6 +117,7 @@ int main(int argc, char *argv[]) {
         player1.setPosition(pos + steps);
 
         // ********* new *********
+        /*
         // need getBlock()
         Block block = board.getBlock(player1.getPosition());
 
@@ -112,11 +132,7 @@ int main(int argc, char *argv[]) {
         } else {
           // should not be here
         }
-
-
-
-
-
+        */
 
       } else if (cmd == "next") {
         rolled = false;
@@ -124,36 +140,82 @@ int main(int argc, char *argv[]) {
 
       } else if (cmd == "trade") {
         string player2Name;
-        // find player
-        Player &player2 = players.at(i);
+        cin >> player2Name;
+        Player *player2;
+        for (int i = 0; i < numPlayers; i++) {
+          if (players[1]->getName() == player2Name) {
+            player2 = players[i];
+            break;
+          }
+        }
+
+        if (player2 == nullptr) {
+          continue;
+        }
+
         string str1;
         string str2;
         cin >> str1;
         cin >> str2;
+
+        int amount1 = toInteger(str1);
+        int amount2 = toInteger(str2);
+
+        // check if both are money
+        if (amount1 != -1 && amount2 != -1) {
+          continue;
+        }
+
         // find property1 & property2
         // player1.trade(player2, str1, str2);
 
       } else if (cmd == "improve") {
-        Property &property;
-        // intake property
-        if (player1.hasProperty(property)) {
-          player1.improve(property);
+        string propertyName;
+        cin >> propertyName;
+        Property *property = player1.getProperty(propertyName);
+
+        if (property == nullptr) {
+          continue;
+        }
+
+        // check if it's an academic
+        Academic *academic = dynamic_cast<Academic *>(property);
+        if (academic != nullptr) {
+          player1.improve(*academic);
         }
 
       } else if (cmd == "mortgage") {
-        Property &property;
-        // intake property
-        if (player1.hasProperty(property) && !property.isMortgaged()) {
-          property.toggleMortgage();
-          player1.addMoney(property.getPurCost() * MORTGAGE_RATE);
+        string propertyName;
+        cin >> propertyName;
+        Property *property = player1.getProperty(propertyName);
+
+        if (property == nullptr) {
+          continue;
+        }
+
+        if (player1.hasProperty(*property) && !property->isMortgaged()) {
+          player1.addMoney(property->getPurCost() * MORTGAGE_RATE);
+          property->toggleMortgage();
+          cout << "Mortgaged property " << property->getName() << " successfully." << endl;
         }
 
       } else if (cmd == "unmortgage") {
-        Property &property;
-        // intake property
-        if (player1.hasProperty(property) && property.isMortgaged()) {
-          property.toggleMortgage();
-          player1.removeMoney(property.getPurCost() * UNMORTGAGE_RATE);
+        string propertyName;
+        cin >> propertyName;
+        Property *property = player1.getProperty(propertyName);
+
+        if (property == nullptr) {
+          continue;
+        }
+
+        if (player1.hasProperty(*property) && property->isMortgaged()) {
+          bool success = player1.removeMoney(property->getPurCost() * UNMORTGAGE_RATE);
+          if (success) {
+            property->toggleMortgage();
+            cout << "Unmortgaged property " << property->getName() << " successfully." << endl;
+          } else {
+            cout << "Unmortgaged property " << property->getName() << " failed." << endl;
+          }
         }
 
       } else if (cmd == "bankrupt") {
@@ -196,9 +258,17 @@ int main(int argc, char *argv[]) {
         continue;
       }
 
-      // check if the currrent player is bankrupt
+      // check if the current player is bankrupt
+      bool bankrupt;
+      if (bankrupt) {
+        // pop player from players vector
+        players.erase(players.begin() + i);
+      }
 
       // check if game is won
+      if (players.size() == 1) {
+        cout << players.at(0)->getName() << " is the winner!" << endl;
+      }
     }
   }
 }
