@@ -3,8 +3,6 @@
 #include "observer.h"
 #include <vector>
 
-//template <typename InfoType, typename StateType> class Observer;
-
 template <typename InfoType, typename StateType> class Subject {
   std::vector<Observer<InfoType, StateType>*> observers;
   InfoType info;

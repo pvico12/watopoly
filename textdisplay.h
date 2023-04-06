@@ -25,6 +25,7 @@ class TextDisplay: public Observer<BlockInfo, BlockState> {
 	std::vector<std::vector<int>> blockCoords;
  public:
 	TextDisplay(); // intialize empty board
+	
 	void initDisplay(std::vector<Block*> &blocks); // fill in board
 
 	// block notifies change of state
