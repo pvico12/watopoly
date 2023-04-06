@@ -35,14 +35,6 @@ std::vector<Property*> Player::getProperties() {
   return props;
 };
 
-std::string Player::getName() {
-  return name;
-}
-
-std::vector<Property*> Player::getProperties() {
-  return props;
-};
-
 Property *Player::getProperty(std::string propertyName) {
   int len = props.size();
   for (int i = 0; i < len; i++) {
@@ -80,12 +72,11 @@ bool Player::removeMoney(int amount) {
   return true;
 }
 
-/*
 int Player::hasProperty(Property &prop) {
   // wack implementation of hasProperty()
-  int len = properties.size();
+  int len = props.size();
   for (int i = 0; i < len; i++) {
-    if (properties[i].getName() == prop.getName()) {
+    if (props[i]->getName() == prop.getName()) {
       return i;
     }
   }
@@ -93,7 +84,7 @@ int Player::hasProperty(Property &prop) {
 }
 
 void Player::addProperty(Property &prop) {
-  properties.emplace_back(prop);
+  props.emplace_back(prop);
 }
 
 bool Player::removeProperty(Property &prop) {
@@ -101,7 +92,7 @@ bool Player::removeProperty(Property &prop) {
   if (index == -1) {
     return false;
   }
-  properties.erase(properties.begin() + index);
+  props.erase(props.begin() + index);
   return true;
 }
 
@@ -111,16 +102,20 @@ bool Player::buy(Property &prop) {
     return false;
   }
   money -= prop.getPurCost();
-  properties.emplace_back(prop);
+  props.emplace_back(prop);
   return true;
 }
 
-bool Player::improve(Academic &prop) {
-  if (money < prop.getImpCost() && prop.isMaxUpgrade()) {
+bool Player::improve(Property &prop) {
+  Academic *academic = dynamic_cast<Academic*>(&prop);
+  if (academic == nullptr) {
+    return false;
+  }
+  if (money < academic->getImpCost() && academic->isMaxUpgrade()) {
     // add print
     return false;
   }
-  money -= prop.getImpCost();
+  money -= academic->getImpCost();
   prop.upgrade();
   return true;
 }
@@ -157,4 +152,3 @@ bool Player::trade(Player &p2, Property &prop1, int amount) {
   }
   return false;
 }
-*/

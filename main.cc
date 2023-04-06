@@ -154,6 +154,7 @@ int main(int argc, char *argv[]) {
         i++;
 
       } else if (cmd == "trade") {
+        /*
         string player2Name;
         cin >> player2Name;
         Player *player2ptr;
@@ -190,6 +191,7 @@ int main(int argc, char *argv[]) {
           Property *property2 = player2.getProperty(str1);
           player1.trade(player2, property1, property2);
         }
+        */
 
       } else if (cmd == "improve") {
         modifyProperty(player1, cmd, [&player1](Property *property) {
@@ -244,7 +246,7 @@ int main(int argc, char *argv[]) {
       }
 
       // check if the current player is bankrupt
-      bool bankrupt;
+      bool bankrupt = false; // false for now, change later
       if (bankrupt) {
         // pop player from players vector
         players.erase(players.begin() + i);

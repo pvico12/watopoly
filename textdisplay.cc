@@ -137,13 +137,13 @@ void TextDisplay::notify(Subject<BlockInfo, BlockState> &whoNotified) {
 	}
 	if (s.type == BlockStateType::VisitorLeft) {
 		std::string remainingVisitors;
-		bool foundTarget = false;
+		// bool foundTarget = false;
 		int targetIndex = BLOCKWIDTH;
 		// find target character
 		for (int i = 1; i < BLOCKWIDTH; i++) {
 			char c = theDisplay[row+BLOCKHEIGHT-1][col+i];
 			if (c == nickname) {
-				foundTarget = true;
+				// foundTarget = true;
 				targetIndex = i;
 				break;
 			}
