@@ -131,6 +131,8 @@ int main(int argc, char *argv[]) {
         // update player info
         player1.setPosition(pos + steps);
 
+        cout << watopoly; 
+
         // ********* new *********
         /*
         // need getBlock()
