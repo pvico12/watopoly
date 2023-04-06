@@ -1,4 +1,5 @@
 #include "property.h"
+#include "../block.h"
 
 Property::Property(std::string name, int purchaseCost, int improvLvl)
     : Block{name}, purchaseCost{purchaseCost}, improvLvl{improvLvl} {}
