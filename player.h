@@ -42,6 +42,8 @@ class Player {
 
   std::string getName();
 
+  Property *getProperty(std::string propertyName);
+
   char getCharToken();
 
   int getPosition();
@@ -63,7 +65,7 @@ class Player {
   int hasProperty(Property &prop);
 
   void addProperty(Property &prop);
-  
+
   bool removeProperty(Property &prop);
 
   bool buy(Property &prop);

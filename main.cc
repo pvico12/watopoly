@@ -1,5 +1,11 @@
-#include "state.h"
-#include "info.h"
+#include <cstdlib>  // temporary randomness, will add shuffle.cc later
+#include <ctime>    // temporary randomness for now, will add shuffle.cc later
+#include <functional>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+
 #include "NonProperty/money.h"
 #include "NonProperty/movement.h"
 #include "NonProperty/nonproperty.h"
@@ -8,23 +14,56 @@
 #include "Property/property.h"
 #include "block.h"
 #include "board.h"
+#include "info.h"
 #include "observer.h"
 #include "player.h"
+#include "state.h"
 #include "subject.h"
 #include "textdisplay.h"
 
-#include <iostream>
-#include <vector>
-#include <cstdlib> // temporary randomness, will add shuffle.cc later
-#include <ctime> // temporary randomness for now, will add shuffle.cc later
-
 using namespace std;
+
+const int MORTGAGE_RATE = 0.5;
+const int UNMORTGAGE_RATE = 0.6;
+
+bool isPosInt(const string str) {
+  if (str[0] == '0') {
+    return false;
+  }
+  for (char c : str) {
+    if (!isdigit(c)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void modifyProperty(Player &player, const string cmd, function<void(Property *)> lambda) {
+  string propertyName;
+  cin >> propertyName;
+  Property *property = player.getProperty(propertyName);
+
+  if (property == nullptr) {
+    return;
+  }
+
+  lambda(property);
+}
+
+void printProperties(Player *player) {
+  vector<Property *> properties = player->getProperties();
+
+  for (Property *property : properties) {
+    string propertyName = property->getName();
+    cout << propertyName << endl;
+  }
+}
 
 int main(int argc, char *argv[]) {
   TextDisplay td;      // initialize a board with constant size
   Board watopoly{td};  // create board (uses .txt file for blocks)
 
-  vector<Player*> players{};
+  vector<Player *> players{};
   Player *p;
   p = new Player{"Goose", 'G', Token::GOOSE};
   players.emplace_back(p);
@@ -43,9 +82,9 @@ int main(int argc, char *argv[]) {
   int numPlayers = players.size();
   bool rolled = false;
 
-  vector<Block*> *bs = watopoly.getBlocks();
-	vector<Block*> &blocks = *bs;
-  
+  vector<Block *> *bs = watopoly.getBlocks();
+  vector<Block *> &blocks = *bs;
+
   // Starting state (game begins at Goose Nesting)
   BlockState s = blocks[0]->getState();
   for (Player *player : players) {
@@ -53,21 +92,25 @@ int main(int argc, char *argv[]) {
     blocks[0]->setState(s);
   }
 
-  cout << watopoly;   // output text display with starting players
+  cout << watopoly;  // output text display with starting players
 
   while (true) {
     int i = 0;
     while (i < numPlayers) {
       Player &player1 = *(players[i]);
+      int pos = player1.getPosition();
 
+      // cmd intake
       string cmd;
       cin >> cmd;
 
-      int pos = player1.getPosition();
-
       if (cmd == "roll") {
+        if (rolled == true) {
+          continue;
+        }
+        rolled = true;
 
-		    srand(time(nullptr));
+        srand(time(nullptr));
         int roll1 = (rand() % 6 + 1);
         int roll2 = (rand() % 6 + 1);
         std::cout << "First Dice:  " << roll1 << std::endl;
@@ -78,82 +121,139 @@ int main(int argc, char *argv[]) {
         BlockState s(BlockStateType::VisitorLeft, BlockDesc::Other, &player1);
         blocks[pos]->setState(s);
 
-        player1.move(steps); // move
+        player1.move(steps);  // move
 
         s.type = BlockStateType::NewVisitor;
-        
+
         // update block state that player is moving to
         blocks[pos + steps]->setState(s);
 
         // update player info
         player1.setPosition(pos + steps);
 
-        rolled = true;
+        // ********* new *********
+        /*
+        // need getBlock()
+        Block block = board.getBlock(player1.getPosition());
 
-        cout << watopoly;
-		
+        if (dynamic_cast<Property *>(block)) {
+          Property *property = dynamic_cast<NonProperty *>(block);
+          // case 1: steps on someone else's property
+          // case 2: unowned property, purchase
+          // case 3: unowned property, auction
+        } else if (dynamic_cast<Property *>(block)) {
+          NonProperty *nonProperty = dynamic_cast<NonProperty *>(block);
+          nonProperty->action();
+        } else {
+          // should not be here
+        }
+        */
+
       } else if (cmd == "next") {
-
         rolled = false;
         i++;
 
       } else if (cmd == "trade") {
-
         string player2Name;
-        // find player
-        //Player &player2 = players.at(i); UNUSED, uncomment when needed
-        string str1;
-        string str2;
-        cin >> str1;
-        cin >> str2;
-        // find property1 & property2
-        // player1.trade(player2, str1, str2);
+        cin >> player2Name;
+        Player *player2ptr;
+        for (int i = 0; i < numPlayers; i++) {
+          if (players[1]->getName() == player2Name) {
+            player2ptr = players[i];
+            break;
+          }
+        }
 
-	  } else if (cmd == "improve") {
+        if (player2ptr == nullptr) {
+          continue;
+        }
+        Player &player2 = *player2ptr;
 
-        //Property &property;
-        //if (player1.hasProperty(property)) {
-        //}
+        string str1, str2;
+        cin >> str1 >> str2;
+        bool b1 = isPosInt(str1);
+        bool b2 = isPosInt(str2);
+
+        // check if both are money
+        if (b1 && b2) {
+          continue;
+        }
+
+        if (b1) {
+          Property *property2 = player2.getProperty(str1);
+          player1.trade(player2, stoi(str1), property2);
+        } else if (b2) {
+          Property *property1 = player1.getProperty(str1);
+          player1.trade(player2, property1, stoi(str2));
+        } else {
+          Property *property1 = player1.getProperty(str1);
+          Property *property2 = player2.getProperty(str1);
+          player1.trade(player2, property1, property2);
+        }
+
+      } else if (cmd == "improve") {
+        modifyProperty(player1, cmd, [&player1](Property *property) {
+          Academic *academic = dynamic_cast<Academic *>(property);
+          if (academic != nullptr) {
+            player1.improve(*academic);
+          }
+        });
 
       } else if (cmd == "mortgage") {
+        modifyProperty(player1, cmd, [&player1](Property *property) {
+          if (player1.hasProperty(*property) && !property->isMortgaged()) {
+            player1.addMoney(property->getPurCost() * MORTGAGE_RATE);
+            property->toggleMortgage();
+            std::cout << "Mortgaged property " << property->getName() << " successfully." << std::endl;
+          }
+        });
 
       } else if (cmd == "unmortgage") {
+        modifyProperty(player1, cmd, [&player1](Property *property) {
+          if (player1.hasProperty(*property) && property->isMortgaged()) {
+            bool success = player1.removeMoney(property->getPurCost() * UNMORTGAGE_RATE);
+            if (success) {
+              property->toggleMortgage();
+              std::cout << "Unmortgaged property " << property->getName() << " successfully." << std::endl;
+            } else {
+              std::cout << "Unmortgaged property " << property->getName() << " failed." << std::endl;
+            }
+          }
+        });
 
       } else if (cmd == "bankrupt") {
         // reset the owners of the properties that player owns
+        // remove any improvements
         // unmortgage any properties in mortgage state
         // remove player from players vector
-      } else if (cmd == "assets") {
 
-        vector<Property*> properties = player1.getProperties();
-        for (Property *property : properties) {
-			    string propertyName = property->getName();
-			    cout << propertyName << endl;
-		    }
+      } else if (cmd == "assets") {
+        printProperties(&player1);
 
       } else if (cmd == "all") {
-
         for (Player *player : players) {
           cout << player->getName() << endl;
-		      vector<Property*> properties = player->getProperties();
-          for (Property *property : properties) {
-			      string propertyName = property->getName();
-            cout << propertyName << endl;
-          }
-        	cout << endl;
+          printProperties(player);
+          cout << endl;
         }
 
       } else if (cmd == "save") {
-
       } else {
         // undefined command
-                continue;
+        continue;
       }
 
-      // check if the currrent player is bankrupt
+      // check if the current player is bankrupt
+      bool bankrupt;
+      if (bankrupt) {
+        // pop player from players vector
+        players.erase(players.begin() + i);
+      }
 
       // check if game is won
-	  
+      if (players.size() == 1) {
+        cout << players.at(0)->getName() << " is the winner!" << endl;
+      }
     }
   }
 }

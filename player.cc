@@ -35,6 +35,24 @@ std::vector<Property*> Player::getProperties() {
   return props;
 };
 
+std::string Player::getName() {
+  return name;
+}
+
+std::vector<Property*> Player::getProperties() {
+  return props;
+};
+
+Property *Player::getProperty(std::string propertyName) {
+  int len = props.size();
+  for (int i = 0; i < len; i++) {
+    if (props.at(i)->getName() == propertyName) {
+      return props.at(i);
+    }
+  }
+  return nullptr;
+}
+
 void Player::move(int n) {
   position = (position + n) % 40;
   if (position - n < 0) {
