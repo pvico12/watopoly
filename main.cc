@@ -246,7 +246,7 @@ int main(int argc, char *argv[]) {
       }
 
       // check if the current player is bankrupt
-      bool bankrupt = false; // false for now, change later
+      bool bankrupt = false;  // false for now, change later
       if (bankrupt) {
         // pop player from players vector
         players.erase(players.begin() + i);

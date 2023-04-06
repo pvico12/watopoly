@@ -18,7 +18,7 @@ class Property : public Block {
   int getLvl();
   int getPurCost();
   bool isMortgaged();
-  bool toggleMortgage();
+  void toggleMortgage();
   virtual bool upgrade() = 0;
   virtual int getFee() = 0;
 };

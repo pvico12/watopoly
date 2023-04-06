@@ -7,7 +7,7 @@
 #include "info.h"
 #include "state.h"
 #include "Property/property.h"
-//#include "Property/academic.h"
+#include "Property/academic.h"
 //#include "Property/nonacademic.h"
 
 extern const int BOARD_SIZE;

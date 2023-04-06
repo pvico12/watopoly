@@ -16,6 +16,6 @@ bool Property::isMortgaged() {
   return mortgaged;
 }
 
-bool Property::toggleMortgage() {
+void Property::toggleMortgage() {
   mortgaged = !mortgaged;
 }

@@ -84,7 +84,7 @@ int Player::hasProperty(Property &prop) {
 }
 
 void Player::addProperty(Property &prop) {
-  props.emplace_back(prop);
+  props.emplace_back(&prop);
 }
 
 bool Player::removeProperty(Property &prop) {
@@ -102,7 +102,7 @@ bool Player::buy(Property &prop) {
     return false;
   }
   money -= prop.getPurCost();
-  props.emplace_back(prop);
+  props.emplace_back(&prop);
   return true;
 }
 
