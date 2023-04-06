@@ -1,12 +1,18 @@
 #ifndef INFO_H
 #define INFO_H
-#include "state.h"
 #include <string>
+
+#include "state.h"
 
 struct BlockInfo {
   std::string name;
   int position;
   BlockDesc desc;
+
+ public:
+  BlockInfo();
+  BlockInfo(std::string name, int position);
+  BlockInfo(std::string name, int position, BlockDesc desc);
 };
 
 #endif

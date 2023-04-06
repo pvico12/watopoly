@@ -29,9 +29,7 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 		std::string type = blockParams[0];
 		std::string name = blockParams[1];
 		std::string boardName = blockParams[2];
-		BlockInfo newI;
-		newI.name = boardName;
-		newI.position = currPos;
+		BlockInfo newI{boardName, currPos};
 
 		if (type == "Academic") {
 			int purchaseCost = std::stoi(blockParams[4]);
