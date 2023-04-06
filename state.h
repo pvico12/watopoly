@@ -21,7 +21,6 @@ struct BlockState {
   BlockDesc desc;
   Player *p = nullptr;
 
- public:
   BlockState();
   BlockState(BlockStateType type, BlockDesc desc);
   BlockState(BlockStateType type, BlockDesc desc, Player *p);

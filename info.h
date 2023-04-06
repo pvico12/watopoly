@@ -9,7 +9,6 @@ struct BlockInfo {
   int position;
   BlockDesc desc;
 
- public:
   BlockInfo();
   BlockInfo(std::string name, int position);
   BlockInfo(std::string name, int position, BlockDesc desc);
