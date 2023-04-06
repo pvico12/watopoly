@@ -1,5 +1,6 @@
 #include <cstdlib>  // temporary randomness, will add shuffle.cc later
 #include <ctime>    // temporary randomness for now, will add shuffle.cc later
+#include <functional>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -37,6 +38,18 @@ int toInteger(string str) {
   } else {
     return -1;
   }
+}
+
+void modifyProperty(Player &player, const string &cmd, function<void(Property *)> lambda) {
+  string propertyName;
+  cin >> propertyName;
+  Property *property = player.getProperty(propertyName);
+
+  if (property == nullptr) {
+    return;
+  }
+
+  lambda(property);
 }
 
 int main(int argc, char *argv[]) {
@@ -170,53 +183,34 @@ int main(int argc, char *argv[]) {
         // player1.trade(player2, str1, str2);
 
       } else if (cmd == "improve") {
-        string propertyName;
-        cin >> propertyName;
-        Property *property = player1.getProperty(propertyName);
-
-        if (property == nullptr) {
-          continue;
-        }
-
-        // check if it's an academic
-        Academic *academic = dynamic_cast<Academic *>(property);
-        if (academic != nullptr) {
-          player1.improve(*academic);
-        }
+        modifyProperty(player1, cmd, [&player1](Property *property) {
+          Academic *academic = dynamic_cast<Academic *>(property);
+          if (academic != nullptr) {
+            player1.improve(*academic);
+          }
+        });
 
       } else if (cmd == "mortgage") {
-        string propertyName;
-        cin >> propertyName;
-        Property *property = player1.getProperty(propertyName);
-
-        if (property == nullptr) {
-          continue;
-        }
-
-        if (player1.hasProperty(*property) && !property->isMortgaged()) {
-          player1.addMoney(property->getPurCost() * MORTGAGE_RATE);
-          property->toggleMortgage();
-          cout << "Mortgaged property " << property->getName() << " successfully." << endl;
-        }
+        modifyProperty(player1, cmd, [&player1](Property *property) {
+          if (player1.hasProperty(*property) && !property->isMortgaged()) {
+            player1.addMoney(property->getPurCost() * MORTGAGE_RATE);
+            property->toggleMortgage();
+            std::cout << "Mortgaged property " << property->getName() << " successfully." << std::endl;
+          }
+        });
 
       } else if (cmd == "unmortgage") {
-        string propertyName;
-        cin >> propertyName;
-        Property *property = player1.getProperty(propertyName);
-
-        if (property == nullptr) {
-          continue;
-        }
-
-        if (player1.hasProperty(*property) && property->isMortgaged()) {
-          bool success = player1.removeMoney(property->getPurCost() * UNMORTGAGE_RATE);
-          if (success) {
-            property->toggleMortgage();
-            cout << "Unmortgaged property " << property->getName() << " successfully." << endl;
-          } else {
-            cout << "Unmortgaged property " << property->getName() << " failed." << endl;
+        modifyProperty(player1, cmd, [&player1](Property *property) {
+          if (player1.hasProperty(*property) && property->isMortgaged()) {
+            bool success = player1.removeMoney(property->getPurCost() * UNMORTGAGE_RATE);
+            if (success) {
+              property->toggleMortgage();
+              std::cout << "Unmortgaged property " << property->getName() << " successfully." << std::endl;
+            } else {
+              std::cout << "Unmortgaged property " << property->getName() << " failed." << std::endl;
+            }
           }
-        }
+        });
 
       } else if (cmd == "bankrupt") {
         // reset the owners of the properties that player owns
