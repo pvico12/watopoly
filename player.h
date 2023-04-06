@@ -4,8 +4,10 @@
 #include <string>
 #include <vector>
 
-#include "academic.h"
-#include "Property/property.h"
+#include "info.h"
+#include "state.h"
+#include "Property/academic.h"
+#include "Property/nonacademic.h"
 
 extern const int BOARD_SIZE;
 
@@ -23,13 +25,34 @@ enum class Token {
 
 class Player {
   std::string name;
+  char tokenChar;
   Token token;
   int position, money;
-  std::vector<Property> properties;
+  std::vector<Academic> academicProps;
+  std::vector<NonAcademic> nonAcademicProps;
 
  public:
-  Player(std::string name, Token token, int position = 0, int money = 0, std::vector<Property> properties = {});
+  Player(std::string name, char tokenChar, Token token,
+        int position = 0, int money = 0,
+        std::vector<Academic> academicProps = {},
+        std::vector<NonAcademic> nonAcademicProps = {});
 
+  Player(const Player &o);
+  
+  Player(Player &&o);
+
+  std::string getName();
+
+  char getCharToken();
+
+  int getPosition();
+
+  void setPosition(int n);
+
+  std::vector<Academic> getAcademicProps();
+
+  std::vector<NonAcademic> getNonAcademicProps();
+  
   void move(int n);
 
   void moveTo(int n);

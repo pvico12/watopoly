@@ -1,4 +1,7 @@
+#include "../block.h"
 #include "academic.h"
+#include "../info.h"
+#include "../state.h"
 #include <sstream>
 
 const int MAXUPGRADES = 5;

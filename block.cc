@@ -1,4 +1,6 @@
 #include "block.h"
+#include "info.h"
+#include "state.h"
 #include <sstream>
 
 const std::string EMPTYLINE(7, ' ');
@@ -30,13 +32,22 @@ Block::Block(std::string name) : name{name} {
   }
   displayComponents.emplace_back(line);
 
-  // finsert the lines into the displayName
+  // insert the lines into the displayName
   int i = 0;
   for (auto s : displayComponents) {
     s.resize(7, ' ');
     displayName[i] = s;
     i++;
   }
+
+  info.name = name;
+  info.position = 0;
+  info.desc = BlockDesc::Other;
+  state.type = BlockStateType::NewVisitor;
+  state.desc = BlockDesc::Other;
+  setInfo(info);
+  setState(state);
+  notifyObservers();
 }
 
 std::string Block::getName() {

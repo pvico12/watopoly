@@ -1,5 +1,11 @@
 #include "textdisplay.h"
 #include "block.h"
+#include "info.h"
+#include "state.h"
+#include "player.h"
+
+#include <fstream>
+#include <iostream>
 
 const int NUMSQUARES = 40;
 const int BLOCKWIDTH = 8;
@@ -10,6 +16,8 @@ const int NUMLEFTBLOCKS = 9;
 const int NUMRIGHTBLOCKS = 9;
 const int MAXWIDTH = 89;
 const int MAXHEIGHT = 56;
+const int LOGOROW = 23;
+const int LOGOCOL = 20;
 
 TextDisplay::TextDisplay() {
 	// create empty board
@@ -76,15 +84,26 @@ TextDisplay::TextDisplay() {
 	}
 
 	// add WaterPoly Logo !!!
+	std::ifstream file{"watopolyLogo.txt"};
+	std::string line;
+	int currLine = 0;
+	while(std::getline(file, line)) {
+		int currInd = 0;
+		for (char c : line) {
+			theDisplay[LOGOROW+currLine][LOGOCOL+currInd] = c;
+			currInd++;
+		}
+		currLine++;
+	}
 }
 
-void TextDisplay::initDisplay(std::vector<Block> &blocks) {
+void TextDisplay::initDisplay(std::vector<Block*> &blocks) {
 	int i = 0;
 	for (auto b : blocks) { // loop through blocks
 		int row = blockCoords[i][0];    // get its display coordinate
 		int col = blockCoords[i][1];
 		int rowIter = 1;
-		std::string *dispName = b.getDisplayName();      // get its display name
+		std::string *dispName = b->getDisplayName();      // get its display name
 		// iterate through respective coordinates, changing the blocks display
 		for (int lineInd = 0; lineInd < BLOCKHEIGHT-1; lineInd++) { 
 			std::string line = dispName[lineInd];
@@ -99,11 +118,42 @@ void TextDisplay::initDisplay(std::vector<Block> &blocks) {
 	}
 }
 
-void TextDisplay::notify(Subject &whoNotified) {
-	// a block changed state,
-	// update the text display of the block
-	// perhaps a player visited
-	// perhaps an improvement was made on the piece
+// a block changed state, update the text display accordingly
+void TextDisplay::notify(Subject<BlockInfo, BlockState> &whoNotified) {
+	BlockInfo i = whoNotified.getInfo();
+	BlockState s = whoNotified.getState();
+	int pos = i.position;
+	int row = blockCoords[pos][0];
+	int col = blockCoords[pos][1];
+	char nickname = s.p->getCharToken();
+	if (s.type == BlockStateType::NewVisitor) {
+		for (int i = 1; i < BLOCKWIDTH; i++) {
+			char c = theDisplay[row+BLOCKHEIGHT-1][col+i];
+			if (c == ' ') {
+				theDisplay[row+BLOCKHEIGHT-1][col+i] = nickname;
+				break;
+			}
+		}
+	}
+	if (s.type == BlockStateType::VisitorLeft) {
+		std::string remainingVisitors;
+		bool foundTarget = false;
+		int targetIndex = BLOCKWIDTH;
+		// find target character
+		for (int i = 1; i < BLOCKWIDTH; i++) {
+			char c = theDisplay[row+BLOCKHEIGHT-1][col+i];
+			if (c == nickname) {
+				foundTarget = true;
+				targetIndex = i;
+				break;
+			}
+		}
+		// shift over remaining characters
+		for (int i = targetIndex; i < BLOCKWIDTH-1; i++) {
+			theDisplay[row+BLOCKHEIGHT-1][col+i] = theDisplay[row+BLOCKHEIGHT-1][col+i+1];
+		}
+		theDisplay[row+BLOCKHEIGHT-1][col+BLOCKWIDTH-1] = ' ';
+	}
 }
 
 std::ostream &operator<<(std::ostream &out, const TextDisplay &td) {

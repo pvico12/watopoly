@@ -1,16 +1,19 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 
-#include <string>
-
+#include "state.h"
+#include "info.h"
 #include "subject.h"
+#include <string>
 
 extern const std::string EMPTYLINE;
 
-class Block : public Subject {
+class Block : public Subject<BlockInfo, BlockState> {
  protected:
   std::string name;
   static const int displayLength = 5;
+  BlockInfo info;
+  BlockState state;
   std::string displayName[displayLength];  // For visual display
  public:
   Block(std::string name);
