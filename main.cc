@@ -166,6 +166,12 @@ int main(int argc, char *argv[]) {
 
       if (cmd == "roll") {
         if (rolled == true) {
+          // player has already rolled, 
+          // output an informative message on what further commands they can use
+          cout << "You have attempted to roll more then once." << endl;
+          cout << "You may either use the command 'next' to give control to the next player, OR" << endl;
+          cout << "You may use other commands to take action on the square landed." << endl;
+          cout << "For help with commands or the rules of the game, enter the command 'help'." << endl;
           continue;
         }
         rolled = true;
@@ -177,17 +183,20 @@ int main(int argc, char *argv[]) {
         std::cout << "Second Dice: " << roll2 << std::endl;
         int steps = roll1 + roll2;
 
-        // set block state
-        BlockState s(BlockStateType::VisitorLeft, BlockDesc::Other, &player1);
-        blocks[pos]->setState(s);
+        // set original block state to visitor leaving, remove player from this block
+        BlockState currPosState = blocks[pos]->getState();
+        currPosState.type = BlockStateType::VisitorLeft;
+        currPosState.p = &player1;
+        blocks[pos]->setState(currPosState);
 
         player1.move(steps);  // move
 
-        s.type = BlockStateType::NewVisitor;
-
         // update block state that player is moving to
-        int newPosition = (pos + steps > NUMSQUARES) ? (pos + steps) % NUMSQUARES : pos + steps;
-        blocks[newPosition]->setState(s);
+        int newPosition = (pos + steps >= NUMSQUARES) ? (pos + steps) % NUMSQUARES : pos + steps;
+        BlockState newPosState = blocks[newPosition]->getState();
+        newPosState.type = BlockStateType::NewVisitor;
+        newPosState.p = &player1;
+        blocks[newPosition]->setState(newPosState);
 
         // update player info
         player1.setPosition(newPosition);
@@ -231,6 +240,7 @@ int main(int argc, char *argv[]) {
         */
 
       } else if (cmd == "next") {
+        // control is given to the next player
         rolled = false;
         i++;
 
