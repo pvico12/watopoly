@@ -68,6 +68,7 @@ void printFileToScreen(std::string filename) {
   while (getline(file, line)) {
     cout << line << endl;
   }
+  file.close();
 }
 
 void getPlayerData(int &numPlayers, vector<Player *> &players) {
@@ -301,6 +302,39 @@ int main(int argc, char *argv[]) {
         }
         
       } else if (cmd == "save") {
+        // get file name and create file
+        std::string filename;
+        cin >> filename;
+        ofstream outFile{filename};
+        // write player info
+        outFile << numPlayers << endl;
+        for (auto player : players) {
+          outFile << player->getName() << " ";
+          outFile << player->getCharToken() << " ";
+          outFile << player->getTimsCups() << " ";
+          outFile << player->getMoney() << " ";
+          outFile << player->getPosition() << endl;
+          // add case for when in tims line
+        }
+        // write block info
+        for (auto block : blocks) {
+          BlockInfo b = block->getInfo();
+          std::string blockName = b.name;
+          Player *owner = b.owner;
+          std::string ownerName = "BANK";
+          if (owner) ownerName = owner->getName();
+          if (b.desc == BlockDesc::AcademicBuilding ||
+              b.desc == BlockDesc::NonAcademicBuilding) {
+            outFile << blockName << " ";
+            outFile << ownerName << " ";
+            //int impLevel = block->getLvl();
+            //outFile << block->getLvl() << endl;
+            //block needs to be able to get level but it cant
+            outFile << endl;
+          } 
+        }
+        outFile.close();
+        
       } else {
         // undefined command
         continue;

@@ -17,12 +17,14 @@ class Player {
   std::string name;
   Token token;
   int position, money;
+  int timsCups = 0;
   std::vector<Property*> props;
 
  public:
   Player(std::string name, Token token,
         int position = 0, int money = 0,
-        std::vector<Property*> props = {});
+        std::vector<Property*> props = {},
+        int timsCups = 0);
 
   //Player(const Player &o);
   
@@ -35,6 +37,10 @@ class Player {
   char getCharToken();
 
   int getPosition();
+
+  int getMoney();
+
+  int getTimsCups();
 
   void setPosition(int n);
 

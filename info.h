@@ -8,12 +8,15 @@ struct BlockInfo {
   std::string name;
   int position;
   BlockDesc desc;
+  Player *owner = nullptr;
 
   BlockInfo();
   BlockInfo(std::string name, int position);
   BlockInfo(std::string name, int position, BlockDesc desc);
 
   BlockInfo(const BlockInfo &o);
+
+  void setOwner(Player *p);
 };
 
 #endif
