@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "token.h"
 #include "info.h"
 #include "state.h"
 #include "Property/property.h"
@@ -11,18 +12,6 @@
 //#include "Property/nonacademic.h"
 
 extern const int BOARD_SIZE;
-
-enum class Token {
-  GOOSE,
-  GRT_BUS,
-  TIM_HORTONS,
-  DOUGHNUT,
-  PROFESSOR,
-  STUDENT,
-  MONEY,
-  LAPTOP,
-  PINK_TIE
-};
 
 class Player {
   std::string name;

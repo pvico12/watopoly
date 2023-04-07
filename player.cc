@@ -20,7 +20,7 @@ std::string Player::getName() {
 };
 
 char Player::getCharToken() {
-  return tokenChar;
+  return tokenToCharMap[token];
 }
 
 int Player::getPosition() {
