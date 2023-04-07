@@ -2,6 +2,7 @@
 #include <ctime>    // temporary randomness for now, will add shuffle.cc later
 #include <functional>
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -59,31 +60,63 @@ void printProperties(Player *player) {
   }
 }
 
+void startGame(int &numPlayers, vector<Player *> &players, vector<Block *> &blocks) {
+  vector<string> names = {"Goose","GRT Bus","Tim Hortons Doughnut","Professor","Student","Money","Laptop","Pink Tie"};
+  vector<char> tokens = {'G','B','D','P','S','$','L','T'};
+  
+  // determine number of players
+  cout << "Enter number of players (2-8): ";
+  cin >> numPlayers; // add some precautions if user input is invalid
+  cout << endl;
+
+  // print out player name options
+  cout << "Here are the avaiable player options:" << endl << endl;
+  cout << left << setw(30) << "Names" << "Token" << endl << endl;;
+  for (int i = 0; i < 8; i++) {
+    cout << left << setw(30) << names[i] << tokens[i] << endl;
+  }
+  cout << endl;
+
+  // let players choose their desired roles
+  for (int i = 1; i <= numPlayers; i++) {
+    cout << "Player " << i << " enter player token: ";
+    std::string chosenToken;
+    std::string chosenName;
+    cin >> chosenToken; // add some precautions here too
+    cout << endl;
+
+    // find token corresponding to this name
+    int ind = 0;
+    for (auto token : tokens) {
+      if (token == chosenToken[0]) {
+        chosenName = names[ind];
+        break;
+      }
+      ind++;
+    }
+
+    // create player object and add to its list
+    Player *p;
+    p = new Player(chosenName, chosenToken[0], Token::GOOSE); // change this Token::GOOSE thing
+    players.emplace_back(p);
+  }
+
+}
+
 int main(int argc, char *argv[]) {
   TextDisplay td;      // initialize a board with constant size
   Board watopoly{td};  // create board (uses .txt file for blocks)
 
-  vector<Player *> players{};
-  Player *p;
-  p = new Player{"Goose", 'G', Token::GOOSE};
-  players.emplace_back(p);
-  p = new Player{"GRT Bus", 'B', Token::GRT_BUS};
-  players.emplace_back(p);
-  p = new Player{"Tim Hortons Doughnut", 'D', Token::DOUGHNUT};
-  players.emplace_back(p);
-  /* use if needed
-  p = new Player{"Professor", 'P', Token::PROFESSOR};
-  p = new Player{"Student", 'S', Token::STUDENT};
-  p = new Player{"Money", '$', Token::MONEY};
-  p = new Player{"Laptop", 'L', Token::LAPTOP};
-  p = new Player{"Pink Tie", 'T', Token::PINK_TIE};
-  */
-
-  int numPlayers = players.size();
-  bool rolled = false;
-
   vector<Block *> *bs = watopoly.getBlocks();
   vector<Block *> &blocks = *bs;
+
+  // some important values
+  int numPlayers;
+  bool rolled = false;
+  vector<vector<string>> playerTokenList;
+  vector<Player *> players;
+
+  startGame(numPlayers, players, blocks);
 
   // Starting state (game begins at Goose Nesting)
   BlockState s = blocks[0]->getState();
@@ -93,6 +126,8 @@ int main(int argc, char *argv[]) {
   }
 
   cout << watopoly;  // output text display with starting players
+
+  
 
   while (true) {
     int i = 0;
