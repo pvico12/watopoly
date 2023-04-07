@@ -27,38 +27,42 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 		}
 
 		std::string type = blockParams[0];
-		std::string name = blockParams[1];
-		std::string boardName = blockParams[2];
-		BlockInfo newI{boardName, currPos};
+		std::string name = blockParams[1];;
+		BlockInfo newI{name, currPos};
 
 		if (type == "Academic") {
-			int purchaseCost = std::stoi(blockParams[4]);
-			int improvLevel = std::stoi(blockParams[5]);
-			int improvCost = std::stoi(blockParams[7]);;
-			std::vector<int> numArr; // fix
-			newI.desc = BlockDesc::AcademicBuilding;
-			b = new Academic(boardName, blockParams[3], purchaseCost, improvLevel, numArr, improvCost);
-		} else if (type == "NonAcademic") {
 			int purchaseCost = std::stoi(blockParams[3]);
 			int improvLevel = std::stoi(blockParams[4]);
+			int improvCost = std::stoi(blockParams[6]);;
+			
+			// create tuition array
+			std::string tuitions = blockParams[5];
+			std::vector<int> tuitionCosts;
+			int cost;
+			char c;
+			std::istringstream iss{tuitions};
+			while (iss >> c >> cost >> c) { tuitionCosts.emplace_back(cost); }
+
+			newI.desc = BlockDesc::AcademicBuilding;
+			b = new Academic(name, blockParams[3], purchaseCost, improvLevel, tuitionCosts, improvCost);
+		} else if (type == "NonAcademic") {
+			int purchaseCost = std::stoi(blockParams[2]);
+			int improvLevel = std::stoi(blockParams[3]);
 			newI.desc = BlockDesc::NonAcademicBuilding;
-			b = new NonAcademic(boardName, purchaseCost, improvLevel, Type::Gym);
+			b = new NonAcademic(name, purchaseCost, improvLevel, Type::Gym);
 		} else if (type == "MoneyBlock") {
-			int money = std::stoi(blockParams[3]);
+			int money = std::stoi(blockParams[2]);
 			MoneyType mt = MoneyType::ADD;
 			newI.desc = BlockDesc::ChancePay;
-			b = new MoneyBlock(boardName, money, mt);
+			b = new MoneyBlock(name, money, mt);
 		} else if (type == "MovementBlock") {
-			int move = std::stoi(blockParams[3]);
+			int move = std::stoi(blockParams[2]);
 			MoveType mt = MoveType::MOVE_N_STEPS;
 			newI.desc = BlockDesc::ChanceMove;
-			b = new MovementBlock(boardName, move, mt);
+			b = new MovementBlock(name, move, mt);
 		} else if (type == "NonProperty") {
-			// temporarily make it a gym
-			int purchaseCost = std::stoi(blockParams[3]);
-			int improvLevel = std::stoi(blockParams[4]);
-			newI.desc = BlockDesc::NonAcademicBuilding;
-			b = new NonAcademic(boardName, purchaseCost, improvLevel, Type::Gym);
+			newI.desc = BlockDesc::Other;
+			b = new MoneyBlock(name, 0, MoneyType::ADD);
 		}
 
 		b->setInfo(newI);

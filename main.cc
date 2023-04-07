@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -61,7 +62,16 @@ void printProperties(Player *player) {
   }
 }
 
-void startGame(int &numPlayers, vector<Player *> &players, vector<Block *> &blocks) {
+void printFileToScreen(std::string filename) {
+  ifstream file{filename};
+  string line;
+  while (getline(file, line)) {
+    cout << line << endl;
+  }
+  file.close();
+}
+
+void getPlayerData(int &numPlayers, vector<Player *> &players) {
   // determine number of players
   cout << "Enter number of players (2-8): ";
   cin >> numPlayers; // add some precautions if user input is invalid
@@ -89,9 +99,24 @@ void startGame(int &numPlayers, vector<Player *> &players, vector<Block *> &bloc
 
     // create player object and add to its list
     Player *p;
-    p = new Player(playerName, charToTokenMap[chosenToken[0]]);
+    p = new Player(playerName, charToTokenMap[chosenToken[0]], 1500);
     players.emplace_back(p);
   }
+}
+
+void startGame(int &numPlayers, vector<Player *> &players, vector<Block *> &blocks) {
+  printFileToScreen("introMessage.txt");
+  getPlayerData(numPlayers, players);
+
+  // Starting state (game begins at Goose Nesting)
+  BlockState s = blocks[0]->getState();
+  for (Player *player : players) {
+    s.p = player;
+    blocks[0]->setState(s);
+  }
+
+  printFileToScreen("rules.txt");
+  printFileToScreen("commands.txt");
 
 }
 
@@ -109,22 +134,13 @@ int main(int argc, char *argv[]) {
   vector<Player *> players;
 
   startGame(numPlayers, players, blocks);
-
-  // Starting state (game begins at Goose Nesting)
-  BlockState s = blocks[0]->getState();
-  for (Player *player : players) {
-    s.p = player;
-    blocks[0]->setState(s);
-  }
-
   cout << watopoly;  // output text display with starting players
-
-  
 
   while (true) {
     int i = 0;
     while (i < numPlayers) {
       Player &player1 = *(players[i]);
+      std::string player1Name = player1.getName();
       int pos = player1.getPosition();
 
       // cmd intake
@@ -153,12 +169,19 @@ int main(int argc, char *argv[]) {
         s.type = BlockStateType::NewVisitor;
 
         // update block state that player is moving to
-        blocks[pos + steps]->setState(s);
+        int newPosition = (pos + steps > NUMSQUARES) ? (pos + steps) % NUMSQUARES : pos + steps;
+        blocks[newPosition]->setState(s);
 
         // update player info
-        player1.setPosition(pos + steps);
+        player1.setPosition(newPosition);
 
-        cout << watopoly; 
+        cout << watopoly;
+
+        /*
+        check if block is property
+        if so, await further commands
+        if not, apply action
+        */
 
         // ********* new *********
         /*
@@ -223,6 +246,36 @@ int main(int argc, char *argv[]) {
         */
 
       } else if (cmd == "improve") {
+        BlockInfo info = blocks[pos]->getInfo();
+        BlockDesc desc = info.desc;
+        Player *owner = info.owner;
+
+        if (desc == BlockDesc::AcademicBuilding) {
+          if (owner) {
+            // this player has purchase the property
+            // implemen this to work, we need to call buy function
+            // but these are blocks so we cant access them
+            // PROBLEM: player1.buy(*(blocks)[pos]);
+            info.owner = &player1;
+            info.impLevel++;
+            blocks[pos]->setInfo(info);
+          } else {
+            // check if the player already owns the property
+            if (owner->getName() == player1Name) {
+              // improve the property
+              info.impLevel++;
+              blocks[pos]->setInfo(info);
+            } else {
+              // if not, output an informative message
+            cerr << "Invalid command. You do not own this property." << endl;
+            }
+          }
+        } else if (desc == BlockDesc::AcademicBuilding) {
+          
+        } else {
+
+        }
+
         modifyProperty(player1, cmd, [&player1](Property *property) {
           Academic *academic = dynamic_cast<Academic *>(property);
           if (academic != nullptr) {
@@ -268,7 +321,56 @@ int main(int argc, char *argv[]) {
           cout << endl;
         }
 
+      } else if (cmd == "help") {
+        cout << "Would you like to see the rules or the list of commands or both?" << endl;
+        string helpCmd;
+        cout << "Enter rules/commands/both: ";
+        cin >> helpCmd;
+        cout << endl;
+        if (helpCmd == "rules") {
+          printFileToScreen("rules.txt");
+        } else if (helpCmd == "commands") {
+          printFileToScreen("commands.txt");
+        } else if (helpCmd == "both") {
+          printFileToScreen("rules.txt");
+          printFileToScreen("commands.txt");
+        } else {
+          cout << "Incorrect input. You have exited the help menu." << endl;
+          cout << "If you wish to try again, enter the 'help' command." << endl;
+        }
+        
       } else if (cmd == "save") {
+        // get file name and create file
+        std::string filename;
+        cin >> filename;
+        ofstream outFile{filename};
+        // write player info
+        outFile << numPlayers << endl;
+        for (auto player : players) {
+          outFile << player->getName() << " ";
+          outFile << player->getCharToken() << " ";
+          outFile << player->getTimsCups() << " ";
+          outFile << player->getMoney() << " ";
+          outFile << player->getPosition() << endl;
+          // add case for when in tims line
+        }
+        // write block info
+        for (auto block : blocks) {
+          BlockInfo b = block->getInfo();
+          std::string blockName = b.name;
+          Player *owner = b.owner;
+          int impLevel = b.impLevel;
+          std::string ownerName = "BANK";
+          if (owner) ownerName = owner->getName();
+          if (b.desc == BlockDesc::AcademicBuilding ||
+              b.desc == BlockDesc::NonAcademicBuilding) {
+            outFile << blockName << " ";
+            outFile << ownerName << " ";
+            outFile << impLevel << endl;
+          } 
+        }
+        outFile.close();
+        
       } else {
         // undefined command
         continue;

@@ -2,9 +2,10 @@
 #include "state.h"
 #include "info.h"
 
-Player::Player(std::string name, Token token, int position, int money,
-        std::vector<Property*> props)
-    : name{name}, token{token}, position{position}, money{money}, props{props} {}
+Player::Player(std::string name, Token token, int money, int position,
+        std::vector<Property*> props, int timsCups)
+    : name{name}, token{token}, money{money}, 
+      position{position}, props{props}, timsCups(timsCups) {}
 
 /*
 Player::Player(const Player &o)
@@ -25,6 +26,14 @@ char Player::getCharToken() {
 
 int Player::getPosition() {
   return position;
+}
+
+int Player::getMoney() {
+  return money;
+}
+
+int Player::getTimsCups() {
+  return timsCups;
 }
 
 void Player::setPosition(int n) {

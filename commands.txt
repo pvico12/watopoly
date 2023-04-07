@@ -1,0 +1,46 @@
+-----------------------------------------------------------------------
+
+Turns are alternated using the "next" command.
+
+When it is your turn, you may use the following commands:
+
+roll : 
+    -> Roll two dice. You will move the sum of the two dice.
+
+next :
+    -> Signal that it is the next players turn. Control is given to the next player.
+
+trade <name> <give> <receieve> :
+    -> You offer a trade to <name> offering them <give>.
+    -> In return you wish to obtain <receive> from <name>.
+    -> <name> can respond with commands "accept" or "reject"
+Note 1. You can only offer to trade a property if all properties in the monopoly do not have improvements.
+Note 2. You can not trade money.
+Note 3. You can offer a trade from the DC Tims line.
+
+improve <property> buy/sell :
+    -> Attempts to buy or sell an improvement for <property>.
+
+mortage <property> :
+    -> Attempts to mortage <property>.
+
+unmortage <property> :
+    -> Attempts to unmortage <property>.
+
+bankrupt:
+    -> You declare bankruptcy.
+    -> This command is only available when you must pay more money then you currently have.
+
+assets:
+    -> Displays all the assets you own.
+Note. This command will not work if you are in the process of deciding how to pay Tuition.
+
+all:
+    -> Displays the assets of all players
+    -> This command can be used to verify the correctness of a transaction.
+Note. This command will not work if you are in the process of deciding how to pay Tuition.
+
+save <filename>:
+    -> Will save the current state of a game to the file <filename>.
+
+-----------------------------------------------------------------------

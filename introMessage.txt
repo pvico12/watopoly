@@ -1,0 +1,41 @@
+
+
+
+Thank you for choosing Petar and Jeff's Watopoly high strategy board game!
+This game is a deviation of the standard stategy game Monopoly.
+Our implementation uses the University of Waterloo's campus as common theme.
+The properties included are campus buildings and facilities such as gyms and residences.
+Monopolies are based on the faculty of the academic building. 
+Some other blocks on the board include things such as Collect OSAP, and Pay Tuition.
+We have also incoorporated a Go to Jail spinoff that spends a player to the DC Tim Hortons line.
+If you have ever been in that line, you know it is a long wait.
+
+
+
+
+
+
+
+
+
+Congratulations, your Watopoly game has started!
+ _____________________________________________
+|                                             |
+| #   #   ##  #####  ###  ###   ###  #  #   # |
+| #   #  #  #   #   #   # #  # #   # #  #   # |
+| # # #  ####   #   #   # ###  #   # #   # #  |
+| # # #  #  #   #   #   # #    #   # #    #   |
+| #####  #  #   #    ###  #     ###  ## # #   |
+|_____________________________________________|
+Petar Vico and Jeffrey Gu
+
+
+
+
+
+
+
+
+
+
+Now, we shall initialize the game. Please enter the information requested below.
