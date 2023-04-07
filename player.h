@@ -48,13 +48,13 @@ class Player {
   
   void move(int n);
 
-  void moveTo(int n);
+  void moveTo(int n, bool collect = true);
 
   bool hasMoney(int amount);
 
   void addMoney(int amount);
 
-  bool removeMoney(int amount);  // may change to void
+  void removeMoney(int amount);
 
   int hasProperty(Property &prop);
 

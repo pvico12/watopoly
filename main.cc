@@ -54,6 +54,18 @@ void modifyProperty(Player &player, const string cmd, function<void(Property *)>
   lambda(property);
 }
 
+Player *findPlayer2(vector<Player *> &players, string player2Name) {
+  Player *player2ptr;
+  int numPlayers = players.size();
+  for (int i = 0; i < numPlayers; i++) {
+    if (players.at(i)->getName() == player2Name) {
+      player2ptr = players.at(i);
+      break;
+    }
+  }
+  return player2ptr;
+}
+
 void printProperties(Player *player) {
   vector<Property *> properties = player->getProperties();
 
@@ -84,7 +96,7 @@ void getPlayerData(int &numPlayers, vector<Player *> &players) {
   cout << left << setw(30) << "Names"
        << "Token" << endl
        << endl;
-  ;
+
   for (auto &t : tokenToStrMap) {
     cout << left << setw(30) << t.second;
     Token token = strToTokenMap[t.second];
@@ -181,45 +193,48 @@ int main(int argc, char *argv[]) {
 
         cout << watopoly;
 
-        /*
-        check if block is property
-        if so, await further commands
-        if not, apply action
-        */
-
         // ********* new *********
-        /*
-        // need getBlock()
-        Block block = board.getBlock(player1.getPosition());
+        BlockInfo info = blocks[pos]->getInfo();
+        BlockDesc desc = info.desc;
+        Player *owner = info.owner;
 
-        if (dynamic_cast<Property *>(block)) {
-          Property *property = dynamic_cast<NonProperty *>(block);
-          // case 1: steps on someone else's property
-          // case 2: unowned property, purchase
-          // case 3: unowned property, auction
-        } else if (dynamic_cast<Property *>(block)) {
-          NonProperty *nonProperty = dynamic_cast<NonProperty *>(block);
-          nonProperty->action();
+        if (desc == BlockDesc::AcademicBuilding && desc == BlockDesc::NonAcademicBuilding) {
+          Property *property = dynamic_cast<Property *>(blocks[pos]);
+          if (owner) {
+            // case 1: steps on someone else's property
+            int amount = property->getFee();
+            Player *player2ptr = findPlayer2(players, owner->getName());
+            Player player2 = *player2ptr;
+            bool isBankrupt = !player1.hasMoney(amount);
+            if (isBankrupt) {
+              cout << "Would you like to mortgage or trade with other players to prevent bankruptcy?" << endl;
+            }
+            player1.removeMoney(amount);
+            player2.addMoney(amount);
+          } else {
+            // case 2: unowned property, purchase
+            // case 3: unowned property, auction
+          }
+
+        } else if (desc == BlockDesc::MovementBlock) {
+          NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[pos]);
+          nonProperty->action(player1);
+          // add additional lines
+        } else if (desc == BlockDesc::MoneyBlock) {
+          NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[pos]);
+          nonProperty->action(player1);
         } else {
           // should not be here
         }
-        */
 
       } else if (cmd == "next") {
         rolled = false;
         i++;
 
       } else if (cmd == "trade") {
-        /*
         string player2Name;
         cin >> player2Name;
-        Player *player2ptr;
-        for (int i = 0; i < numPlayers; i++) {
-          if (players[1]->getName() == player2Name) {
-            player2ptr = players.at(i);
-            break;
-          }
-        }
+        Player *player2ptr = findPlayer2(players, player2Name);
 
         if (player2ptr == nullptr) {
           continue;
@@ -238,16 +253,15 @@ int main(int argc, char *argv[]) {
 
         if (b1) {
           Property *property2 = player2.getProperty(str1);
-          player1.trade(player2, stoi(str1), property2);
+          player1.trade(player2, stoi(str1), *property2);
         } else if (b2) {
           Property *property1 = player1.getProperty(str1);
-          player1.trade(player2, property1, stoi(str2));
+          player1.trade(player2, *property1, stoi(str2));
         } else {
           Property *property1 = player1.getProperty(str1);
           Property *property2 = player2.getProperty(str1);
-          player1.trade(player2, property1, property2);
+          player1.trade(player2, *property1, *property2);
         }
-        */
 
       } else if (cmd == "improve") {
         BlockInfo info = blocks[pos]->getInfo();
@@ -287,8 +301,9 @@ int main(int argc, char *argv[]) {
 
       } else if (cmd == "mortgage") {
         modifyProperty(player1, cmd, [&player1](Property *property) {
+          int mortgageFee = property->getPurCost() * MORTGAGE_RATE;
           if (player1.hasProperty(*property) && !property->isMortgaged()) {
-            player1.addMoney(property->getPurCost() * MORTGAGE_RATE);
+            player1.addMoney(mortgageFee);
             property->toggleMortgage();
             std::cout << "Mortgaged property " << property->getName() << " successfully." << std::endl;
           }
@@ -297,8 +312,10 @@ int main(int argc, char *argv[]) {
       } else if (cmd == "unmortgage") {
         modifyProperty(player1, cmd, [&player1](Property *property) {
           if (player1.hasProperty(*property) && property->isMortgaged()) {
-            bool success = player1.removeMoney(property->getPurCost() * UNMORTGAGE_RATE);
+            int unMortgageFee = property->getPurCost() * UNMORTGAGE_RATE;
+            bool success = player1.hasMoney(unMortgageFee);
             if (success) {
+              player1.removeMoney(unMortgageFee);
               property->toggleMortgage();
               std::cout << "Unmortgaged property " << property->getName() << " successfully." << std::endl;
             } else {
@@ -378,6 +395,7 @@ int main(int argc, char *argv[]) {
 
       } else {
         // undefined command
+        cout << "Invalid command." << endl;
         continue;
       }
 

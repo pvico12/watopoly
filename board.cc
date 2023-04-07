@@ -53,12 +53,12 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 		} else if (type == "MoneyBlock") {
 			int money = std::stoi(blockParams[2]);
 			MoneyType mt = MoneyType::ADD;
-			newI.desc = BlockDesc::ChancePay;
+			newI.desc = BlockDesc::MoneyBlock;
 			b = new MoneyBlock(name, money, mt);
 		} else if (type == "MovementBlock") {
 			int move = std::stoi(blockParams[2]);
 			MoveType mt = MoveType::MOVE_N_STEPS;
-			newI.desc = BlockDesc::ChanceMove;
+			newI.desc = BlockDesc::MovementBlock;
 			b = new MovementBlock(name, move, mt);
 		} else if (type == "NonProperty") {
 			newI.desc = BlockDesc::Other;
