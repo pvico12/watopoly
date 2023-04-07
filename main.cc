@@ -417,6 +417,8 @@ int main(int argc, char *argv[]) {
       if (numPlayers == 1) {
         cout << players.at(0)->getName() << " is the winner!" << endl;
       }
+
+      cout << watopoly;
     }
   }
 }
