@@ -72,9 +72,8 @@ void startGame(int &numPlayers, vector<Player *> &players, vector<Block *> &bloc
   cout << left << setw(30) << "Names" << "Token" << endl << endl;;
   for (auto &t : tokenToStrMap) {
     cout << left << setw(30) << t.second;
-  }
-  for (auto &t : tokenToCharMap) {
-    cout << left << setw(30) << t.second;
+    Token token = strToTokenMap[t.second];
+    cout << left << setw(5) << tokenToCharMap[token] << endl;
   }
   cout << endl;
 
