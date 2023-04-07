@@ -28,6 +28,7 @@ using namespace std;
 
 const int MORTGAGE_RATE = 0.5;
 const int UNMORTGAGE_RATE = 0.6;
+const int STARTING_BLOCK = 20;
 const string separator = " ";
 
 bool isPosInt(const string str) {
@@ -116,7 +117,7 @@ void getPlayerData(int &numPlayers, vector<Player *> &players) {
 
     // create player object and add to its list
     Player *p;
-    p = new Player(playerName, charToTokenMap[chosenToken[0]], 1500);
+    p = new Player(playerName, charToTokenMap[chosenToken[0]], 1500, STARTING_BLOCK); // put players at Collect OSAP block
     players.emplace_back(p);
   }
 }
@@ -129,7 +130,7 @@ void startGame(int &numPlayers, vector<Player *> &players, vector<Block *> &bloc
   BlockState s = blocks[0]->getState();
   for (Player *player : players) {
     s.p = player;
-    blocks[0]->setState(s);
+    blocks[STARTING_BLOCK]->setState(s);
   }
 
   printFileToScreen("rules.txt");
