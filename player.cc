@@ -2,9 +2,9 @@
 #include "state.h"
 #include "info.h"
 
-Player::Player(std::string name, char tokenChar, Token token, int position, int money,
+Player::Player(std::string name, Token token, int position, int money,
         std::vector<Property*> props)
-    : name{name}, tokenChar{tokenChar}, token{token}, position{position}, money{money}, props{props} {}
+    : name{name}, token{token}, position{position}, money{money}, props{props} {}
 
 /*
 Player::Player(const Player &o)

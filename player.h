@@ -15,13 +15,12 @@ extern const int BOARD_SIZE;
 
 class Player {
   std::string name;
-  char tokenChar;
   Token token;
   int position, money;
   std::vector<Property*> props;
 
  public:
-  Player(std::string name, char tokenChar, Token token,
+  Player(std::string name, Token token,
         int position = 0, int money = 0,
         std::vector<Property*> props = {});
 
