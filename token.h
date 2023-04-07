@@ -39,9 +39,9 @@ std::map<Token, char> tokenToCharMap = {
 
 std::map<std::string, Token> strToTokenMap = {
   {"Goose", Token::GOOSE},
-  {"Grt_Bus", Token::GRT_BUS},
-  {"Tim_Hortons", Token::TIM_HORTONS},
-  {"Pink_Tie", Token::PINK_TIE},
+  {"GRT Bus", Token::GRT_BUS},
+  {"Tim Hortons", Token::TIM_HORTONS},
+  {"Pink Tie", Token::PINK_TIE},
   {"Student", Token::STUDENT},
   {"Money", Token::MONEY},
   {"Laptop", Token::LAPTOP},
@@ -50,9 +50,9 @@ std::map<std::string, Token> strToTokenMap = {
 
 std::map<Token, std::string> tokenToStrMap = {
   {Token::GOOSE, "Goose"},
-  {Token::GRT_BUS, "Grt_Bus"},
-  {Token::TIM_HORTONS, "Tim_Hortons"},
-  {Token::PINK_TIE, "Pink_Tie"},
+  {Token::GRT_BUS, "GRT Bus"},
+  {Token::TIM_HORTONS, "Tim Hortons"},
+  {Token::PINK_TIE, "Pink Tie"},
   {Token::STUDENT, "Student"},
   {Token::MONEY, "Money"},
   {Token::LAPTOP, "Laptop"},
