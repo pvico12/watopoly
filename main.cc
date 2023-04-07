@@ -60,10 +60,10 @@ Player *findPlayer2(vector<Player *> &players, string player2Name) {
   for (int i = 0; i < numPlayers; i++) {
     if (players.at(i)->getName() == player2Name) {
       player2ptr = players.at(i);
-      break;
+      return player2ptr;
     }
   }
-  return player2ptr;
+  return nullptr;
 }
 
 void printProperties(Player *player) {
