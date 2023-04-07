@@ -21,6 +21,7 @@
 #include "state.h"
 #include "subject.h"
 #include "textdisplay.h"
+#include "token.h"
 
 using namespace std;
 
@@ -61,43 +62,35 @@ void printProperties(Player *player) {
 }
 
 void startGame(int &numPlayers, vector<Player *> &players, vector<Block *> &blocks) {
-  vector<string> names = {"Goose","GRT Bus","Tim Hortons Doughnut","Professor","Student","Money","Laptop","Pink Tie"};
-  vector<char> tokens = {'G','B','D','P','S','$','L','T'};
-  
   // determine number of players
   cout << "Enter number of players (2-8): ";
   cin >> numPlayers; // add some precautions if user input is invalid
   cout << endl;
 
   // print out player name options
-  cout << "Here are the avaiable player options:" << endl << endl;
+  cout << "Here are the available player options:" << endl << endl;
   cout << left << setw(30) << "Names" << "Token" << endl << endl;;
-  for (int i = 0; i < 8; i++) {
-    cout << left << setw(30) << names[i] << tokens[i] << endl;
+  for (auto &t : tokenToStrMap) {
+    cout << left << setw(30) << t.second;
+  }
+  for (auto &t : tokenToCharMap) {
+    cout << left << setw(30) << t.second;
   }
   cout << endl;
 
   // let players choose their desired roles
   for (int i = 1; i <= numPlayers; i++) {
-    cout << "Player " << i << " enter player token: ";
+    cout << "Player " << i << " enter name: ";
+    std::string playerName;
+    cin >> playerName; // add some precautions here too
     std::string chosenToken;
-    std::string chosenName;
+    cout << "Please enter the token of which piece you would like on the board (e.g. G): ";
     cin >> chosenToken; // add some precautions here too
     cout << endl;
 
-    // find token corresponding to this name
-    int ind = 0;
-    for (auto token : tokens) {
-      if (token == chosenToken[0]) {
-        chosenName = names[ind];
-        break;
-      }
-      ind++;
-    }
-
     // create player object and add to its list
     Player *p;
-    p = new Player(chosenName, chosenToken[0], Token::GOOSE); // change this Token::GOOSE thing
+    p = new Player(playerName, charToTokenMap[chosenToken[0]]);
     players.emplace_back(p);
   }
 
