@@ -9,14 +9,13 @@ struct BlockInfo {
   int position;
   BlockDesc desc;
   Player *owner = nullptr;
+  int impLevel = 0;
 
   BlockInfo();
   BlockInfo(std::string name, int position);
   BlockInfo(std::string name, int position, BlockDesc desc);
 
   BlockInfo(const BlockInfo &o);
-
-  void setOwner(Player *p);
 };
 
 #endif

@@ -140,6 +140,7 @@ int main(int argc, char *argv[]) {
     int i = 0;
     while (i < numPlayers) {
       Player &player1 = *(players[i]);
+      std::string player1Name = player1.getName();
       int pos = player1.getPosition();
 
       // cmd intake
@@ -168,12 +169,19 @@ int main(int argc, char *argv[]) {
         s.type = BlockStateType::NewVisitor;
 
         // update block state that player is moving to
-        blocks[pos + steps]->setState(s);
+        int newPosition = (pos + steps > NUMSQUARES) ? (pos + steps) % NUMSQUARES : pos + steps;
+        blocks[newPosition]->setState(s);
 
         // update player info
-        player1.setPosition(pos + steps);
+        player1.setPosition(newPosition);
 
-        cout << watopoly; 
+        cout << watopoly;
+
+        /*
+        check if block is property
+        if so, await further commands
+        if not, apply action
+        */
 
         // ********* new *********
         /*
@@ -238,6 +246,31 @@ int main(int argc, char *argv[]) {
         */
 
       } else if (cmd == "improve") {
+        BlockInfo info = blocks[pos]->getInfo();
+        BlockDesc desc = info.desc;
+        Player *owner = info.owner;
+
+        if (desc == BlockDesc::AcademicBuilding) {
+          if (!owner) {
+            // this player has purchase the property
+            info.owner = &player1;
+            info.impLevel++;
+            blocks[pos]->setInfo(info);
+          } else {
+            // check if the player already owns the property
+            if (owner->getName() == player1Name) {
+              // improve the property
+            } else {
+              // if not, output an informative message
+            cerr << "Invalid command. You do not own this property." << endl;
+            }
+          }
+        } else if (desc == BlockDesc::AcademicBuilding) {
+          
+        } else {
+
+        }
+
         modifyProperty(player1, cmd, [&player1](Property *property) {
           Academic *academic = dynamic_cast<Academic *>(property);
           if (academic != nullptr) {
@@ -321,16 +354,14 @@ int main(int argc, char *argv[]) {
           BlockInfo b = block->getInfo();
           std::string blockName = b.name;
           Player *owner = b.owner;
+          int impLevel = b.impLevel;
           std::string ownerName = "BANK";
           if (owner) ownerName = owner->getName();
           if (b.desc == BlockDesc::AcademicBuilding ||
               b.desc == BlockDesc::NonAcademicBuilding) {
             outFile << blockName << " ";
             outFile << ownerName << " ";
-            //int impLevel = block->getLvl();
-            //outFile << block->getLvl() << endl;
-            //block needs to be able to get level but it cant
-            outFile << endl;
+            outFile << impLevel << endl;
           } 
         }
         outFile.close();
