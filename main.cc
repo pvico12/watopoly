@@ -193,6 +193,7 @@ int main(int argc, char *argv[]) {
 
         cout << watopoly;
 
+        /*
         // ********* new *********
         BlockInfo info = blocks[pos]->getInfo();
         BlockDesc desc = info.desc;
@@ -226,6 +227,7 @@ int main(int argc, char *argv[]) {
         } else {
           // should not be here
         }
+        */
 
       } else if (cmd == "next") {
         rolled = false;
@@ -327,7 +329,8 @@ int main(int argc, char *argv[]) {
       } else if (cmd == "bankrupt") {
         // need to reset the owners of the properties that player owns
         vector<Property *> properties = player1.getProperties();
-        for (int i = 0; i < properties.size(); i++) {
+        int len = properties.size();
+        for (int i = 0; i < len; i++) {
           properties.at(i)->reset();
         }
         players.erase(players.begin() + i);
