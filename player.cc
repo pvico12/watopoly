@@ -56,16 +56,22 @@ Property *Player::getProperty(std::string propertyName) {
 
 void Player::move(int n) {
   position = (position + n) % 40;
-  if (position - n < 0) {
+  // if (position - n < 0) {
+  //   money += 200;
+  // }
+  if (position > 20 && position - n < 20) {
     money += 200;
   }
 }
 
 void Player::moveTo(int n, bool collect) {
-  position = n;
-  if (collect && position < n) {
+  // if (collect && position < n) {
+  //   money += 200;
+  // }
+  if (collect && position < 20 && n > 20) {
     money += 200;
   }
+  position = n;
 }
 
 bool Player::hasMoney(int amount) {
