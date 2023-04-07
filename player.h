@@ -17,8 +17,8 @@ class Player {
   std::string name;
   Token token;
   int money, position;
-  int timsCups = 0;
   std::vector<Property*> props;
+  int timsCups;
 
  public:
   Player(std::string name, Token token,
