@@ -2,10 +2,10 @@
 #include "state.h"
 #include "info.h"
 
-Player::Player(std::string name, Token token, int position, int money,
+Player::Player(std::string name, Token token, int money, int position,
         std::vector<Property*> props, int timsCups)
-    : name{name}, token{token}, position{position},
-      money{money}, props{props}, timsCups(timsCups) {}
+    : name{name}, token{token}, money{money}, 
+      position{position}, props{props}, timsCups(timsCups) {}
 
 /*
 Player::Player(const Player &o)

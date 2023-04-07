@@ -99,7 +99,7 @@ void getPlayerData(int &numPlayers, vector<Player *> &players) {
 
     // create player object and add to its list
     Player *p;
-    p = new Player(playerName, charToTokenMap[chosenToken[0]]);
+    p = new Player(playerName, charToTokenMap[chosenToken[0]], 1500);
     players.emplace_back(p);
   }
 }
@@ -251,8 +251,11 @@ int main(int argc, char *argv[]) {
         Player *owner = info.owner;
 
         if (desc == BlockDesc::AcademicBuilding) {
-          if (!owner) {
+          if (owner) {
             // this player has purchase the property
+            // implemen this to work, we need to call buy function
+            // but these are blocks so we cant access them
+            // PROBLEM: player1.buy(*(blocks)[pos]);
             info.owner = &player1;
             info.impLevel++;
             blocks[pos]->setInfo(info);
@@ -260,6 +263,8 @@ int main(int argc, char *argv[]) {
             // check if the player already owns the property
             if (owner->getName() == player1Name) {
               // improve the property
+              info.impLevel++;
+              blocks[pos]->setInfo(info);
             } else {
               // if not, output an informative message
             cerr << "Invalid command. You do not own this property." << endl;
