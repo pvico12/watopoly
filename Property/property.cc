@@ -19,3 +19,8 @@ bool Property::isMortgaged() {
 void Property::toggleMortgage() {
   mortgaged = !mortgaged;
 }
+
+void Property::reset() {
+  improvLvl = 0;
+  mortgaged = false;
+}

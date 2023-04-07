@@ -61,8 +61,11 @@ void Player::move(int n) {
   }
 }
 
-void Player::moveTo(int n) {
+void Player::moveTo(int n, bool collect) {
   position = n;
+  if (collect && position < n) {
+    money += 200;
+  }
 }
 
 bool Player::hasMoney(int amount) {
@@ -73,19 +76,15 @@ void Player::addMoney(int amount) {
   money += amount;
 }
 
-bool Player::removeMoney(int amount) {
-  if (!hasMoney(amount)) {
-    return false;
-  }
+void Player::removeMoney(int amount) {
   money -= amount;
-  return true;
 }
 
 int Player::hasProperty(Property &prop) {
   // wack implementation of hasProperty()
   int len = props.size();
   for (int i = 0; i < len; i++) {
-    if (props[i]->getName() == prop.getName()) {
+    if (props.at(i)->getName() == prop.getName()) {
       return i;
     }
   }

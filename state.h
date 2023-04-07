@@ -11,8 +11,8 @@ enum class BlockStateType {
 enum class BlockDesc {
   AcademicBuilding,
   NonAcademicBuilding,
-  ChanceMove,
-  ChancePay,
+  MovementBlock,
+  MoneyBlock,
   Other
 };
 
