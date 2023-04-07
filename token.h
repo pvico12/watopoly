@@ -15,7 +15,7 @@ enum class Token {
   PINK_TIE
 };
 
-std::map<char, Token> tokenCharMap = {
+std::map<char, Token> charToTokenMap = {
   {'G', Token::GOOSE},
   {'B', Token::GRT_BUS},
   {'D', Token::TIM_HORTONS},
@@ -24,6 +24,17 @@ std::map<char, Token> tokenCharMap = {
   {'$', Token::MONEY},
   {'L', Token::LAPTOP},
   {'T', Token::DOUGHNUT}
+};
+
+std::map<Token, char> tokenToCharMap = {
+  {Token::GOOSE, 'G'},
+  {Token::GRT_BUS, 'B'},
+  {Token::TIM_HORTONS, 'D'},
+  {Token::PINK_TIE, 'P'},
+  {Token::STUDENT, 'S'},
+  {Token::MONEY, '$'},
+  {Token::LAPTOP, 'L'},
+  {Token::TIM_HORTONS, 'T'}
 };
 
 #endif
