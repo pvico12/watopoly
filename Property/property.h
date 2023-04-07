@@ -21,6 +21,7 @@ class Property : public Block {
   void toggleMortgage();
   virtual bool upgrade() = 0;
   virtual int getFee() = 0;
+  void reset();
 };
 
 #endif

@@ -85,7 +85,7 @@ int Player::hasProperty(Property &prop) {
   // wack implementation of hasProperty()
   int len = props.size();
   for (int i = 0; i < len; i++) {
-    if (props[i]->getName() == prop.getName()) {
+    if (props.at(i)->getName() == prop.getName()) {
       return i;
     }
   }

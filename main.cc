@@ -1,10 +1,10 @@
 #include <cstdlib>  // temporary randomness, will add shuffle.cc later
 #include <ctime>    // temporary randomness for now, will add shuffle.cc later
-#include <functional>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
 #include <fstream>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -28,6 +28,7 @@ using namespace std;
 
 const int MORTGAGE_RATE = 0.5;
 const int UNMORTGAGE_RATE = 0.6;
+const string separator = " ";
 
 bool isPosInt(const string str) {
   if (str[0] == '0') {
@@ -74,12 +75,16 @@ void printFileToScreen(std::string filename) {
 void getPlayerData(int &numPlayers, vector<Player *> &players) {
   // determine number of players
   cout << "Enter number of players (2-8): ";
-  cin >> numPlayers; // add some precautions if user input is invalid
+  cin >> numPlayers;  // add some precautions if user input is invalid
   cout << endl;
 
   // print out player name options
-  cout << "Here are the available player options:" << endl << endl;
-  cout << left << setw(30) << "Names" << "Token" << endl << endl;;
+  cout << "Here are the available player options:" << endl
+       << endl;
+  cout << left << setw(30) << "Names"
+       << "Token" << endl
+       << endl;
+  ;
   for (auto &t : tokenToStrMap) {
     cout << left << setw(30) << t.second;
     Token token = strToTokenMap[t.second];
@@ -91,10 +96,10 @@ void getPlayerData(int &numPlayers, vector<Player *> &players) {
   for (int i = 1; i <= numPlayers; i++) {
     cout << "Player " << i << " enter name: ";
     std::string playerName;
-    cin >> playerName; // add some precautions here too
+    cin >> playerName;  // add some precautions here too
     std::string chosenToken;
     cout << "Please enter the token of which piece you would like on the board (e.g. G): ";
-    cin >> chosenToken; // add some precautions here too
+    cin >> chosenToken;  // add some precautions here too
     cout << endl;
 
     // create player object and add to its list
@@ -117,7 +122,6 @@ void startGame(int &numPlayers, vector<Player *> &players, vector<Block *> &bloc
 
   printFileToScreen("rules.txt");
   printFileToScreen("commands.txt");
-
 }
 
 int main(int argc, char *argv[]) {
@@ -139,7 +143,7 @@ int main(int argc, char *argv[]) {
   while (true) {
     int i = 0;
     while (i < numPlayers) {
-      Player &player1 = *(players[i]);
+      Player &player1 = *(players.at(i));
       std::string player1Name = player1.getName();
       int pos = player1.getPosition();
 
@@ -212,7 +216,7 @@ int main(int argc, char *argv[]) {
         Player *player2ptr;
         for (int i = 0; i < numPlayers; i++) {
           if (players[1]->getName() == player2Name) {
-            player2ptr = players[i];
+            player2ptr = players.at(i);
             break;
           }
         }
@@ -253,7 +257,7 @@ int main(int argc, char *argv[]) {
         if (desc == BlockDesc::AcademicBuilding) {
           if (owner) {
             // this player has purchase the property
-            // implemen this to work, we need to call buy function
+            // implement this to work, we need to call buy function
             // but these are blocks so we cant access them
             // PROBLEM: player1.buy(*(blocks)[pos]);
             info.owner = &player1;
@@ -267,13 +271,11 @@ int main(int argc, char *argv[]) {
               blocks[pos]->setInfo(info);
             } else {
               // if not, output an informative message
-            cerr << "Invalid command. You do not own this property." << endl;
+              cerr << "Invalid command. You do not own this property." << endl;
             }
           }
         } else if (desc == BlockDesc::AcademicBuilding) {
-          
         } else {
-
         }
 
         modifyProperty(player1, cmd, [&player1](Property *property) {
@@ -306,10 +308,13 @@ int main(int argc, char *argv[]) {
         });
 
       } else if (cmd == "bankrupt") {
-        // reset the owners of the properties that player owns
-        // remove any improvements
-        // unmortgage any properties in mortgage state
-        // remove player from players vector
+        // need to reset the owners of the properties that player owns
+        vector<Property *> properties = player1.getProperties();
+        for (int i = 0; i < properties.size(); i++) {
+          properties.at(i)->reset();
+        }
+        players.erase(players.begin() + i);
+        numPlayers--;
 
       } else if (cmd == "assets") {
         printProperties(&player1);
@@ -322,9 +327,9 @@ int main(int argc, char *argv[]) {
         }
 
       } else if (cmd == "help") {
-        cout << "Would you like to see the rules or the list of commands or both?" << endl;
+        cout << "Would you like to see the rules or the list of commands or both?\n"
+             << "Enter rules/commands/both: ";
         string helpCmd;
-        cout << "Enter rules/commands/both: ";
         cin >> helpCmd;
         cout << endl;
         if (helpCmd == "rules") {
@@ -335,10 +340,10 @@ int main(int argc, char *argv[]) {
           printFileToScreen("rules.txt");
           printFileToScreen("commands.txt");
         } else {
-          cout << "Incorrect input. You have exited the help menu." << endl;
-          cout << "If you wish to try again, enter the 'help' command." << endl;
+          cout << "Incorrect input. You have exited the help menu.\n"
+               << "If you wish to try again, enter the 'help' command." << endl;
         }
-        
+
       } else if (cmd == "save") {
         // get file name and create file
         std::string filename;
@@ -347,10 +352,10 @@ int main(int argc, char *argv[]) {
         // write player info
         outFile << numPlayers << endl;
         for (auto player : players) {
-          outFile << player->getName() << " ";
-          outFile << player->getCharToken() << " ";
-          outFile << player->getTimsCups() << " ";
-          outFile << player->getMoney() << " ";
+          outFile << player->getName() << separator;
+          outFile << player->getCharToken() << separator;
+          outFile << player->getTimsCups() << separator;
+          outFile << player->getMoney() << separator;
           outFile << player->getPosition() << endl;
           // add case for when in tims line
         }
@@ -364,27 +369,20 @@ int main(int argc, char *argv[]) {
           if (owner) ownerName = owner->getName();
           if (b.desc == BlockDesc::AcademicBuilding ||
               b.desc == BlockDesc::NonAcademicBuilding) {
-            outFile << blockName << " ";
-            outFile << ownerName << " ";
+            outFile << blockName << separator;
+            outFile << ownerName << separator;
             outFile << impLevel << endl;
-          } 
+          }
         }
         outFile.close();
-        
+
       } else {
         // undefined command
         continue;
       }
 
-      // check if the current player is bankrupt
-      bool bankrupt = false;  // false for now, change later
-      if (bankrupt) {
-        // pop player from players vector
-        players.erase(players.begin() + i);
-      }
-
       // check if game is won
-      if (players.size() == 1) {
+      if (numPlayers == 1) {
         cout << players.at(0)->getName() << " is the winner!" << endl;
       }
     }

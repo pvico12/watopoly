@@ -100,8 +100,8 @@ TextDisplay::TextDisplay() {
 void TextDisplay::initDisplay(std::vector<Block*> &blocks) {
 	int i = 0;
 	for (auto b : blocks) { // loop through blocks
-		int row = blockCoords[i][0];    // get its display coordinate
-		int col = blockCoords[i][1];
+		int row = blockCoords.at(i).at(0);    // get its display coordinate
+		int col = blockCoords.at(i).at(1);
 		int rowIter = 1;
 		std::string *dispName = b->getDisplayName();      // get its display name
 		// iterate through respective coordinates, changing the blocks display
