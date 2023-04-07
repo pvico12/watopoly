@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -61,7 +62,15 @@ void printProperties(Player *player) {
   }
 }
 
-void startGame(int &numPlayers, vector<Player *> &players, vector<Block *> &blocks) {
+void printFileToScreen(std::string filename) {
+  ifstream file{filename};
+  string line;
+  while (getline(file, line)) {
+    cout << line << endl;
+  }
+}
+
+void getPlayerData(int &numPlayers, vector<Player *> &players) {
   // determine number of players
   cout << "Enter number of players (2-8): ";
   cin >> numPlayers; // add some precautions if user input is invalid
@@ -92,6 +101,21 @@ void startGame(int &numPlayers, vector<Player *> &players, vector<Block *> &bloc
     p = new Player(playerName, charToTokenMap[chosenToken[0]]);
     players.emplace_back(p);
   }
+}
+
+void startGame(int &numPlayers, vector<Player *> &players, vector<Block *> &blocks) {
+  printFileToScreen("introMessage.txt");
+  getPlayerData(numPlayers, players);
+
+  // Starting state (game begins at Goose Nesting)
+  BlockState s = blocks[0]->getState();
+  for (Player *player : players) {
+    s.p = player;
+    blocks[0]->setState(s);
+  }
+
+  printFileToScreen("rules.txt");
+  printFileToScreen("commands.txt");
 
 }
 
@@ -109,17 +133,7 @@ int main(int argc, char *argv[]) {
   vector<Player *> players;
 
   startGame(numPlayers, players, blocks);
-
-  // Starting state (game begins at Goose Nesting)
-  BlockState s = blocks[0]->getState();
-  for (Player *player : players) {
-    s.p = player;
-    blocks[0]->setState(s);
-  }
-
   cout << watopoly;  // output text display with starting players
-
-  
 
   while (true) {
     int i = 0;
@@ -268,6 +282,24 @@ int main(int argc, char *argv[]) {
           cout << endl;
         }
 
+      } else if (cmd == "help") {
+        cout << "Would you like to see the rules or the list of commands or both?" << endl;
+        string helpCmd;
+        cout << "Enter rules/commands/both: ";
+        cin >> helpCmd;
+        cout << endl;
+        if (helpCmd == "rules") {
+          printFileToScreen("rules.txt");
+        } else if (helpCmd == "commands") {
+          printFileToScreen("commands.txt");
+        } else if (helpCmd == "both") {
+          printFileToScreen("rules.txt");
+          printFileToScreen("commands.txt");
+        } else {
+          cout << "Incorrect input. You have exited the help menu." << endl;
+          cout << "If you wish to try again, enter the 'help' command." << endl;
+        }
+        
       } else if (cmd == "save") {
       } else {
         // undefined command

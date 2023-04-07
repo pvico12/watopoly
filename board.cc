@@ -34,9 +34,17 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 			int purchaseCost = std::stoi(blockParams[3]);
 			int improvLevel = std::stoi(blockParams[4]);
 			int improvCost = std::stoi(blockParams[6]);;
-			std::vector<int> numArr; // fix
+			
+			// create tuition array
+			std::string tuitions = blockParams[5];
+			std::vector<int> tuitionCosts;
+			int cost;
+			char c;
+			std::istringstream iss{tuitions};
+			while (iss >> c >> cost >> c) { tuitionCosts.emplace_back(cost); }
+
 			newI.desc = BlockDesc::AcademicBuilding;
-			b = new Academic(name, blockParams[3], purchaseCost, improvLevel, numArr, improvCost);
+			b = new Academic(name, blockParams[3], purchaseCost, improvLevel, tuitionCosts, improvCost);
 		} else if (type == "NonAcademic") {
 			int purchaseCost = std::stoi(blockParams[2]);
 			int improvLevel = std::stoi(blockParams[3]);
