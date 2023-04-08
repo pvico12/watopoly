@@ -11,9 +11,10 @@ extern const int BOARD_SIZE;
 
 class Board {
   std::vector<Block*> blocks;
-  int timsCupCount;
+  int timsCupCount = 0;
   TextDisplay *td = nullptr;
  public:
+  Board();
   Board(TextDisplay &td);
   int getCupCount();
   std::vector<Block*> *getBlocks();
