@@ -67,6 +67,48 @@ Player *findPlayer2(vector<Player *> &players, string player2Name) {
   return nullptr;
 }
 
+void auction(Property *prop, std::vector<Player *> &players) {
+  cout << "Starting auction for " << prop->getName() << "..." << endl;
+
+  int cost = prop->getPurCost();
+  int bidders = 0;
+  Player *highestBidder = nullptr;
+  int highestBid = 0;
+
+  while (true) {
+    int previousHigh = highestBid;
+    for (Player *player : players) {
+      // check if the player has enough money to make a higher bid
+      if (player->getMoney() < highestBid) {
+        continue;
+      }
+
+      cout << "Current highest bid: " << highestBid << endl;
+      cout << player->getName() << ", please enter your bid: ";
+      int bid;
+      cin >> bid;
+      cout << endl;
+
+      if (bid > highestBid) {
+        highestBidder = player;
+        highestBid = bid;
+      }
+    }
+
+    if (highestBid == previousHigh) {
+      break;
+    }
+  }
+
+  if (highestBidder != nullptr) {
+    highestBidder->removeMoney(cost);
+    highestBidder->addProperty(*prop);
+    cout << prop->getName() << " has been auctioned to " << highestBidder->getName() << endl;
+  } else {
+    cout << "No one bid, " << prop->getName() << " remains unowned." << endl;
+  }
+}
+
 void printProperties(Player *player) {
   vector<Property *> properties = player->getProperties();
 
@@ -246,11 +288,8 @@ int main(int argc, char *argv[]) {
                 }
               }
               // case 3: unowned property, auction
-              string player2Name;
-              cout << "Auction has started, who would like to purchase this property?" << endl;
-              property->auction(players);
+              auction(property, players);
             }
-
           } else if (desc == BlockDesc::MovementBlock) {
             NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[pos]);
             nonProperty->action(player1);
