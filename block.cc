@@ -59,8 +59,8 @@ Block::Block(std::string name) : name{name} {
     i++;
   }
 
-  BlockInfo info{name, 0, BlockDesc::Other};
-  BlockState state{BlockStateType::NewVisitor, BlockDesc::Other};
+  BlockInfo info{name, 0};
+  state.type = BlockStateType::NewVisitor;
   setInfo(info);
   setState(state);
 }

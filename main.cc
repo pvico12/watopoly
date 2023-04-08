@@ -126,10 +126,11 @@ void startGame(int &numPlayers, vector<Player *> &players, vector<Block *> &bloc
   printFileToScreen("introMessage.txt");
   getPlayerData(numPlayers, players);
 
-  // Starting state (game begins at Goose Nesting)
+  // Starting state (game begins at Collect OSAP)
   BlockState s = blocks[0]->getState();
   for (Player *player : players) {
-    s.p = player;
+    vector<Player *> &visitors = s.visitors;
+    visitors.emplace_back(player);
     blocks[STARTING_BLOCK]->setState(s);
   }
 
@@ -189,7 +190,13 @@ int main(int argc, char *argv[]) {
           // set original block state to visitor leaving, remove player from this block
           BlockState currPosState = blocks[pos]->getState();
           currPosState.type = BlockStateType::VisitorLeft;
-          currPosState.p = &player1;
+          vector<Player *> &visitors = currPosState.visitors;
+          int targetIndex = 0;
+          for (auto player : visitors) {
+            if (player->getName() == player1.getName()) break;
+            targetIndex++;
+          }
+          visitors.erase(visitors.begin() + targetIndex);
           blocks[pos]->setState(currPosState);
 
           player1.move(steps);  // move
@@ -198,7 +205,7 @@ int main(int argc, char *argv[]) {
           int newPosition = (pos + steps >= NUMSQUARES) ? (pos + steps) % NUMSQUARES : pos + steps;
           BlockState newPosState = blocks[newPosition]->getState();
           newPosState.type = BlockStateType::NewVisitor;
-          newPosState.p = &player1;
+          newPosState.visitors.emplace_back(&player1);
           blocks[newPosition]->setState(newPosState);
 
           // update player info
