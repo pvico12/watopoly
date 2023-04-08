@@ -6,6 +6,7 @@ class Player;
 enum class BlockStateType {
   NewVisitor,
   VisitorLeft,
+  Improved,
   Other
 };
 enum class BlockDesc {

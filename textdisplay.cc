@@ -154,6 +154,15 @@ void TextDisplay::notify(Subject<BlockInfo, BlockState> &whoNotified) {
 		}
 		theDisplay[row+BLOCKHEIGHT-1][col+BLOCKWIDTH-1] = ' ';
 	}
+	if (s.type == BlockStateType::Improved) {
+		for (int i = 1; i < BLOCKWIDTH; i++) {
+			char c = theDisplay[row+1][col+i];
+			if (c == ' ') {
+				theDisplay[row+1][col+i] = 'I';
+				break;
+			}
+		}
+	}
 }
 
 std::ostream &operator<<(std::ostream &out, const TextDisplay &td) {
