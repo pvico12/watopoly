@@ -67,6 +67,47 @@ Player *findPlayer2(vector<Player *> &players, string player2Name) {
   return nullptr;
 }
 
+void auction(Property *prop, std::vector<Player *> &players) {
+  cout << "Starting auction for " << prop->getName() << "..." << endl;
+
+  int cost = prop->getPurCost();
+  Player *highestBidder = nullptr;
+  int highestBid = 0;
+
+  while (true) {
+    int previousHigh = highestBid;
+    for (Player *player : players) {
+      // check if the player has enough money to make a higher bid
+      if (player->getMoney() < highestBid) {
+        continue;
+      }
+
+      cout << "Current highest bid: " << highestBid << endl;
+      cout << player->getName() << ", please enter your bid: ";
+      int bid;
+      cin >> bid;
+      cout << endl;
+
+      if (bid > highestBid) {
+        highestBidder = player;
+        highestBid = bid;
+      }
+    }
+
+    if (highestBid == previousHigh) {
+      break;
+    }
+  }
+
+  if (highestBidder != nullptr) {
+    highestBidder->removeMoney(cost);
+    highestBidder->addProperty(*prop);
+    cout << prop->getName() << " has been auctioned to " << highestBidder->getName() << endl;
+  } else {
+    cout << "No one bid, " << prop->getName() << " remains unowned." << endl;
+  }
+}
+
 void printProperties(Player *player) {
   vector<Property *> properties = player->getProperties();
 
@@ -211,41 +252,66 @@ int main(int argc, char *argv[]) {
           // update player info
           player1.setPosition(newPosition);
 
-          /*
           // ********* new *********
           BlockInfo info = blocks[pos]->getInfo();
           BlockDesc desc = info.desc;
           Player *owner = info.owner;
+          
+          while (true) {
+            if (desc == BlockDesc::AcademicBuilding && desc == BlockDesc::NonAcademicBuilding) {
+              Property *property = dynamic_cast<Property *>(blocks[pos]);
+              if (owner) {
+                // case 1: steps on someone else's property
+                int amount = property->getFee();
+                Player *player2ptr = findPlayer2(players, owner->getName());
+                Player player2 = *player2ptr;
+                bool isBankrupt = !player1.hasMoney(amount);
+                if (isBankrupt) {
+                  cout << "Would you like to mortgage or trade with other players to prevent bankruptcy?" << endl;
+                }
+                player1.removeMoney(amount);
+                player2.addMoney(amount);
+              } else {
+                // check if it's the current player's property
+                if (owner == &player1) {
+                  continue;
+                }
 
-          if (desc == BlockDesc::AcademicBuilding && desc == BlockDesc::NonAcademicBuilding) {
-            Property *property = dynamic_cast<Property *>(blocks[pos]);
-            if (owner) {
-              // case 1: steps on someone else's property
-              int amount = property->getFee();
-              Player *player2ptr = findPlayer2(players, owner->getName());
-              Player player2 = *player2ptr;
-              bool isBankrupt = !player1.hasMoney(amount);
-              if (isBankrupt) {
-                cout << "Would you like to mortgage or trade with other players to prevent bankruptcy?" << endl;
+                string purchase;
+                cout << "Would you like to purchase this unowned property? (Yes/No)";
+                cin >> purchase;
+                cout << endl;
+                int fee = property->getFee();
+
+                if (purchase == "Yes") {
+                  // case 2: unowned property, purchase
+                  if (player1.hasMoney(fee)) {
+                    player1.removeMoney(fee);
+                    player1.addProperty(*property);  // need to check if this works
+                    cout << "Purchase successful! You now own " << property->getName() << "." << endl;
+                    continue;
+                  } else {
+                    cout << "Purchase failed! You have insufficient funds." << endl;
+                  }
+                }
+                // case 3: unowned property, auction
+                auction(property, players);
               }
-              player1.removeMoney(amount);
-              player2.addMoney(amount);
+              break;
+            } else if (desc == BlockDesc::MovementBlock) {
+              NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[pos]);
+              nonProperty->action(player1);
+              // add additional lines
+            } else if (desc == BlockDesc::MoneyBlock) {
+              NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[pos]);
+              nonProperty->action(player1);
+              break;
+            // } else if (desc == BlockDesc::Tims) {
+              
             } else {
-              // case 2: unowned property, purchase
-              // case 3: unowned property, auction
+              // should not be here
             }
-
-          } else if (desc == BlockDesc::MovementBlock) {
-            NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[pos]);
-            nonProperty->action(player1);
-            // add additional lines
-          } else if (desc == BlockDesc::MoneyBlock) {
-            NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[pos]);
-            nonProperty->action(player1);
-          } else {
-            // should not be here
           }
-          */
         }
       } else if (cmd == "next") {
         // control is given to the next player
@@ -352,11 +418,8 @@ int main(int argc, char *argv[]) {
         });
       } else if (cmd == "bankrupt") {
         // need to reset the owners of the properties that player owns
-        vector<Property *> properties = player1.getProperties();
-        int len = properties.size();
-        for (int i = 0; i < len; i++) {
-          properties.at(i)->reset();
-        }
+        // remove from tims cups total
+        player1.reset();
         players.erase(players.begin() + i);
         numPlayers--;
       } else if (cmd == "assets") {
@@ -424,6 +487,7 @@ int main(int argc, char *argv[]) {
       // check if game is won
       if (numPlayers == 1) {
         cout << players.at(0)->getName() << " is the winner!" << endl;
+        break;
       }
 
       cout << watopoly;

@@ -1,11 +1,11 @@
 #include "player.h"
-#include "state.h"
+
 #include "info.h"
+#include "state.h"
 
 Player::Player(std::string name, Token token, int money, int position,
-        std::vector<Property*> props, int timsCups)
-    : name{name}, token{token}, money{money}, 
-      position{position}, props{props}, timsCups(timsCups) {}
+               std::vector<Property *> props, int timsCups)
+    : name{name}, token{token}, money{money}, position{position}, props{props}, timsCups(timsCups) {}
 
 /*
 Player::Player(const Player &o)
@@ -36,11 +36,19 @@ int Player::getTimsCups() {
   return timsCups;
 }
 
+void Player::addTimsCup() {
+  timsCups++;
+}
+
+void Player::useTimsCup() {
+  timsCups--;
+}
+
 void Player::setPosition(int n) {
   position = n;
 }
 
-std::vector<Property*> Player::getProperties() {
+std::vector<Property *> Player::getProperties() {
   return props;
 };
 
@@ -121,7 +129,7 @@ bool Player::buy(Property &prop) {
 }
 
 bool Player::improve(Property &prop) {
-  Academic *academic = dynamic_cast<Academic*>(&prop);
+  Academic *academic = dynamic_cast<Academic *>(&prop);
   if (academic == nullptr) {
     return false;
   }
@@ -165,4 +173,13 @@ bool Player::trade(Player &p2, Property &prop1, int amount) {
     return true;
   }
   return false;
+}
+
+void Player::reset() {
+  int numProps = props.size();
+  for (int i = 0; i < numProps; i++) {
+    props.at(i)->reset();
+  }
+  props.clear();
+  timsCups = 0;
 }
