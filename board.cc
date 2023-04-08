@@ -28,7 +28,7 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 
 		std::string type = blockParams[0];
 		std::string name = blockParams[1];;
-		BlockInfo newI{name, currPos};
+		BlockInfo info{name, currPos};
 
 		if (type == "Academic") {
 			int purchaseCost = std::stoi(blockParams[3]);
@@ -43,30 +43,30 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 			std::istringstream iss{tuitions};
 			while (iss >> c >> cost >> c) { tuitionCosts.emplace_back(cost); }
 
-			newI.desc = BlockDesc::AcademicBuilding;
+			info.desc = BlockDesc::AcademicBuilding;
 			b = new Academic(name, blockParams[3], purchaseCost, improvLevel, tuitionCosts, improvCost);
 		} else if (type == "NonAcademic") {
 			int purchaseCost = std::stoi(blockParams[2]);
 			int improvLevel = std::stoi(blockParams[3]);
-			newI.desc = BlockDesc::NonAcademicBuilding;
+			info.desc = BlockDesc::NonAcademicBuilding;
 			b = new NonAcademic(name, purchaseCost, improvLevel, Type::Gym);
 		} else if (type == "MoneyBlock") {
 			int money = std::stoi(blockParams[2]);
 			MoneyType mt = MoneyType::ADD;
-			newI.desc = BlockDesc::MoneyBlock;
+			info.desc = BlockDesc::MoneyBlock;
 			b = new MoneyBlock(name, money, mt);
 		} else if (type == "MovementBlock") {
 			int move = std::stoi(blockParams[2]);
 			MoveType mt = MoveType::MOVE_N_STEPS;
-			newI.desc = BlockDesc::MovementBlock;
+			info.desc = BlockDesc::MovementBlock;
 			b = new MovementBlock(name, move, mt);
 		} else if (type == "NonProperty") {
-			newI.desc = BlockDesc::Other;
+			info.desc = BlockDesc::Other;
 			b = new MoneyBlock(name, 0, MoneyType::ADD);
 		}
 
-		b->setInfo(newI);
-		b->notifyObservers();
+		b->setInfo(info);
+		//b->notifyObservers();
 		blocks.emplace_back(b); // add to end of block list
 
 		currPos++;

@@ -1,13 +1,16 @@
 #ifndef STATE_H
 #define STATE_H
 
+#include <vector>
+
 class Player;
 
 enum class BlockStateType {
   NewVisitor,
   VisitorLeft,
-  Improved,
-  Other
+  Improve,
+  Worsen,
+  Stable
 };
 enum class BlockDesc {
   AcademicBuilding,
@@ -18,15 +21,9 @@ enum class BlockDesc {
 };
 
 struct BlockState {
-  BlockStateType type;
-  BlockDesc desc;
-  Player *p;
-
-  BlockState();
-  BlockState(BlockStateType type, BlockDesc desc);
-  BlockState(BlockStateType type, BlockDesc desc, Player *p);
-
-  BlockState(const BlockState &o);
+  BlockStateType type = BlockStateType::Stable;
+  BlockDesc desc = BlockDesc::Other;
+  std::vector<Player *> visitors = {};
 };
 
 #endif
