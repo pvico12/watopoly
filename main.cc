@@ -71,7 +71,6 @@ void auction(Property *prop, std::vector<Player *> &players) {
   cout << "Starting auction for " << prop->getName() << "..." << endl;
 
   int cost = prop->getPurCost();
-  int bidders = 0;
   Player *highestBidder = nullptr;
   int highestBid = 0;
 
@@ -250,55 +249,61 @@ int main(int argc, char *argv[]) {
           BlockInfo info = blocks[pos]->getInfo();
           BlockDesc desc = info.desc;
           Player *owner = info.owner;
-
-          if (desc == BlockDesc::AcademicBuilding && desc == BlockDesc::NonAcademicBuilding) {
-            Property *property = dynamic_cast<Property *>(blocks[pos]);
-            if (owner) {
-              // case 1: steps on someone else's property
-              int amount = property->getFee();
-              Player *player2ptr = findPlayer2(players, owner->getName());
-              Player player2 = *player2ptr;
-              bool isBankrupt = !player1.hasMoney(amount);
-              if (isBankrupt) {
-                cout << "Would you like to mortgage or trade with other players to prevent bankruptcy?" << endl;
-              }
-              player1.removeMoney(amount);
-              player2.addMoney(amount);
-            } else {
-              // check if it's the current player's property
-              if (owner == &player1) {
-                continue;
-              }
-
-              string purchase;
-              cout << "Would you like to purchase this unowned property? (Yes/No)";
-              cin >> purchase;
-              cout << endl;
-              int fee = property->getFee();
-
-              if (purchase == "Yes") {
-                // case 2: unowned property, purchase
-                if (player1.hasMoney(fee)) {
-                  player1.removeMoney(fee);
-                  player1.addProperty(*property);  // need to check if this works
-                  cout << "Purchase successful! You now own " << property->getName() << "." << endl;
-                  continue;
-                } else {
-                  cout << "Purchase failed! You have insufficient funds." << endl;
+          
+          while (true) {
+            if (desc == BlockDesc::AcademicBuilding && desc == BlockDesc::NonAcademicBuilding) {
+              Property *property = dynamic_cast<Property *>(blocks[pos]);
+              if (owner) {
+                // case 1: steps on someone else's property
+                int amount = property->getFee();
+                Player *player2ptr = findPlayer2(players, owner->getName());
+                Player player2 = *player2ptr;
+                bool isBankrupt = !player1.hasMoney(amount);
+                if (isBankrupt) {
+                  cout << "Would you like to mortgage or trade with other players to prevent bankruptcy?" << endl;
                 }
+                player1.removeMoney(amount);
+                player2.addMoney(amount);
+              } else {
+                // check if it's the current player's property
+                if (owner == &player1) {
+                  continue;
+                }
+
+                string purchase;
+                cout << "Would you like to purchase this unowned property? (Yes/No)";
+                cin >> purchase;
+                cout << endl;
+                int fee = property->getFee();
+
+                if (purchase == "Yes") {
+                  // case 2: unowned property, purchase
+                  if (player1.hasMoney(fee)) {
+                    player1.removeMoney(fee);
+                    player1.addProperty(*property);  // need to check if this works
+                    cout << "Purchase successful! You now own " << property->getName() << "." << endl;
+                    continue;
+                  } else {
+                    cout << "Purchase failed! You have insufficient funds." << endl;
+                  }
+                }
+                // case 3: unowned property, auction
+                auction(property, players);
               }
-              // case 3: unowned property, auction
-              auction(property, players);
+              break;
+            } else if (desc == BlockDesc::MovementBlock) {
+              NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[pos]);
+              nonProperty->action(player1);
+              // add additional lines
+            } else if (desc == BlockDesc::MoneyBlock) {
+              NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[pos]);
+              nonProperty->action(player1);
+              break;
+            // } else if (desc == BlockDesc::Tims) {
+              
+            } else {
+              // should not be here
             }
-          } else if (desc == BlockDesc::MovementBlock) {
-            NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[pos]);
-            nonProperty->action(player1);
-            // add additional lines
-          } else if (desc == BlockDesc::MoneyBlock) {
-            NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[pos]);
-            nonProperty->action(player1);
-          } else {
-            // should not be here
           }
         }
       } else if (cmd == "next") {
