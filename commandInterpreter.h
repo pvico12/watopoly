@@ -7,8 +7,8 @@
 #include <vector>
 #include <functional>
 
-extern const int MORTGAGE_RATE;
-extern const int UNMORTGAGE_RATE;
+extern const double MORTGAGE_RATE;
+extern const double UNMORTGAGE_RATE;
 extern const int STARTING_BLOCK;
 extern const std::string separator;
 
@@ -43,8 +43,8 @@ struct WatopolyGame {
     void next(int &playerInd);
     void trade(Player &p1, Player &p2);
     void improve(Player &p, std::string cmd, int pos);
-    void mortage(Player &p, std::string cmd);
-    void unmortage(Player &p, std::string cmd);
+    void mortgage(Player &p, std::string cmd);
+    void unmortgage(Player &p, std::string cmd);
     void bankrupt(Player &p, int &playerInd);
     void assets(Player &p);
     void allAssets();

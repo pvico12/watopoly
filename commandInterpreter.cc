@@ -1,3 +1,5 @@
+#include "commandInterpreter.h"
+
 #include <cstdlib>  // temporary randomness, will add shuffle.cc later
 #include <ctime>    // temporary randomness for now, will add shuffle.cc later
 #include <fstream>
@@ -8,7 +10,6 @@
 #include <string>
 #include <vector>
 
-#include "commandInterpreter.h"
 #include "NonProperty/money.h"
 #include "NonProperty/movement.h"
 #include "NonProperty/nonproperty.h"
@@ -27,8 +28,8 @@
 
 using namespace std;
 
-const int MORTGAGE_RATE = 0.5;
-const int UNMORTGAGE_RATE = 0.6;
+const double MORTGAGE_RATE = 0.5;
+const double UNMORTGAGE_RATE = 0.6;
 const int STARTING_BLOCK = 20;
 const string separator = " ";
 
@@ -45,8 +46,10 @@ bool isPosInt(const string str) {
 }
 
 void modifyProperty(Player &player, const string cmd, function<void(Property *)> lambda) {
+  cout << "Choose your property: ";
   string propertyName;
   cin >> propertyName;
+  cout << endl;
   Property *property = player.getProperty(propertyName);
 
   if (property == nullptr) {
@@ -75,11 +78,19 @@ void auction(Property *prop, std::vector<Player *> &players) {
   Player *highestBidder = nullptr;
   int highestBid = 0;
 
+  int numPlayers = players.size();
+  int numBidders = numPlayers;
+
   while (true) {
     int previousHigh = highestBid;
     for (Player *player : players) {
+      if (numBidders <= 1) {
+        break;
+      }
+
       // check if the player has enough money to make a higher bid
       if (player->getMoney() < highestBid) {
+        numBidders--;
         continue;
       }
 
@@ -92,6 +103,9 @@ void auction(Property *prop, std::vector<Player *> &players) {
       if (bid > highestBid) {
         highestBidder = player;
         highestBid = bid;
+        numBidders = numPlayers;
+      } else {
+        numBidders--;
       }
     }
 
@@ -166,8 +180,7 @@ void getPlayerData(int &numPlayers, vector<Player *> &players) {
 
 // game constructors
 WatopolyGame::WatopolyGame(int &playerCount, vector<Player *> &playerList)
-  : players{playerList} {
-
+    : players{playerList} {
   Board watopoly{td};  // create board (uses .txt file for blocks)
   board = watopoly;
   blocks = *(board.getBlocks());  // create list of blocks
@@ -183,7 +196,7 @@ WatopolyGame::WatopolyGame(int &playerCount, vector<Player *> &playerList)
   for (Player *player : players) {
     vector<Player *> &visitors = s.visitors;
     visitors.emplace_back(player);
-    //s.type = BlockStateType::NewVisitor;
+    // s.type = BlockStateType::NewVisitor;
     blocks[STARTING_BLOCK]->setState(s);
   }
 
@@ -193,7 +206,7 @@ WatopolyGame::WatopolyGame(int &playerCount, vector<Player *> &playerList)
 
 // construct game from file
 WatopolyGame::WatopolyGame(string filename) {
-    // create game from file here
+  // create game from file here
 }
 
 // game commands
@@ -214,8 +227,8 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
   vector<Player *> &visitors = currPosState.visitors;
   int targetIndex = 0;
   for (auto player : visitors) {
-      if (player->getName() == p.getName()) break;
-      targetIndex++;
+    if (player->getName() == p.getName()) break;
+    targetIndex++;
   }
   visitors.erase(visitors.begin() + targetIndex);
   blocks[pos]->setState(currPosState);
@@ -238,241 +251,260 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
   BlockInfo info = blocks[newPosition]->getInfo();
   BlockDesc desc = info.desc;
   Player *owner = info.owner;
-  
+
   while (true) {
-      if (desc == BlockDesc::AcademicBuilding || desc == BlockDesc::NonAcademicBuilding) {
-          Property *property = dynamic_cast<Property *>(blocks[newPosition]);
-          if (owner) {
-              // case 1: steps on someone else's property
-              int amount = property->getFee();
-              Player *player2ptr = findPlayer2(players, owner->getName());
-              Player player2 = *player2ptr;
-              bool isBankrupt = !p.hasMoney(amount);
-              if (isBankrupt) {
-                  cout << "Would you like to mortgage or trade with other players to prevent bankruptcy?" << endl;
-              }
-              p.removeMoney(amount);
-              player2.addMoney(amount);
+    if (desc == BlockDesc::AcademicBuilding || desc == BlockDesc::NonAcademicBuilding) {
+      Property *property = dynamic_cast<Property *>(blocks[newPosition]);
+      if (owner) {
+        // case 1: steps on someone else's property
+        int amount = property->getFee();
+        Player *player2ptr = findPlayer2(players, owner->getName());
+        Player player2 = *player2ptr;
+        bool isBankrupt = !p.hasMoney(amount);
+        if (isBankrupt) {
+          cout << "Would you like to mortgage or trade with other players to prevent bankruptcy?" << endl;
+        }
+        p.removeMoney(amount);
+        player2.addMoney(amount);
+      } else {
+        // check if it's the current player's property
+        if (owner == &p) {
+          continue;
+        }
+
+        int cost = property->getPurCost();
+        string purchase;
+        cout << "Would you like to purchase this unowned property for $" << to_string(cost) << " (Yes/No)? ";
+        cin >> purchase;
+        cout << endl;
+
+        if (purchase == "Yes") {
+          // case 2: unowned property, purchase
+          if (p.hasMoney(cost)) {
+            p.removeMoney(cost);
+            p.addProperty(*property);  // need to check if this works
+            cout << "Purchase successful! You now own " << property->getName() << "." << endl;
+            break;
           } else {
-              // check if it's the current player's property
-              if (owner == &p) {
-                  continue;
-              }
-
-              string purchase;
-              cout << "Would you like to purchase this unowned property? (Yes/No)";
-              cin >> purchase;
-              cout << endl;
-              int fee = property->getFee();
-
-              if (purchase == "Yes") {
-                  // case 2: unowned property, purchase
-                  if (p.hasMoney(fee)) {
-                      p.removeMoney(fee);
-                      p.addProperty(*property);  // need to check if this works
-                      cout << "Purchase successful! You now own " << property->getName() << "." << endl;
-                      break;
-                  } else {
-                      cout << "Purchase failed! You have insufficient funds." << endl;
-                  }
-              }
-              // case 3: unowned property, auction
-              auction(property, players);
+            cout << "Purchase failed! You have insufficient funds." << endl;
           }
-          break;
-      } else if (desc == BlockDesc::MovementBlock) {
-          NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
-          nonProperty->action(p);
-          // add additional lines
-      } else if (desc == BlockDesc::MoneyBlock) {
-          NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
-          nonProperty->action(p);
-          break;
+        }
+        // case 3: unowned property, auction
+        auction(property, players);
+      }
+      break;
+    } else if (desc == BlockDesc::MovementBlock) {
+      NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
+      nonProperty->action(p);
+      // add additional lines
+    } else if (desc == BlockDesc::MoneyBlock) {
+      NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
+      nonProperty->action(p);
+      break;
       // } else if (desc == BlockDesc::Tims) {
 
-      } else {
-          // should not be here
-      }
+    } else {
+      // should not be here
+    }
   }
 }
 
 void WatopolyGame::next(int &playerInd) {
-    // control is given to the next player
-    rolled = false;
-    playerInd++;
-    if (playerInd >= numPlayers) {
-        playerInd = 0;
-    }
-    // output an informative message
-    string newPlayerName = players.at(playerInd)->getName();
-    cout << "Control is now given to " << newPlayerName << endl;
+  // control is given to the next player
+  rolled = false;
+  playerInd++;
+  if (playerInd >= numPlayers) {
+    playerInd = 0;
+  }
+  // output an informative message
+  string newPlayerName = players.at(playerInd)->getName();
+  cout << "Control is now given to " << newPlayerName << endl;
 }
 
 void WatopolyGame::trade(Player &p1, Player &p2) {
-    string str1, str2;
-    cin >> str1 >> str2;
-    bool b1 = isPosInt(str1);
-    bool b2 = isPosInt(str2);
+  string str1, str2;
+  cin >> str1 >> str2;
+  bool b1 = isPosInt(str1);
+  bool b2 = isPosInt(str2);
 
-  /*
-    // check if both are money
-    if (b1 && b2) {
-        continue;
-    }
-  */
+  // check if both are money
+  if (b1 && b2) {
+    cout << "You cannot trade money for money." << endl;
+    return;
+  }
 
-    if (b1) {
-        Property *property2 = p2.getProperty(str1);
-        p1.trade(p2, stoi(str1), *property2);
-    } else if (b2) {
-        Property *property1 = p1.getProperty(str1);
-        p1.trade(p2, *property1, stoi(str2));
-    } else {
-        Property *property1 = p1.getProperty(str1);
-        Property *property2 = p2.getProperty(str1);
-        p1.trade(p2, *property1, *property2);
-    }
+  bool success;
+  if (b1) {
+    Property *property2 = p2.getProperty(str1);
+    success = p1.trade(p2, stoi(str1), *property2);
+  } else if (b2) {
+    Property *property1 = p1.getProperty(str1);
+    success = p1.trade(p2, *property1, stoi(str2));
+  } else {
+    Property *property1 = p1.getProperty(str1);
+    Property *property2 = p2.getProperty(str1);
+    success = p1.trade(p2, *property1, *property2);
+  }
+
+  if (success) {
+    cout << "You have successfully traded " << (b1 ? "$" : "") << str1 << " for "
+         << p2.getName() << "'s " << (b2 ? "$" : "") << str2 << "." << endl;
+  } else {
+    cout << "Trade failed." << endl;
+  }
 }
 
 void WatopolyGame::improve(Player &p, string cmd, int pos) {
-    BlockInfo info = blocks[pos]->getInfo();
-    BlockDesc desc = info.desc;
-    Player *owner = info.owner;
+  BlockInfo info = blocks[pos]->getInfo();
+  BlockDesc desc = info.desc;
+  Player *owner = info.owner;
 
-    if (desc == BlockDesc::AcademicBuilding) {
-        if (owner) {
-        // this player has purchase the property
-        // implement this to work, we need to call buy function
-        // but these are blocks so we cant access them
-        // PROBLEM: player1.buy(*(blocks)[pos]);
-        info.owner = &p;
+  if (desc == BlockDesc::AcademicBuilding) {
+    if (owner) {
+      // this player has purchase the property
+      // implement this to work, we need to call buy function
+      // but these are blocks so we cant access them
+      // PROBLEM: player1.buy(*(blocks)[pos]);
+      info.owner = &p;
+      info.impLevel++;
+      blocks[pos]->setInfo(info);
+    } else {
+      // check if the player already owns the property
+      if (owner->getName() == p.getName()) {
+        // improve the property
         info.impLevel++;
         blocks[pos]->setInfo(info);
-        } else {
-        // check if the player already owns the property
-        if (owner->getName() == p.getName()) {
-            // improve the property
-            info.impLevel++;
-            blocks[pos]->setInfo(info);
-        } else {
-            // if not, output an informative message
-            cerr << "Invalid command. You do not own this property." << endl;
-        }
-        }
-    } else if (desc == BlockDesc::AcademicBuilding) {
-    } else {
+      } else {
+        // if not, output an informative message
+        cerr << "Invalid command. You do not own this property." << endl;
+      }
     }
-    /*
-    modifyProperty(p, cmd, [&p](Property *property) {
-        Academic *academic = dynamic_cast<Academic *>(property);
-        if (academic != nullptr) {
-        p.improve(*academic);
-        }
-    });
-    */
+  } else if (desc == BlockDesc::AcademicBuilding) {
+  } else {
+  }
+  /*
+  modifyProperty(p, cmd, [&p](Property *property) {
+      Academic *academic = dynamic_cast<Academic *>(property);
+      if (academic != nullptr) {
+      p.improve(*academic);
+      }
+  });
+  */
 }
 
-void WatopolyGame::mortage(Player &p, string cmd) {
-    modifyProperty(p, cmd, [&p](Property *property) {
-        int mortgageFee = property->getPurCost() * MORTGAGE_RATE;
-        if (p.hasProperty(*property) && !property->isMortgaged()) {
-            p.addMoney(mortgageFee);
-            property->toggleMortgage();
-            std::cout << "Mortgaged property " << property->getName() << " successfully." << std::endl;
-        }
-    });
+void WatopolyGame::mortgage(Player &p, string cmd) {
+  modifyProperty(p, cmd, [&p](Property *property) {
+    if (p.hasProperty(*property) == -1) {
+      cout << "You don't own " << property->getName() << "." << endl;
+      return;
+    }
+    if (property->isMortgaged()) {
+      cout << property->getName() << " is mortgaged already." << endl;
+      return;
+    }
+    int mortgageFee = property->getPurCost() * MORTGAGE_RATE;
+    p.addMoney(mortgageFee);
+    property->toggleMortgage();
+    cout << "Mortgaged property " << property->getName() << " successfully." << std::endl;
+  });
 }
 
-void WatopolyGame::unmortage(Player &p, string cmd) {
-    modifyProperty(p, cmd, [&p](Property *property) {
-        if (p.hasProperty(*property) && property->isMortgaged()) {
-        int unMortgageFee = property->getPurCost() * UNMORTGAGE_RATE;
-        bool success = p.hasMoney(unMortgageFee);
-        if (success) {
-            p.removeMoney(unMortgageFee);
-            property->toggleMortgage();
-            std::cout << "Unmortgaged property " << property->getName() << " successfully." << std::endl;
-        } else {
-            std::cout << "Unmortgaged property " << property->getName() << " failed." << std::endl;
-        }
-        }
-    });
+void WatopolyGame::unmortgage(Player &p, string cmd) {
+  modifyProperty(p, cmd, [&p](Property *property) {
+    if (p.hasProperty(*property) == -1) {
+      cout << "You don't own " << property->getName() << "." << endl;
+      return;
+    }
+    if (!property->isMortgaged()) {
+      cout << property->getName() << " is not mortgaged." << endl;
+      return;
+    }
+    int unMortgageFee = property->getPurCost() * UNMORTGAGE_RATE;
+    bool success = p.hasMoney(unMortgageFee);
+    if (success) {
+      p.removeMoney(unMortgageFee);
+      property->toggleMortgage();
+      cout << "Unmortgaged property " << property->getName() << " successfully." << endl;
+    } else {
+      cout << "Unmortgaged property " << property->getName() << " failed, insufficient funds." << endl;
+    }
+  });
 }
 
 void WatopolyGame::bankrupt(Player &p, int &playerInd) {
-    // need to reset the owners of the properties that player owns
-    // remove from tims cups total
-    p.reset();
-    players.erase(players.begin() + playerInd);
-    numPlayers--;
+  // need to reset the owners of the properties that player owns
+  // remove from tims cups total
+  p.reset();
+  players.erase(players.begin() + playerInd);
+  numPlayers--;
 }
 
 void WatopolyGame::assets(Player &p) {
-    printProperties(&p);
+  printProperties(&p);
 }
 
 void WatopolyGame::allAssets() {
-    for (Player *player : players) {
-        cout << player->getName() << endl;
-        printProperties(player);
-        cout << endl;
-    }
+  for (Player *player : players) {
+    cout << player->getName() << endl;
+    printProperties(player);
+    cout << endl;
+  }
 }
 
 void WatopolyGame::help() {
-    cout << "Would you like to see the rules or the list of commands or both?\n"
-         << "Enter rules/commands/both: ";
-    string helpCmd;
-    cin >> helpCmd;
-    cout << endl;
-    if (helpCmd == "rules") {
-        printFileToScreen("rules.txt");
-    } else if (helpCmd == "commands") {
-        printFileToScreen("commands.txt");
-    } else if (helpCmd == "both") {
-        printFileToScreen("rules.txt");
-        printFileToScreen("commands.txt");
-    } else {
-        cout << "Incorrect input. You have exited the help menu.\n"
-            << "If you wish to try again, enter the 'help' command." << endl;
-    }
+  cout << "Would you like to see the rules or the list of commands or both?\n"
+       << "Enter rules/commands/both: ";
+  string helpCmd;
+  cin >> helpCmd;
+  cout << endl;
+  if (helpCmd == "rules") {
+    printFileToScreen("rules.txt");
+  } else if (helpCmd == "commands") {
+    printFileToScreen("commands.txt");
+  } else if (helpCmd == "both") {
+    printFileToScreen("rules.txt");
+    printFileToScreen("commands.txt");
+  } else {
+    cout << "Incorrect input. You have exited the help menu.\n"
+         << "If you wish to try again, enter the 'help' command." << endl;
+  }
 }
 
 void WatopolyGame::save() {
-    // get file name and create file
-    std::string filename;
-    cin >> filename;
-    ofstream outFile{filename};
-    // write player info
-    outFile << numPlayers << endl;
-    for (auto player : players) {
-        outFile << player->getName() << separator;
-        outFile << player->getCharToken() << separator;
-        outFile << player->getTimsCups() << separator;
-        outFile << player->getMoney() << separator;
-        outFile << player->getPosition() << endl;
-        // add case for when in tims line
+  // get file name and create file
+  std::string filename;
+  cin >> filename;
+  ofstream outFile{filename};
+  // write player info
+  outFile << numPlayers << endl;
+  for (auto player : players) {
+    outFile << player->getName() << separator;
+    outFile << player->getCharToken() << separator;
+    outFile << player->getTimsCups() << separator;
+    outFile << player->getMoney() << separator;
+    outFile << player->getPosition() << endl;
+    // add case for when in tims line
+  }
+  // write block info
+  for (auto block : blocks) {
+    BlockInfo b = block->getInfo();
+    std::string blockName = b.name;
+    Player *owner = b.owner;
+    int impLevel = b.impLevel;
+    std::string ownerName = "BANK";
+    if (owner) ownerName = owner->getName();
+    if (b.desc == BlockDesc::AcademicBuilding ||
+        b.desc == BlockDesc::NonAcademicBuilding) {
+      outFile << blockName << separator;
+      outFile << ownerName << separator;
+      outFile << impLevel << endl;
     }
-    // write block info
-    for (auto block : blocks) {
-        BlockInfo b = block->getInfo();
-        std::string blockName = b.name;
-        Player *owner = b.owner;
-        int impLevel = b.impLevel;
-        std::string ownerName = "BANK";
-        if (owner) ownerName = owner->getName();
-        if (b.desc == BlockDesc::AcademicBuilding ||
-            b.desc == BlockDesc::NonAcademicBuilding) {
-        outFile << blockName << separator;
-        outFile << ownerName << separator;
-        outFile << impLevel << endl;
-        }
-    }
-    outFile.close();
+  }
+  outFile.close();
 }
 
 void WatopolyGame::play() {
-    while (true) {
+  while (true) {
     int i = 0;
     string startingPlayerName = players.at(0)->getName();
     cout << "Control is now given to " << startingPlayerName << endl;
@@ -509,20 +541,28 @@ void WatopolyGame::play() {
         Player *player2ptr = findPlayer2(players, player2Name);
 
         if (player2ptr == nullptr) {
-            continue;
+          continue;
         }
         Player &player2 = *player2ptr;
-        
+
         trade(player1, player2);
 
-      } else if (cmd == "improve") { improve(player1, cmd, pos);
-      } else if (cmd == "mortgage") { mortage(player1, cmd);
-      } else if (cmd == "unmortgage") { unmortage(player1, cmd);
-      } else if (cmd == "bankrupt") { bankrupt(player1, i);
-      } else if (cmd == "assets") { assets(player1);
-      } else if (cmd == "all") { allAssets();
-      } else if (cmd == "help") { help();
-      } else if (cmd == "save") { save();
+      } else if (cmd == "improve") {
+        improve(player1, cmd, pos);
+      } else if (cmd == "mortgage") {
+        mortgage(player1, cmd);
+      } else if (cmd == "unmortgage") {
+        unmortgage(player1, cmd);
+      } else if (cmd == "bankrupt") {
+        bankrupt(player1, i);
+      } else if (cmd == "assets") {
+        assets(player1);
+      } else if (cmd == "all") {
+        allAssets();
+      } else if (cmd == "help") {
+        help();
+      } else if (cmd == "save") {
+        save();
       } else {
         // undefined command
         cout << "Invalid command. Use 'help' to see a list of commands and rules." << endl;
@@ -536,6 +576,16 @@ void WatopolyGame::play() {
       }
 
       cout << board;
+      for (Player *player : players) {
+        vector<Property *> properties = player->getProperties();
+        int money = player->getMoney();
+        cout << player->getName() << endl;
+        cout << to_string(money) << endl;
+        for (auto property : properties) {
+          cout << property->getName() << endl;
+        }
+        cout << endl;
+      }
     }
   }
 }
