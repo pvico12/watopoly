@@ -120,40 +120,18 @@ void TextDisplay::initDisplay(std::vector<Block*> &blocks) {
 
 // a block changed state, update the text display accordingly
 void TextDisplay::notify(Subject<BlockInfo, BlockState> &whoNotified) {
-	BlockInfo i = whoNotified.getInfo();
-	BlockState s = whoNotified.getState();
-	int pos = i.position;
+	BlockInfo info = whoNotified.getInfo();
+	BlockState state = whoNotified.getState();
+	int pos = info.position;
 	int row = blockCoords[pos][0];
 	int col = blockCoords[pos][1];
-	char nickname = s.p->getCharToken();
-	if (s.type == BlockStateType::NewVisitor) {
-		for (int i = 1; i < BLOCKWIDTH; i++) {
-			char c = theDisplay[row+BLOCKHEIGHT-1][col+i];
-			if (c == ' ') {
-				theDisplay[row+BLOCKHEIGHT-1][col+i] = nickname;
-				break;
-			}
-		}
+	int i = 1;
+	for (auto player : state.visitors) {
+		char nickname = player->getCharToken();
+		theDisplay[row+BLOCKHEIGHT-1][col+i] = nickname;
+		i++;
 	}
-	if (s.type == BlockStateType::VisitorLeft) {
-		std::string remainingVisitors;
-		// bool foundTarget = false;
-		int targetIndex = BLOCKWIDTH;
-		// find target character
-		for (int i = 1; i < BLOCKWIDTH; i++) {
-			char c = theDisplay[row+BLOCKHEIGHT-1][col+i];
-			if (c == nickname) {
-				// foundTarget = true;
-				targetIndex = i;
-				break;
-			}
-		}
-		// shift over remaining characters
-		for (int i = targetIndex; i < BLOCKWIDTH-1; i++) {
-			theDisplay[row+BLOCKHEIGHT-1][col+i] = theDisplay[row+BLOCKHEIGHT-1][col+i+1];
-		}
-		theDisplay[row+BLOCKHEIGHT-1][col+BLOCKWIDTH-1] = ' ';
-	}
+	if (state.type == BlockStateType::VisitorLeft) theDisplay[row+BLOCKHEIGHT-1][col+i] = ' ';
 }
 
 std::ostream &operator<<(std::ostream &out, const TextDisplay &td) {
