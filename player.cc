@@ -1,5 +1,7 @@
 #include "player.h"
 
+// #include <iostream>
+
 #include "info.h"
 #include "state.h"
 
@@ -143,36 +145,54 @@ bool Player::improve(Property &prop) {
 }
 
 bool Player::trade(Player &p2, Property &prop1, Property &prop2) {
-  if (hasProperty(prop1) && p2.hasProperty(prop2)) {
-    removeProperty(prop1);
-    p2.removeProperty(prop2);
-    addProperty(prop2);
-    p2.addProperty(prop1);
-    return true;
+  // std::cout << getMoney() << " " << p2.getMoney();
+
+  if (hasProperty(prop1) == -1) {
+    return false;
   }
-  return false;
+  if (p2.hasProperty(prop2) == -1) {
+    return false;
+  }
+  removeProperty(prop1);
+  p2.removeProperty(prop2);
+  addProperty(prop2);
+  p2.addProperty(prop1);
+  // std::cout << getMoney() << " " << p2.getMoney();
+  return true;
 }
 
 bool Player::trade(Player &p2, int amount, Property &prop2) {
-  if (hasMoney(amount) && p2.hasProperty(prop2)) {
-    removeMoney(amount);
-    p2.removeProperty(prop2);
-    addProperty(prop2);
-    p2.addMoney(amount);
-    return true;
+  // std::cout << getMoney() << " " << p2.getMoney();
+
+  if (!hasMoney(amount)) {
+    return false;
   }
-  return false;
+  if (p2.hasProperty(prop2) == -1) {
+    return false;
+  }
+  removeMoney(amount);
+  p2.removeProperty(prop2);
+  addProperty(prop2);
+  p2.addMoney(amount);
+  // std::cout << getMoney() << " " << p2.getMoney();
+  return true;
 }
 
 bool Player::trade(Player &p2, Property &prop1, int amount) {
-  if (hasProperty(prop1) && p2.hasMoney(amount)) {
-    removeProperty(prop1);
-    p2.removeMoney(amount);
-    addMoney(amount);
-    p2.addProperty(prop1);
-    return true;
+  // std::cout << getMoney() << " " << p2.getMoney();
+
+  if (hasProperty(prop1) == -1) {
+    return false;
   }
-  return false;
+  if (!p2.hasMoney(amount)) {
+    return false;
+  }
+  removeProperty(prop1);
+  p2.removeMoney(amount);
+  addMoney(amount);
+  p2.addProperty(prop1);
+  // std::cout << getMoney() << " " << p2.getMoney();
+  return true;
 }
 
 void Player::reset() {
