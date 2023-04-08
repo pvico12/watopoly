@@ -60,7 +60,7 @@ Block::Block(std::string name) : name{name} {
   }
 
   BlockInfo info{name, 0};
-  state.type = BlockStateType::NewVisitor;
+  state.type = BlockStateType::Stable;
   setInfo(info);
   setState(state);
 }
