@@ -248,22 +248,7 @@ int main(int argc, char *argv[]) {
               // case 3: unowned property, auction
               string player2Name;
               cout << "Auction has started, who would like to purchase this property?" << endl;
-              while (true) {
-                /*
-                cout << "Enter player name: ";
-                cin >> player2Name;
-                cout << endl;
-                Player *player2ptr = findPlayer2(players, player2Name);
-                if (!player2ptr) {
-                  continue;
-                }
-                Player &player2 = *player2ptr;
-
-                if (player2.hasMoney(fee)) {
-                  
-                }
-                */
-              }
+              property->auction(players);
             }
 
           } else if (desc == BlockDesc::MovementBlock) {
@@ -384,11 +369,6 @@ int main(int argc, char *argv[]) {
         // need to reset the owners of the properties that player owns
         // remove from tims cups total
         player1.reset();
-        vector<Property *> properties = player1.getProperties();
-        int len = properties.size();
-        for (int i = 0; i < len; i++) {
-          properties.at(i)->reset();
-        }
         players.erase(players.begin() + i);
         numPlayers--;
       } else if (cmd == "assets") {

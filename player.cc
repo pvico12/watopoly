@@ -176,6 +176,10 @@ bool Player::trade(Player &p2, Property &prop1, int amount) {
 }
 
 void Player::reset() {
+  int numProps = props.size();
+  for (int i = 0; i < numProps; i++) {
+    props.at(i)->reset();
+  }
   props.clear();
   timsCups = 0;
 }
