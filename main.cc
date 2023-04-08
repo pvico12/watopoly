@@ -204,8 +204,6 @@ int main(int argc, char *argv[]) {
           // update player info
           player1.setPosition(newPosition);
 
-          cout << watopoly;
-
           /*
           // ********* new *********
           BlockInfo info = blocks[pos]->getInfo();
@@ -244,13 +242,15 @@ int main(int argc, char *argv[]) {
         }
       } else if (cmd == "next") {
         // control is given to the next player
-        if (rolled = false) {
+        if (!rolled) {
           cout << "Invalid command. You have not rolled yet." << endl;
           continue;
         }
         rolled = false;
         i++;
-        if (i >= players.size()) i = 0;
+        if (i >= numPlayers) {
+          i = 0;
+        }
         // output an informative message
         string newPlayerName = players.at(i)->getName();
         cout << "Control is now given to " << newPlayerName << endl;
