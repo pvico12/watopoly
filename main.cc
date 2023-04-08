@@ -204,7 +204,6 @@ int main(int argc, char *argv[]) {
           // update player info
           player1.setPosition(newPosition);
 
-          /*
           // ********* new *********
           BlockInfo info = blocks[pos]->getInfo();
           BlockDesc desc = info.desc;
@@ -224,8 +223,47 @@ int main(int argc, char *argv[]) {
               player1.removeMoney(amount);
               player2.addMoney(amount);
             } else {
-              // case 2: unowned property, purchase
+              // check if it's the current player's property
+              if (owner == &player1) {
+                continue;
+              }
+
+              string purchase;
+              cout << "Would you like to purchase this unowned property? (Yes/No)";
+              cin >> purchase;
+              cout << endl;
+              int fee = property->getFee();
+
+              if (purchase == "Yes") {
+                // case 2: unowned property, purchase
+                if (player1.hasMoney(fee)) {
+                  player1.removeMoney(fee);
+                  player1.addProperty(*property);  // need to check if this works
+                  cout << "Purchase successful! You now own " << property->getName() << "." << endl;
+                  continue;
+                } else {
+                  cout << "Purchase failed! You have insufficient funds." << endl;
+                }
+              }
               // case 3: unowned property, auction
+              string player2Name;
+              cout << "Auction has started, who would like to purchase this property?" << endl;
+              while (true) {
+                /*
+                cout << "Enter player name: ";
+                cin >> player2Name;
+                cout << endl;
+                Player *player2ptr = findPlayer2(players, player2Name);
+                if (!player2ptr) {
+                  continue;
+                }
+                Player &player2 = *player2ptr;
+
+                if (player2.hasMoney(fee)) {
+                  
+                }
+                */
+              }
             }
 
           } else if (desc == BlockDesc::MovementBlock) {
@@ -238,7 +276,6 @@ int main(int argc, char *argv[]) {
           } else {
             // should not be here
           }
-          */
         }
       } else if (cmd == "next") {
         // control is given to the next player
@@ -345,6 +382,8 @@ int main(int argc, char *argv[]) {
         });
       } else if (cmd == "bankrupt") {
         // need to reset the owners of the properties that player owns
+        // remove from tims cups total
+        player1.reset();
         vector<Property *> properties = player1.getProperties();
         int len = properties.size();
         for (int i = 0; i < len; i++) {
@@ -417,6 +456,7 @@ int main(int argc, char *argv[]) {
       // check if game is won
       if (numPlayers == 1) {
         cout << players.at(0)->getName() << " is the winner!" << endl;
+        break;
       }
 
       cout << watopoly;

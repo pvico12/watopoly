@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 
-#include "token.h"
+#include "Property/academic.h"
+#include "Property/property.h"
 #include "info.h"
 #include "state.h"
-#include "Property/property.h"
-#include "Property/academic.h"
-//#include "Property/nonacademic.h"
+#include "token.h"
+// #include "Property/nonacademic.h"
 
 extern const int BOARD_SIZE;
 
@@ -17,18 +17,18 @@ class Player {
   std::string name;
   Token token;
   int money, position;
-  std::vector<Property*> props;
+  std::vector<Property *> props;
   int timsCups;
 
  public:
   Player(std::string name, Token token,
-        int money = 0, int position = 0, 
-        std::vector<Property*> props = {},
-        int timsCups = 0);
+         int money = 0, int position = 0,
+         std::vector<Property *> props = {},
+         int timsCups = 0);
 
-  //Player(const Player &o);
-  
-  //Player(Player &&o);
+  // Player(const Player &o);
+
+  // Player(Player &&o);
 
   std::string getName();
 
@@ -42,10 +42,14 @@ class Player {
 
   int getTimsCups();
 
+  void addTimsCup();
+
+  void useTimsCup();
+
   void setPosition(int n);
 
-  std::vector<Property*> getProperties();
-  
+  std::vector<Property *> getProperties();
+
   void move(int n);
 
   void moveTo(int n, bool collect = true);
@@ -69,6 +73,8 @@ class Player {
   bool trade(Player &p2, Property &prop1, Property &prop2);
   bool trade(Player &p2, int amount, Property &prop2);
   bool trade(Player &p2, Property &prop1, int amount);
+
+  void reset();
 };
 
 #endif
