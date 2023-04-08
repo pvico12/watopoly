@@ -125,13 +125,27 @@ void TextDisplay::notify(Subject<BlockInfo, BlockState> &whoNotified) {
 	int pos = info.position;
 	int row = blockCoords[pos][0];
 	int col = blockCoords[pos][1];
-	int i = 1;
-	for (auto player : state.visitors) {
-		char nickname = player->getCharToken();
-		theDisplay[row+BLOCKHEIGHT-1][col+i] = nickname;
-		i++;
+	if (state.type == BlockStateType::Visitors) {
+		// update the visitors of the block
+		int i = 1;
+		for (auto player : state.visitors) {
+			char nickname = player->getCharToken();
+			theDisplay[row+BLOCKHEIGHT-1][col+i] = nickname;
+			i++;
+		}
+		for (int j = i; j < BLOCKWIDTH; j++) {
+			theDisplay[row+BLOCKHEIGHT-1][col+j] = ' ';
+		}
 	}
-	if (state.type == BlockStateType::VisitorLeft) theDisplay[row+BLOCKHEIGHT-1][col+i] = ' ';
+	if (state.type == BlockStateType::Improvements) {
+		// update the improvements of the block
+		for (int i = 1; i <= info.impLevel; i++) {
+			theDisplay[row+1][col+i] = 'I';
+		}
+		for (int j = info.impLevel+1; j < BLOCKWIDTH; j++) {
+			theDisplay[row+1][col+j] = ' ';
+		}
+	}
 }
 
 std::ostream &operator<<(std::ostream &out, const TextDisplay &td) {

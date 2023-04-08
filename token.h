@@ -7,8 +7,7 @@
 enum class Token {
   GOOSE,
   GRT_BUS,
-  TIM_HORTONS,
-  DOUGHNUT,
+  TIM_HORTONS_DOUGHNUT,
   PROFESSOR,
   STUDENT,
   MONEY,

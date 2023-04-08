@@ -179,15 +179,14 @@ void getPlayerData(int &numPlayers, vector<Player *> &players) {
 }
 
 // game constructors
-WatopolyGame::WatopolyGame(int &playerCount, vector<Player *> &playerList)
-    : players{playerList} {
+WatopolyGame::WatopolyGame()
+    : rolled{false}, numPlayers{0} {
   Board watopoly{td};  // create board (uses .txt file for blocks)
   board = watopoly;
   blocks = *(board.getBlocks());  // create list of blocks
 
   printFileToScreen("introMessage.txt");
-  getPlayerData(playerCount, players);
-  numPlayers = playerCount;
+  getPlayerData(numPlayers, players);
 
   numPlayers = players.size();
 
@@ -196,7 +195,7 @@ WatopolyGame::WatopolyGame(int &playerCount, vector<Player *> &playerList)
   for (Player *player : players) {
     vector<Player *> &visitors = s.visitors;
     visitors.emplace_back(player);
-    // s.type = BlockStateType::NewVisitor;
+    s.type = BlockStateType::Visitors;
     blocks[STARTING_BLOCK]->setState(s);
   }
 
@@ -205,8 +204,87 @@ WatopolyGame::WatopolyGame(int &playerCount, vector<Player *> &playerList)
 }
 
 // construct game from file
-WatopolyGame::WatopolyGame(string filename) {
-  // create game from file here
+WatopolyGame::WatopolyGame(string filename)
+    : rolled{false}, numPlayers{0} {
+  Board watopoly{td};  // create board (uses .txt file for blocks)
+  board = watopoly;
+  blocks = *(board.getBlocks());  // create list of blocks
+
+  ifstream gameStateFile{filename};
+  string line;
+
+  // load game info into board
+  int lineNum = 0;
+  while (getline(gameStateFile, line)) {
+    if (lineNum == 0) {
+      // read in num players
+      numPlayers = stoi(line);
+    } else if (lineNum <= numPlayers) {
+      // read in players
+      vector<string> playerData;
+      istringstream iss{line};
+      string data;
+      while (getline(iss, data, ' ')) {
+        playerData.emplace_back(data);
+      }
+
+      string playerName = playerData[0];
+      char playerChar = playerData[1][0];
+      int timsCups = stoi(playerData[2]);
+      int money = stoi(playerData[3]);
+      int position = stoi(playerData[4]);
+
+      Player *p;
+      p = new Player(playerName, charToTokenMap[playerChar], money, position, {}, timsCups);
+      players.emplace_back(p);
+
+      // update the block at player position for display
+      BlockState state = blocks[position]->getState();
+      state.type = BlockStateType::Visitors;
+      vector<Player *> &visitors = state.visitors;
+      visitors.emplace_back(p);
+      blocks[position]->setState(state);
+    } else {
+      // read in properties
+      vector<string> propertyData;
+      istringstream iss{line};
+      string data;
+      while (getline(iss, data, ' ')) {
+        propertyData.emplace_back(data);
+      }
+
+      string propName = propertyData[0];
+      string owner = propertyData[1];
+      int numImp = stoi(propertyData[2]);
+
+      // get block position
+      int position = 0;
+      for (auto b : blocks) {
+        BlockInfo info = b->getInfo();
+        if (info.name == propName) {
+          position = info.position;
+          break;
+        }
+      }
+
+      // update BlockInfo with owner and improvements
+      BlockInfo info = blocks[position]->getInfo();
+      for (auto currPlayer : players) {
+        if (currPlayer->getName() == owner) {
+          info.owner = currPlayer;
+          info.impLevel = numImp;
+        }
+      }
+      blocks[position]->setInfo(info);
+      // update block state so it shows on the display
+      BlockState state = blocks[position]->getState();
+      state.type = BlockStateType::Improvements;
+      blocks[position]->setState(state);
+    }
+    lineNum++;
+  }
+
+  gameStateFile.close();
 }
 
 // game commands
@@ -221,9 +299,9 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
   std::cout << "Second Dice: " << roll2 << std::endl;
   int steps = roll1 + roll2;
 
-  // set original block state to visitor leaving, remove player from this block
+  // set original block state, remove player from this block
   BlockState currPosState = blocks[pos]->getState();
-  currPosState.type = BlockStateType::VisitorLeft;
+  currPosState.type = BlockStateType::Visitors;
   vector<Player *> &visitors = currPosState.visitors;
   int targetIndex = 0;
   for (auto player : visitors) {
@@ -238,7 +316,7 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
   // update block state that player is moving to
   int newPosition = (pos + steps >= NUMSQUARES) ? (pos + steps) % NUMSQUARES : pos + steps;
   BlockState newPosState = blocks[newPosition]->getState();
-  newPosState.type = BlockStateType::NewVisitor;
+  newPosState.type = BlockStateType::Visitors;
   newPosState.visitors.emplace_back(&p);
   blocks[newPosition]->setState(newPosState);
 
@@ -288,23 +366,22 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
           } else {
             cout << "Purchase failed! You have insufficient funds." << endl;
           }
-        }
-        // case 3: unowned property, auction
-        auction(property, players);
-      }
-      break;
-    } else if (desc == BlockDesc::MovementBlock) {
-      NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
-      nonProperty->action(p);
-      // add additional lines
-    } else if (desc == BlockDesc::MoneyBlock) {
-      NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
-      nonProperty->action(p);
-      break;
-      // } else if (desc == BlockDesc::Tims) {
+          break;
+        } else if (desc == BlockDesc::MovementBlock) {
+          NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
+          nonProperty->action(p);
+          break;
+        } else if (desc == BlockDesc::MoneyBlock) {
+          NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
+          nonProperty->action(p);
+          break;
+          // } else if (desc == BlockDesc::Tims) {
 
-    } else {
-      // should not be here
+        } else {
+          // should not be here
+          break;
+        }
+      }
     }
   }
 }

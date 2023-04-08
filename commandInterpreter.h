@@ -29,13 +29,13 @@ void getPlayerData(int &numPlayers, std::vector<Player *> &players);
 struct WatopolyGame {
     TextDisplay td;
     Board board;
-    bool rolled = false;
-    int numPlayers = 0;
+    bool rolled;
+    int numPlayers;
     std::vector<Block *> blocks;
     std::vector<Player *> players;
 
     // construct and initialize
-    WatopolyGame(int &playerCount, std::vector<Player *> &players);
+    WatopolyGame();
     WatopolyGame(std::string filename);
 
     // game commands
