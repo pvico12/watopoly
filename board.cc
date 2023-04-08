@@ -11,6 +11,8 @@
 #include <iostream>
 const int BOARD_SIZE = 40;
 
+Board::Board() : blocks{{}}, timsCupCount{0}, td{nullptr} {}
+
 Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 	// add all of these blocks to the array from block file
 	std::ifstream file{"watopolyBlocks.txt"};
