@@ -293,40 +293,52 @@ int main(int argc, char *argv[]) {
           player1.trade(player2, *property1, *property2);
         }
       } else if (cmd == "improve") {
-        BlockInfo info = blocks[pos]->getInfo();
-        BlockDesc desc = info.desc;
-        Player *owner = info.owner;
+        string propertyName;
+        string action;
+        cin >> propertyName;
+        cin >> action; // add precaution for this
 
-        if (desc == BlockDesc::AcademicBuilding) {
-          if (owner) {
-            // this player has purchase the property
-            // implement this to work, we need to call buy function
-            // but these are blocks so we cant access them
-            // PROBLEM: player1.buy(*(blocks)[pos]);
-            info.owner = &player1;
-            info.impLevel++;
-            blocks[pos]->setInfo(info);
+        Property *property = player1.getProperty(propertyName);
+
+        if (property) {  // if player owns property
+          BlockInfo info = property->getInfo();
+          BlockState state = property->getState();
+          if (action == "buy") {
+            // improve the property, setState to update the board
+            info.impLevel += 1;
+            state.type = BlockStateType::Improve;
+            property->setInfo(info);
+            cout << "HERE    " << endl;
+            property->setState(state);
+          } else if (action == "sell") {
+            // worsen the property, setState to update the board
+            info.impLevel -= 1;
+            state.type = BlockStateType::Worsen;
+            property->setInfo(info);
+            property->setState(state);
           } else {
-            // check if the player already owns the property
-            if (owner->getName() == player1Name) {
-              // improve the property
-              info.impLevel++;
-              blocks[pos]->setInfo(info);
-            } else {
-              // if not, output an informative message
-              cerr << "Invalid command. You do not own this property." << endl;
-            }
+            cerr << "Invalid command. You have not entered buy or sell." << endl;
+            cerr << "If you wish to retry, you must enter the improve command again." << endl;
           }
-        } else if (desc == BlockDesc::AcademicBuilding) {
-        } else {
+        } else { // player does not own this property
+          // check if they are actually on the property
+          if (propertyName == blocks[pos]->getName()) {
+            BlockInfo info = blocks[pos]->getInfo();
+            info.owner = &player1;
+            blocks[pos]->setInfo(info);
+            Property *prop = dynamic_cast<Property *>(blocks[pos]);
+            player1.addProperty(*prop);
+          } else {
+            cerr << "Invalid command. You have not landed on this property so you may not purchase it." << endl;
+          }
         }
-
+        /*
         modifyProperty(player1, cmd, [&player1](Property *property) {
           Academic *academic = dynamic_cast<Academic *>(property);
           if (academic != nullptr) {
             player1.improve(*academic);
           }
-        });
+        });*/
       } else if (cmd == "mortgage") {
         modifyProperty(player1, cmd, [&player1](Property *property) {
           int mortgageFee = property->getPurCost() * MORTGAGE_RATE;
