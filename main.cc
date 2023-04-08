@@ -46,6 +46,14 @@ int main(int argc, char *argv[]) {
 
         if (argv[2] == "-load") {
             // check if file(argv[3]) is correct format
+            ifstream inputFile{argv[3]};
+            if (!inputFile.is_open()) {
+                cerr << "Unable to open file" << endl;
+            } else {
+                inputFile.close();
+                WatopolyGame loadedGame{filename};
+            }
+
         } else {
             cerr << "Invalid argument. Optional arguments include only: " << endl;
             cerr << "1. -load <filename>" << endl;

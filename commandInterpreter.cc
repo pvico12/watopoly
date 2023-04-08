@@ -193,7 +193,12 @@ WatopolyGame::WatopolyGame(int &playerCount, vector<Player *> &playerList)
 
 // construct game from file
 WatopolyGame::WatopolyGame(string filename) {
-    // create game from file here
+  ifstream gameStateFile{filename};
+  
+  // load game info into board
+  
+
+  gameStateFile.close();
 }
 
 // game commands
