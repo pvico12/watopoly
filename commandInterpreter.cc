@@ -354,6 +354,7 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
       cout << endl;
       if (response == "Yes") {
         p.spentRoundInTims(true);
+        p.removeMoney(GET_OUT_OF_TIMS_FEE);
         cout << "You are now out of Tims." << endl;
         outOfTims = true;
       }
