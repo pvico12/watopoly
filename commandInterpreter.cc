@@ -362,26 +362,28 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
             p.removeMoney(cost);
             p.addProperty(*property);  // need to check if this works
             cout << "Purchase successful! You now own " << property->getName() << "." << endl;
+            info.owner = &p;
+            blocks[newPosition]->setInfo(info);
             break;
           } else {
             cout << "Purchase failed! You have insufficient funds." << endl;
           }
           break;
-        } else if (desc == BlockDesc::MovementBlock) {
-          NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
-          nonProperty->action(p);
-          break;
-        } else if (desc == BlockDesc::MoneyBlock) {
-          NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
-          nonProperty->action(p);
-          break;
-          // } else if (desc == BlockDesc::Tims) {
-
-        } else {
-          // should not be here
-          break;
-        }
+        } 
       }
+    } else if (desc == BlockDesc::MovementBlock) {
+      NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
+      nonProperty->action(p);
+      break;
+    } else if (desc == BlockDesc::MoneyBlock) {
+      NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
+      nonProperty->action(p);
+      break;
+      // } else if (desc == BlockDesc::Tims) {
+
+      } else {
+      // should not be here
+      break;
     }
   }
 }
@@ -431,33 +433,35 @@ void WatopolyGame::trade(Player &p1, Player &p2) {
   }
 }
 
-void WatopolyGame::improve(Player &p, string cmd, int pos) {
+void WatopolyGame::improve(Player &p, string choice, int pos) {
   BlockInfo info = blocks[pos]->getInfo();
+  BlockState state = blocks[pos]->getState();
   BlockDesc desc = info.desc;
   Player *owner = info.owner;
 
   if (desc == BlockDesc::AcademicBuilding) {
     if (owner) {
-      // this player has purchase the property
-      // implement this to work, we need to call buy function
-      // but these are blocks so we cant access them
-      // PROBLEM: player1.buy(*(blocks)[pos]);
-      info.owner = &p;
-      info.impLevel++;
-      blocks[pos]->setInfo(info);
-    } else {
-      // check if the player already owns the property
       if (owner->getName() == p.getName()) {
-        // improve the property
-        info.impLevel++;
+        // TO ADD: Check if player has monopoly
+        if (choice == "buy") {
+          state.type = BlockStateType::Improvements;
+          info.impLevel++;
+        } else if (choice == "sell") {
+          state.type = BlockStateType::Improvements;
+          info.impLevel--;
+        } else {
+          cerr << "Invalid command." << endl;
+        }
         blocks[pos]->setInfo(info);
+        blocks[pos]->setState(state);
       } else {
-        // if not, output an informative message
         cerr << "Invalid command. You do not own this property." << endl;
-      }
+      } 
+    } else {
+      cerr << "Invalid command. You do not own this property." << endl;
     }
-  } else if (desc == BlockDesc::AcademicBuilding) {
   } else {
+    cerr << "Invalid command. You can only improve Academic Properties that you own." << endl;
   }
   /*
   modifyProperty(p, cmd, [&p](Property *property) {
@@ -625,7 +629,29 @@ void WatopolyGame::play() {
         trade(player1, player2);
 
       } else if (cmd == "improve") {
-        improve(player1, cmd, pos);
+        string propName;
+        cin >> propName;
+        string choice;
+        cin >> choice;
+        if (choice != "buy" && choice != "sell") {
+          cerr << "Invalid command." << endl;
+          continue;
+        }
+        // see if property even exists
+        int propIndex = -1;
+        int currInd = 0;
+        for (auto b : blocks) {
+          if (b->getName() == propName) {
+            propIndex = currInd;
+          }
+          currInd++;
+        }
+        if (propIndex == -1) { 
+          cerr << "Invalid command." << endl;
+          continue;
+        }
+
+        improve(player1, choice, propIndex);
       } else if (cmd == "mortgage") {
         mortgage(player1, cmd);
       } else if (cmd == "unmortgage") {
