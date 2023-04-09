@@ -367,8 +367,8 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
     }
     if (!outOfTims) {
       p.spentRoundInTims();
-      cout << "You have " << to_string(timsRounds) << " rounds left in Tims." << endl;
-      return;  // Move this line inside the if (!outOfTims) block
+      cout << "You have " << to_string(p.getTimsRounds()) << " more rounds left in Tims." << endl;
+      return;
     }
   }
 
@@ -497,17 +497,17 @@ void WatopolyGame::trade(Player &p1, Player &p2) {
   }
 
   bool success;
-  if (b1) {
-    Property *property2 = p2.getProperty(str1);
-    success = p1.trade(p2, stoi(str1), *property2);
-  } else if (b2) {
-    Property *property1 = p1.getProperty(str1);
-    success = p1.trade(p2, *property1, stoi(str2));
-  } else {
-    Property *property1 = p1.getProperty(str1);
-    Property *property2 = p2.getProperty(str1);
-    success = p1.trade(p2, *property1, *property2);
-  }
+if (b1) {
+  Property *property2 = p2.getProperty(str2);
+  success = p1.trade(p2, stoi(str1), *property2);
+} else if (b2) {
+  Property *property1 = p1.getProperty(str1);
+  success = p1.trade(p2, *property1, stoi(str2));
+} else {
+  Property *property1 = p1.getProperty(str1);
+  Property *property2 = p2.getProperty(str2);
+  success = p1.trade(p2, *property1, *property2);
+}
 
   if (success) {
     cout << "You have successfully traded " << (b1 ? "$" : "") << str1 << " for "
