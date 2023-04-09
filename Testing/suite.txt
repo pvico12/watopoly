@@ -1,3 +1,4 @@
 newGameStarting1700
 purchaseAcademic
 purchaseNonacademic
+academicAuction
