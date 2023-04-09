@@ -1,5 +1,7 @@
 #include "player.h"
 
+#include <iostream>
+
 #include "info.h"
 #include "state.h"
 
@@ -13,8 +15,8 @@ Player::Player(std::string name, Token token, int money, int position,
       money{money},
       position{position},
       props{props},
-      timsCups(timsCups),
-      timsRounds(-1) {}
+      timsCups{timsCups},
+      timsRounds{0} {}
 
 /*
 Player::Player(const Player &o)
@@ -72,6 +74,12 @@ Property *Player::getProperty(std::string propertyName) {
 }
 
 void Player::move(int n) {
+  if (timsRounds != 0) {
+    std::cout << "You are currently in DC Tims Line." << std::endl;
+    std::cout << "You have " << std::to_string(timsRounds) << " rounds left in Tims." << std::endl;
+    return;
+  }
+
   position = (position + n) % 40;
   // if (position - n < 0) {
   //   money += 200;
@@ -93,7 +101,7 @@ void Player::moveTo(int n, bool collect) {
   // if (collect && position < n) {
   //   money += 200;
   // }
-  if (collect && position < 20 && n > 20) {
+  if (collect && position < 20 && n >= 20) {
     money += 200;
   }
   position = n;
@@ -105,6 +113,7 @@ void Player::moveTo(int n, bool collect) {
     }
   } else if (n == DC_TIMS_LINE) {
     std::cout << "You have been moved to DC Tims Line." << std::endl;
+    timsRounds = 3;
   } else {
     std::cout << "You have moved to block " + std::to_string(n) + "." << std::endl;
   }
@@ -225,6 +234,18 @@ bool Player::trade(Player &p2, Property &prop1, int amount) {
   p2.addProperty(prop1);
   // std::cout << getMoney() << " " << p2.getMoney();
   return true;
+}
+
+int Player::getTimsRounds() {
+  return timsRounds;
+}
+
+void Player::spentRoundInTims(bool outOfTims) {
+  if (outOfTims) {
+    timsRounds = 0;
+  } else {
+    timsRounds--;
+  }
 }
 
 void Player::reset() {

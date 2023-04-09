@@ -61,13 +61,14 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 			b = new MoneyBlock(name, money, mt);
 		} else if (type == "MovementBlock") {
 			int move = std::stoi(blockParams[2]);
+			std::string moveType = blockParams[3];
 			MoveType mt = MoveType::MOVE_N_STEPS;
+			if (moveType == "TO_BLOCK") {
+				mt = MoveType::TO_BLOCK;
+			}
 			info.desc = BlockDesc::MovementBlock;
 			b = new MovementBlock(name, move, mt);
 		} else if (type == "Card") {
-			// Card|NEEDLES HALL|7|18,9,6,3,6,9,18|Remove,200;Remove,100;Remove,50;Add,25;Add,50;Add,100;Add,200
-			// Card|SLC|8|8,6,6,8,6,6,24,24|Move,-3;Move,-2;Move,-1;Move,1;Move,2;Move,3;MoveTo,10;MoveTo,20
-
 			int numCards = std::stoi(blockParams[2]);
 
 			std::string probStr = blockParams[3];
@@ -92,9 +93,9 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 			// create vector of cards
 			std::vector<Card> cards;
 			for (int i = 0; i < numCards; i++) {
-				std::string cmd = actionList[i][0]; // temporary, you need to input value from file
-				int n = std::stoi(actionList[i][1]); // temporary, you need to input value from file
-				double chance = probablities[i]; // temporary, you need to input value from file
+				std::string cmd = actionList[i][0];
+				int n = std::stoi(actionList[i][1]);
+				double chance = probablities[i];
 
 				Card c;
 
@@ -119,9 +120,11 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 				cards.emplace_back(c);
 			}
 			b = new CardBlock(name, numCards, cards);
+		} else if (type == "Tims") {
+			b = new Tims(name);
 		} else if (type == "NonProperty") {
 			info.desc = BlockDesc::Other;
-			b = new MoneyBlock(name, 0, MoneyType::ADD);
+			b = new MovementBlock(name, 0, MoveType::MOVE_N_STEPS);
 		} else {
 			// doesn't matter
 		}

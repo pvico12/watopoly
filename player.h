@@ -1,7 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -78,9 +77,9 @@ class Player {
   bool trade(Player &p2, int amount, Property &prop2);
   bool trade(Player &p2, Property &prop1, int amount);
 
-  void inTims();
+  int getTimsRounds();
 
-  int roundsSpentInTims();
+  void spentRoundInTims(bool outOfTims = false);
 
   void reset();
 };
