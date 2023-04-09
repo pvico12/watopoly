@@ -30,13 +30,14 @@ struct WatopolyGame {
     TextDisplay td;
     Board board;
     bool rolled;
+    bool testing;
     int numPlayers;
     std::vector<Block *> blocks;
     std::vector<Player *> players;
 
     // construct and initialize
-    WatopolyGame();
-    WatopolyGame(std::string filename);
+    WatopolyGame(bool testing);
+    WatopolyGame(std::string filename, bool testing);
 
     // game commands
     void roll(Player &p, int &pos, bool &rolled);

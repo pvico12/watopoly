@@ -188,8 +188,8 @@ void getPlayerData(int &numPlayers, vector<Player *> &players) {
 }
 
 // game constructors
-WatopolyGame::WatopolyGame()
-    : rolled{false}, numPlayers{0} {
+WatopolyGame::WatopolyGame(bool testing)
+    : rolled{false}, testing{testing}, numPlayers{0} {
   Board watopoly{td};  // create board (uses .txt file for blocks)
   board = watopoly;
   blocks = *(board.getBlocks());  // create list of blocks
@@ -213,8 +213,8 @@ WatopolyGame::WatopolyGame()
 }
 
 // construct game from file
-WatopolyGame::WatopolyGame(string filename)
-    : rolled{false}, numPlayers{0} {
+WatopolyGame::WatopolyGame(string filename, bool testing)
+    : rolled{false}, testing{testing}, numPlayers{0} {
   Board watopoly{td};  // create board (uses .txt file for blocks)
   board = watopoly;
   blocks = *(board.getBlocks());  // create list of blocks
@@ -301,9 +301,40 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
   // you can now move the player
   rolled = true;
 
-  srand(time(nullptr));
-  int roll1 = (rand() % 6 + 1);
-  int roll2 = (rand() % 6 + 1);
+  int roll1;
+  int roll2;
+  if (testing) {
+    string option1;
+    string option2;
+    cin >> option1;
+    cin >> option2;
+    // exception for the two roll options (testing or not)
+    try {
+        roll1 = std::stoi(option1);
+        std::cout << "std::stoi succeeded. Result: " << option1 << std::endl;
+    }
+    catch (const std::invalid_argument& e) {
+        std::cerr << "Error: Invalid argument. " << e.what() << std::endl;
+    }
+    catch (const std::out_of_range& e) {
+        std::cerr << "Error: Out of range. " << e.what() << std::endl;
+    }
+    try {
+        roll2 = std::stoi(option2);
+        std::cout << "std::stoi succeeded. Result: " << option2 << std::endl;
+    }
+    catch (const std::invalid_argument& e) {
+        std::cerr << "Error: Invalid argument. " << e.what() << std::endl;
+    }
+    catch (const std::out_of_range& e) {
+        std::cerr << "Error: Out of range. " << e.what() << std::endl;
+    }
+  } else {
+    srand(time(nullptr));
+    roll1 = (rand() % 6 + 1);
+    roll2 = (rand() % 6 + 1);
+  }
+  
   std::cout << "First Dice:  " << roll1 << std::endl;
   std::cout << "Second Dice: " << roll2 << std::endl;
   int steps = roll1 + roll2;
