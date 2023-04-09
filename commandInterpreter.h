@@ -41,6 +41,8 @@ struct WatopolyGame {
     WatopolyGame(bool testing);
     WatopolyGame(std::string filename, bool testing);
 
+    void movePlayerOnDisplay(Player &p, int oldPos, int newPos);
+
     // game commands
     void roll(Player &p, int &pos, bool &rolled);
     void next(int &playerInd);

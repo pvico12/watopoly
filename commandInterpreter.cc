@@ -315,6 +315,31 @@ WatopolyGame::WatopolyGame(string filename, bool testing)
   gameStateFile.close();
 }
 
+void WatopolyGame::movePlayerOnDisplay(Player &p, int oldPos, int newPos) {
+  // set original block state, remove player from this block
+  BlockState currPosState = blocks[oldPos]->getState();
+  currPosState.type = BlockStateType::Visitors;
+  vector<Player *> &visitors = currPosState.visitors;
+  int targetIndex = 0;
+  for (auto player : visitors) {
+    if (player->getName() == p.getName()) break;
+    targetIndex++;
+  }
+  visitors.erase(visitors.begin() + targetIndex);
+  blocks[oldPos]->setState(currPosState);
+
+  p.move(newPos - oldPos);  // move
+
+  // update block state that player is moving to
+  BlockState newPosState = blocks[newPos]->getState();
+  newPosState.type = BlockStateType::Visitors;
+  newPosState.visitors.emplace_back(&p);
+  blocks[newPos]->setState(newPosState);
+
+  // update player info
+  p.setPosition(newPos);
+}
+
 // game commands
 void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
   // you can now move the player
@@ -399,30 +424,8 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
   std::cout << "Second Dice: " << roll2 << std::endl;
   int steps = roll1 + roll2;
 
-  // set original block state, remove player from this block
-  BlockState currPosState = blocks[pos]->getState();
-  currPosState.type = BlockStateType::Visitors;
-  vector<Player *> &visitors = currPosState.visitors;
-  int targetIndex = 0;
-  for (auto player : visitors) {
-    if (player->getName() == p.getName()) break;
-    targetIndex++;
-  }
-  visitors.erase(visitors.begin() + targetIndex);
-  blocks[pos]->setState(currPosState);
-
-  p.move(steps);  // move
-
-  // update block state that player is moving to
   int newPosition = (pos + steps >= NUMSQUARES) ? (pos + steps) % NUMSQUARES : pos + steps;
-  BlockState newPosState = blocks[newPosition]->getState();
-  newPosState.type = BlockStateType::Visitors;
-  newPosState.visitors.emplace_back(&p);
-  blocks[newPosition]->setState(newPosState);
-
-  // update player info
-  p.setPosition(newPosition);
-
+  movePlayerOnDisplay(p, pos, newPosition);
   cout << board;
 
   // ********* new *********
@@ -475,6 +478,11 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
       // need some sort of output
       NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
       nonProperty->action(p);
+      int updatedPosition = p.getPosition();
+      if (updatedPosition != newPosition) { // player was sent to tims
+        movePlayerOnDisplay(p, newPosition, updatedPosition);
+        cout << board;
+      }
       break;
     } else if (desc == BlockDesc::CardBlock) {
       // need some sort of output
@@ -486,6 +494,11 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
       } else {
         NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
         nonProperty->action(p);
+        int updatedPosition = p.getPosition();
+        if (updatedPosition != newPosition) { // player was moved
+          movePlayerOnDisplay(p, newPosition, updatedPosition);
+          cout << board;
+        }
         break;
       }
     } else {

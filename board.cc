@@ -5,7 +5,6 @@
 #include "NonProperty/movement.h"
 #include "NonProperty/money.h"
 #include "NonProperty/card.h"
-#include "NonProperty/tims.h"
 #include "info.h"
 #include "state.h"
 #include <fstream>
