@@ -9,6 +9,8 @@
 
 extern const double MORTGAGE_RATE;
 extern const double UNMORTGAGE_RATE;
+extern const int MAX_CUP_COUNT;
+extern const int GET_OUT_OF_TIMS_FEE;
 extern const int STARTING_BLOCK;
 extern const std::string separator;
 
@@ -38,6 +40,8 @@ struct WatopolyGame {
     // construct and initialize
     WatopolyGame(bool testing);
     WatopolyGame(std::string filename, bool testing);
+
+    void movePlayerOnDisplay(Player &p, int oldPos, int newPos);
 
     // game commands
     void roll(Player &p, int &pos, bool &rolled);

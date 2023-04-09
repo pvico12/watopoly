@@ -1,13 +1,22 @@
 #include "player.h"
 
-// #include <iostream>
+#include <iostream>
 
 #include "info.h"
 #include "state.h"
 
+const int COLLECT_OSAP = 20;
+const int DC_TIMS_LINE = 30;
+
 Player::Player(std::string name, Token token, int money, int position,
                std::vector<Property *> props, int timsCups)
-    : name{name}, token{token}, money{money}, position{position}, props{props}, timsCups(timsCups) {}
+    : name{name},
+      token{token},
+      money{money},
+      position{position},
+      props{props},
+      timsCups{timsCups},
+      timsRounds{0} {}
 
 /*
 Player::Player(const Player &o)
@@ -65,6 +74,12 @@ Property *Player::getProperty(std::string propertyName) {
 }
 
 void Player::move(int n) {
+  if (timsRounds != 0) {
+    std::cout << "You are currently in DC Tims Line." << std::endl;
+    std::cout << "You have " << std::to_string(timsRounds) << " rounds left in Tims." << std::endl;
+    return;
+  }
+
   position = (position + n) % 40;
   // if (position - n < 0) {
   //   money += 200;
@@ -72,16 +87,36 @@ void Player::move(int n) {
   if (position > 20 && position - n < 20) {
     money += 200;
   }
+
+  if (n > 0) {
+    std::cout << "You have moved " << std::to_string(n) << " steps forwards." << std::endl;
+  } else if (n < 0) {
+    std::cout << "You have moved " << std::to_string(-n) << " steps backwards." << std::endl;
+  } else {
+    std::cout << "You remain in your current position." << std::endl;
+  }
 }
 
 void Player::moveTo(int n, bool collect) {
   // if (collect && position < n) {
   //   money += 200;
   // }
-  if (collect && position < 20 && n > 20) {
+  if (collect && position < 20 && n >= 20) {
     money += 200;
   }
   position = n;
+
+  if (n == COLLECT_OSAP) {
+    std::cout << "You have been moved to Collect OSAP." << std::endl;
+    if (collect) {
+      std::cout << "$200 has been added to your account." << std::endl;
+    }
+  } else if (n == DC_TIMS_LINE) {
+    std::cout << "You have been moved to DC Tims Line." << std::endl;
+    timsRounds = 3;
+  } else {
+    std::cout << "You have moved to block " + std::to_string(n) + "." << std::endl;
+  }
 }
 
 bool Player::hasMoney(int amount) {
@@ -90,10 +125,16 @@ bool Player::hasMoney(int amount) {
 
 void Player::addMoney(int amount) {
   money += amount;
+  std::cout << "$" << std::to_string(amount) << " has been added to your account." << std::endl;
 }
 
 void Player::removeMoney(int amount) {
   money -= amount;
+  std::cout << "$" << std::to_string(amount) << " has been removed from your account." << std::endl;
+  if (money < 0) {
+    std::cout << "your account total is now -$" << std::to_string(-money) << "." << std::endl;
+    std::cout << "Would you like to mortgage or trade with other players to prevent bankruptcy?" << std::endl;
+  }
 }
 
 int Player::hasProperty(Property &prop) {
@@ -193,6 +234,18 @@ bool Player::trade(Player &p2, Property &prop1, int amount) {
   p2.addProperty(prop1);
   // std::cout << getMoney() << " " << p2.getMoney();
   return true;
+}
+
+int Player::getTimsRounds() {
+  return timsRounds;
+}
+
+void Player::spentRoundInTims(bool outOfTims) {
+  if (outOfTims) {
+    timsRounds = 0;
+  } else {
+    timsRounds--;
+  }
 }
 
 void Player::reset() {
