@@ -30,6 +30,8 @@ using namespace std;
 
 const double MORTGAGE_RATE = 0.5;
 const double UNMORTGAGE_RATE = 0.6;
+const int MAX_CUP_COUNT = 4;
+const int GET_OUT_OF_TIMS_FEE = 50;
 const int STARTING_BLOCK = 20;
 const string separator = " ";
 
@@ -74,7 +76,6 @@ Player *findPlayer2(vector<Player *> &players, string player2Name) {
 void auction(Property *prop, std::vector<Player *> &players) {
   cout << "Starting auction for " << prop->getName() << "..." << endl;
 
-  int cost = prop->getPurCost();
   Player *highestBidder = nullptr;
   int highestBid = 0;
 
@@ -124,7 +125,7 @@ void auction(Property *prop, std::vector<Player *> &players) {
   }
 
   if (highestBidder != nullptr) {
-    highestBidder->removeMoney(cost);
+    highestBidder->removeMoney(highestBid);
     highestBidder->addProperty(*prop);
     cout << prop->getName() << " has been auctioned to " << highestBidder->getName() << endl;
   } else {
@@ -310,31 +311,27 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
     cin >> option2;
     // exception for the two roll options (testing or not)
     try {
-        roll1 = std::stoi(option1);
-        std::cout << "std::stoi succeeded. Result: " << option1 << std::endl;
-    }
-    catch (const std::invalid_argument& e) {
-        std::cerr << "Error: Invalid argument. " << e.what() << std::endl;
-    }
-    catch (const std::out_of_range& e) {
-        std::cerr << "Error: Out of range. " << e.what() << std::endl;
+      roll1 = std::stoi(option1);
+      std::cout << "std::stoi succeeded. Result: " << option1 << std::endl;
+    } catch (const std::invalid_argument &e) {
+      std::cerr << "Error: Invalid argument. " << e.what() << std::endl;
+    } catch (const std::out_of_range &e) {
+      std::cerr << "Error: Out of range. " << e.what() << std::endl;
     }
     try {
-        roll2 = std::stoi(option2);
-        std::cout << "std::stoi succeeded. Result: " << option2 << std::endl;
-    }
-    catch (const std::invalid_argument& e) {
-        std::cerr << "Error: Invalid argument. " << e.what() << std::endl;
-    }
-    catch (const std::out_of_range& e) {
-        std::cerr << "Error: Out of range. " << e.what() << std::endl;
+      roll2 = std::stoi(option2);
+      std::cout << "std::stoi succeeded. Result: " << option2 << std::endl;
+    } catch (const std::invalid_argument &e) {
+      std::cerr << "Error: Invalid argument. " << e.what() << std::endl;
+    } catch (const std::out_of_range &e) {
+      std::cerr << "Error: Out of range. " << e.what() << std::endl;
     }
   } else {
     srand(time(nullptr));
     roll1 = (rand() % 6 + 1);
     roll2 = (rand() % 6 + 1);
   }
-  
+
   std::cout << "First Dice:  " << roll1 << std::endl;
   std::cout << "Second Dice: " << roll2 << std::endl;
   int steps = roll1 + roll2;
@@ -411,16 +408,55 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
         auction(property, players);
       }
       break;
-    } else if (desc == BlockDesc::MovementBlock) {
+    } else if (desc == BlockDesc::MovementBlock || desc == BlockDesc::MoneyBlock) {
+      // need some sort of output
       NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
       nonProperty->action(p);
       break;
-    } else if (desc == BlockDesc::MoneyBlock) {
-      NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
-      nonProperty->action(p);
-      break;
-      // } else if (desc == BlockDesc::Tims) {
-
+    } else if (desc == BlockDesc::CardBlock) {
+      // need some sort of output
+      int getTimsCup = rand() % 100;
+      int totalTimsCup = board.getCupCount();
+      if (totalTimsCup < MAX_CUP_COUNT && getTimsCup == 0) {
+        p.addTimsCup();
+        cout << "Congratulations! You have won a Roll Up the Rim cup." << endl;
+      } else {
+        NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
+        nonProperty->action(p);
+        break;
+      }
+    } else if (desc == BlockDesc::Tims) {
+      // if (p.inTims()) {
+      //   cout << "You are currently in Tims" << endl;
+      //   if (p.getTimsCups() > 0) {
+      //     cout << "Would you like to use a Tims Cup (Yes/No)? ";
+      //     string response;
+      //     cin >> response;
+      //     cout << endl;
+      //     if (response == "Yes") {
+      //       // player.getoutoftims()
+      //       cout << "You are now out of Tims." << endl;
+      //       continue;
+      //     }
+      //   }
+      //   if (p.getMoney() >= GET_OUT_OF_TIMS_FEE) {
+      //     cout << "Would you like to use pay a $" << GET_OUT_OF_TIMS_FEE << " fee to get out of Tims (Yes/No)? ";
+      //     string response;
+      //     cin >> response;
+      //     cout << endl;
+      //     if (response == "Yes") {
+      //       // player.getoutoftims()
+      //       cout << "You are now out of Tims." << endl;
+      //       continue;
+      //     }
+      //   }
+      //   if (roll1 == roll2) {
+      //     // player.getoutoftims()
+      //     cout << "You have rolled a double! You are not out of Tims." << endl;
+      //     continue;
+      //   }
+      //   cout << "You have " << /* player.gettimsrounds() << */ " rounds left in Tims." << endl;
+      // }
     } else {
       // should not be here
       break;
@@ -715,7 +751,7 @@ void WatopolyGame::play() {
       // check if game is won
       if (numPlayers == 1) {
         cout << players.at(0)->getName() << " is the winner!" << endl;
-        break;
+        return;
       }
 
       cout << board;

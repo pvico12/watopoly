@@ -9,6 +9,8 @@
 
 extern const double MORTGAGE_RATE;
 extern const double UNMORTGAGE_RATE;
+extern const int MAX_CUP_COUNT;
+extern const int GET_OUT_OF_TIMS_FEE;
 extern const int STARTING_BLOCK;
 extern const std::string separator;
 

@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -12,6 +13,8 @@
 // #include "Property/nonacademic.h"
 
 extern const int BOARD_SIZE;
+extern const int COLLECT_OSAP;
+extern const int DC_TIMS_LINE;
 
 class Player {
   std::string name;
@@ -19,6 +22,7 @@ class Player {
   int money, position;
   std::vector<Property *> props;
   int timsCups;
+  int timsRounds;
 
  public:
   Player(std::string name, Token token,
@@ -73,6 +77,10 @@ class Player {
   bool trade(Player &p2, Property &prop1, Property &prop2);
   bool trade(Player &p2, int amount, Property &prop2);
   bool trade(Player &p2, Property &prop1, int amount);
+
+  void inTims();
+
+  int roundsSpentInTims();
 
   void reset();
 };
