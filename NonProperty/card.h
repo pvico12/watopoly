@@ -17,6 +17,7 @@ class CardBlock : public NonProperty {
 
  public:
   CardBlock(std::string name, int totalCards);
+  CardBlock(std::string name, int totalCards, std::vector<Card> cards);
   bool setCards(const std::vector<Card>& newCards);
   virtual void action(Player &player);
 };

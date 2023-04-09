@@ -14,6 +14,18 @@ CardBlock::CardBlock(std::string name, int numCards)
   }
 }
 
+CardBlock::CardBlock(std::string name, int numCards, std::vector<Card> cards)
+    : NonProperty{name},
+      numCards{numCards},
+      cards{cards},
+      cumulativeChances(std::vector<double>(numCards)) {
+  double cumulativeChance = 0.0;
+  for (int i = 0; i < numCards; i++) {
+    cumulativeChance += cards.at(i).chance;
+    cumulativeChances[i] = cumulativeChance;
+  }
+}
+
 bool CardBlock::setCards(const std::vector<Card>& newCards) {
   if (newCards.size() != numCards) {
     return false;

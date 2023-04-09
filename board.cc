@@ -4,6 +4,7 @@
 #include "Property/nonacademic.h"
 #include "NonProperty/movement.h"
 #include "NonProperty/money.h"
+#include "NonProperty/card.h"
 #include "info.h"
 #include "state.h"
 #include <fstream>
@@ -62,6 +63,39 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 			MoveType mt = MoveType::MOVE_N_STEPS;
 			info.desc = BlockDesc::MovementBlock;
 			b = new MovementBlock(name, move, mt);
+		} else if (type == "Card") {
+			// |Card|SLC|8|{8,6,6,8,6,6,24,24}|{(Move,-3),(Move,-2),(Move,-1),(Move,1),(Move,2),(Move,3),(MoveTo,10),(MoveTo,20)}
+			// |Card|Needles Hall|7|{18,9,6,3,6,9,18}|{(Remove,200),(Remove,100),(Remove,50),(Add,25),(Add,50),(Add,100),(Add,200)}
+
+			// input
+
+			int numCards; // input the number of cards (8 for SLC, 7 for Needles Hall)
+			
+			std::vector<Card> cards;
+			for (int i = 0; i < numCards; i++) {
+				std::string cmd = ""; // temporary, you need to input value from file
+				int n = -1; // temporary, you need to input value from file
+				double chance = 0.125; // temporary, you need to input value from file
+				if (cmd == "Move") {
+					cards[i].action = [n](Player &player) {
+						player.move(n);
+					};
+				} else if (cmd == "MoveTo") {
+					cards[i].action = [n](Player &player) {
+						player.moveTo(n);
+					};
+				} else if (cmd == "Remove") {
+					cards[i].action = [n](Player &player) {
+						player.removeMoney(n);
+					};
+				} else if (cmd == "Add") {
+					cards[i].action = [n](Player &player) {
+						player.addMoney(n);
+					};
+				}
+				cards[i].chance = 1.0 / chance;
+			}
+			b = new CardBlock(name, numCards, cards);
 		} else if (type == "NonProperty") {
 			info.desc = BlockDesc::Other;
 			b = new MoneyBlock(name, 0, MoneyType::ADD);
