@@ -84,7 +84,7 @@ void auction(Property *prop, std::vector<Player *> &players) {
   while (true) {
     int previousHigh = highestBid;
     for (Player *player : players) {
-      if (numBidders <= 1) {
+      if (numBidders <= 1 && highestBidder) {
         break;
       }
 
@@ -95,11 +95,20 @@ void auction(Property *prop, std::vector<Player *> &players) {
       }
 
       cout << "Current highest bid: " << highestBid << endl;
-      cout << player->getName() << ", please enter your bid: ";
-      int bid;
-      cin >> bid;
-      cout << endl;
+      string bidStr;
+      while (true) {
+        cout << player->getName() << ", please enter your bid: ";
+        cin >> bidStr;
+        cout << endl;
+        bool b = isPosInt(bidStr);
+        if (b) {
+          break;
+        } else {
+          cout << "Invalid input, please enter a positive integer." << endl;
+        }
+      }
 
+      int bid = stoi(bidStr);
       if (bid > highestBid) {
         highestBidder = player;
         highestBid = bid;
@@ -362,15 +371,15 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
             p.removeMoney(cost);
             p.addProperty(*property);  // need to check if this works
             cout << "Purchase successful! You now own " << property->getName() << "." << endl;
-            info.owner = &p;
-            blocks[newPosition]->setInfo(info);
             break;
           } else {
             cout << "Purchase failed! You have insufficient funds." << endl;
           }
-          break;
-        } 
+        }
+        // case 3: unowned property, auction
+        auction(property, players);
       }
+      break;
     } else if (desc == BlockDesc::MovementBlock) {
       NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
       nonProperty->action(p);
@@ -381,7 +390,7 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
       break;
       // } else if (desc == BlockDesc::Tims) {
 
-      } else {
+    } else {
       // should not be here
       break;
     }
@@ -456,7 +465,7 @@ void WatopolyGame::improve(Player &p, string choice, int pos) {
         blocks[pos]->setState(state);
       } else {
         cerr << "Invalid command. You do not own this property." << endl;
-      } 
+      }
     } else {
       cerr << "Invalid command. You do not own this property." << endl;
     }
@@ -646,7 +655,7 @@ void WatopolyGame::play() {
           }
           currInd++;
         }
-        if (propIndex == -1) { 
+        if (propIndex == -1) {
           cerr << "Invalid command." << endl;
           continue;
         }
