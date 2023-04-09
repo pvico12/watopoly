@@ -42,7 +42,7 @@ struct WatopolyGame {
     void roll(Player &p, int &pos, bool &rolled);
     void next(int &playerInd);
     void trade(Player &p1, Player &p2);
-    void improve(Player &p, std::string cmd, int pos);
+    void improve(Player &p, std::string choice, int pos);
     void mortgage(Player &p, std::string cmd);
     void unmortgage(Player &p, std::string cmd);
     void bankrupt(Player &p, int &playerInd);
