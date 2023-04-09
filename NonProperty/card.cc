@@ -27,7 +27,8 @@ CardBlock::CardBlock(std::string name, int numCards, std::vector<Card> cards)
 }
 
 bool CardBlock::setCards(const std::vector<Card>& newCards) {
-  if (newCards.size() != numCards) {
+  int len = newCards.size();
+  if (len != numCards) {
     return false;
   }
 

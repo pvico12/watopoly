@@ -30,6 +30,8 @@ using namespace std;
 
 const double MORTGAGE_RATE = 0.5;
 const double UNMORTGAGE_RATE = 0.6;
+const int MAX_CUP_COUNT = 4;
+const int GET_OUT_OF_TIMS_FEE = 50;
 const int STARTING_BLOCK = 20;
 const string separator = " ";
 
@@ -74,7 +76,6 @@ Player *findPlayer2(vector<Player *> &players, string player2Name) {
 void auction(Property *prop, std::vector<Player *> &players) {
   cout << "Starting auction for " << prop->getName() << "..." << endl;
 
-  int cost = prop->getPurCost();
   Player *highestBidder = nullptr;
   int highestBid = 0;
 
@@ -124,7 +125,7 @@ void auction(Property *prop, std::vector<Player *> &players) {
   }
 
   if (highestBidder != nullptr) {
-    highestBidder->removeMoney(cost);
+    highestBidder->removeMoney(highestBid);
     highestBidder->addProperty(*prop);
     cout << prop->getName() << " has been auctioned to " << highestBidder->getName() << endl;
   } else {
@@ -314,6 +315,31 @@ WatopolyGame::WatopolyGame(string filename, bool testing)
   gameStateFile.close();
 }
 
+void WatopolyGame::movePlayerOnDisplay(Player &p, int oldPos, int newPos) {
+  // set original block state, remove player from this block
+  BlockState currPosState = blocks[oldPos]->getState();
+  currPosState.type = BlockStateType::Visitors;
+  vector<Player *> &visitors = currPosState.visitors;
+  int targetIndex = 0;
+  for (auto player : visitors) {
+    if (player->getName() == p.getName()) break;
+    targetIndex++;
+  }
+  visitors.erase(visitors.begin() + targetIndex);
+  blocks[oldPos]->setState(currPosState);
+
+  p.move(newPos - oldPos);  // move
+
+  // update block state that player is moving to
+  BlockState newPosState = blocks[newPos]->getState();
+  newPosState.type = BlockStateType::Visitors;
+  newPosState.visitors.emplace_back(&p);
+  blocks[newPos]->setState(newPosState);
+
+  // update player info
+  p.setPosition(newPos);
+}
+
 // game commands
 void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
   // you can now move the player
@@ -352,35 +378,54 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
     roll1 = (rand() % 6 + 1);
     roll2 = (rand() % 6 + 1);
   }
-  
+
+  int timsRounds = p.getTimsRounds();
+  if (timsRounds != 0) {
+    bool outOfTims = false;
+    if (!outOfTims && p.getTimsCups() > 0) {
+      cout << "Would you like to use a Tims Cup (Yes/No)? ";
+      string response;
+      cin >> response;
+      cout << endl;
+      if (response == "Yes") {
+        p.spentRoundInTims(true);
+        p.useTimsCup();
+        cout << "You are now out of Tims." << endl;
+        outOfTims = true;
+      }
+    }
+    if (!outOfTims && p.getMoney() >= GET_OUT_OF_TIMS_FEE) {
+      cout << "Would you like to use pay a $" << GET_OUT_OF_TIMS_FEE << " fee to get out of Tims (Yes/No)? ";
+      string response;
+      cin >> response;
+      cout << endl;
+      if (response == "Yes") {
+        p.spentRoundInTims(true);
+        p.removeMoney(GET_OUT_OF_TIMS_FEE);
+        cout << "You are now out of Tims." << endl;
+        outOfTims = true;
+      }
+    }
+    if (!outOfTims && roll1 == roll2) {
+      p.spentRoundInTims(true);
+      std::cout << "First Dice:  " << roll1 << std::endl;
+      std::cout << "Second Dice: " << roll2 << std::endl;
+      cout << "You have rolled a double! You are now out of Tims." << endl;
+      outOfTims = true;
+    }
+    if (!outOfTims) {
+      p.spentRoundInTims();
+      cout << "You have " << to_string(p.getTimsRounds()) << " more rounds left in Tims." << endl;
+      return;
+    }
+  }
+
   std::cout << "First Dice:  " << roll1 << std::endl;
   std::cout << "Second Dice: " << roll2 << std::endl;
   int steps = roll1 + roll2;
 
-  // set original block state, remove player from this block
-  BlockState currPosState = blocks[pos]->getState();
-  currPosState.type = BlockStateType::Visitors;
-  vector<Player *> &visitors = currPosState.visitors;
-  int targetIndex = 0;
-  for (auto player : visitors) {
-    if (player->getName() == p.getName()) break;
-    targetIndex++;
-  }
-  visitors.erase(visitors.begin() + targetIndex);
-  blocks[pos]->setState(currPosState);
-
-  p.move(steps);  // move
-
-  // update block state that player is moving to
   int newPosition = (pos + steps >= NUMSQUARES) ? (pos + steps) % NUMSQUARES : pos + steps;
-  BlockState newPosState = blocks[newPosition]->getState();
-  newPosState.type = BlockStateType::Visitors;
-  newPosState.visitors.emplace_back(&p);
-  blocks[newPosition]->setState(newPosState);
-
-  // update player info
-  p.setPosition(newPosition);
-
+  movePlayerOnDisplay(p, pos, newPosition);
   cout << board;
 
   // ********* new *********
@@ -429,16 +474,33 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
         auction(property, players);
       }
       break;
-    } else if (desc == BlockDesc::MovementBlock) {
+    } else if (desc == BlockDesc::MovementBlock || desc == BlockDesc::MoneyBlock) {
+      // need some sort of output
       NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
       nonProperty->action(p);
+      int updatedPosition = p.getPosition();
+      if (updatedPosition != newPosition) { // player was sent to tims
+        movePlayerOnDisplay(p, newPosition, updatedPosition);
+        cout << board;
+      }
       break;
-    } else if (desc == BlockDesc::MoneyBlock) {
-      NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
-      nonProperty->action(p);
-      break;
-      // } else if (desc == BlockDesc::Tims) {
-
+    } else if (desc == BlockDesc::CardBlock) {
+      // need some sort of output
+      int getTimsCup = rand() % 100;
+      int totalTimsCup = board.getCupCount();
+      if (totalTimsCup < MAX_CUP_COUNT && getTimsCup == 0) {
+        p.addTimsCup();
+        cout << "Congratulations! You have won a Roll Up the Rim cup." << endl;
+      } else {
+        NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
+        nonProperty->action(p);
+        int updatedPosition = p.getPosition();
+        if (updatedPosition != newPosition) { // player was moved
+          movePlayerOnDisplay(p, newPosition, updatedPosition);
+          cout << board;
+        }
+        break;
+      }
     } else {
       // should not be here
       break;
@@ -471,17 +533,17 @@ void WatopolyGame::trade(Player &p1, Player &p2) {
   }
 
   bool success;
-  if (b1) {
-    Property *property2 = p2.getProperty(str1);
-    success = p1.trade(p2, stoi(str1), *property2);
-  } else if (b2) {
-    Property *property1 = p1.getProperty(str1);
-    success = p1.trade(p2, *property1, stoi(str2));
-  } else {
-    Property *property1 = p1.getProperty(str1);
-    Property *property2 = p2.getProperty(str1);
-    success = p1.trade(p2, *property1, *property2);
-  }
+if (b1) {
+  Property *property2 = p2.getProperty(str2);
+  success = p1.trade(p2, stoi(str1), *property2);
+} else if (b2) {
+  Property *property1 = p1.getProperty(str1);
+  success = p1.trade(p2, *property1, stoi(str2));
+} else {
+  Property *property1 = p1.getProperty(str1);
+  Property *property2 = p2.getProperty(str2);
+  success = p1.trade(p2, *property1, *property2);
+}
 
   if (success) {
     cout << "You have successfully traded " << (b1 ? "$" : "") << str1 << " for "
@@ -743,7 +805,7 @@ void WatopolyGame::play() {
       // check if game is won
       if (numPlayers == 1) {
         cout << players.at(0)->getName() << " is the winner!" << endl;
-        break;
+        return;
       }
 
       for (Player *player : players) {

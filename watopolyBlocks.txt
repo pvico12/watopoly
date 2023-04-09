@@ -8,7 +8,7 @@ Academic|PHYS|Sci1|260|0|{22,110,330,800,975,1150}|150
 Academic|B1|Sci1|260|0|{22,110,330,800,975,1150}|150
 NonAcademic|CIF|150|1|Gym
 Academic|B2|Sci1|280|0|{24,120,360,850,1025,1200}|150
-NonProperty|GO TO TIMS
+MovementBlock|GO TO TIMS|30|TO_BLOCK
 Academic|EIT|Sci2|300|0|{26,130,390,900,1100,1275}|200
 Academic|ESC|Sci2|300|0|{26,130,390,900,1100,1275}|200
 Card|SLC|8|8,6,6,8,6,6,24,24|Move,-3;Move,-2;Move,-1;Move,1;Move,2;Move,3;MoveTo,10;MoveTo,20
