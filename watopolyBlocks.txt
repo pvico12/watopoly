@@ -1,6 +1,6 @@
 NonProperty|Goose Nesting|
 Academic|EV1|Env|220|0|{18,90,250,700,875,1050}|150
-MoneyBlock|NEEDLES HALL|200
+Card|NEEDLES HALL|7|18,9,6,3,6,9,18|Remove,200;Remove,100;Remove,50;Add,25;Add,50;Add,100;Add,200
 Academic|EV2|Env|220|0|{18,90,250,700,875,1050}|150
 Academic|EV3|Env|240|0|{20,100,300,750,925,1100}|150
 NonAcademic|V1|200|1|Residence
@@ -11,21 +11,21 @@ Academic|B2|Sci1|280|0|{24,120,360,850,1025,1200}|150
 NonProperty|GO TO TIMS
 Academic|EIT|Sci2|300|0|{26,130,390,900,1100,1275}|200
 Academic|ESC|Sci2|300|0|{26,130,390,900,1100,1275}|200
-MovementBlock|SLC|10
+Card|SLC|8|8,6,6,8,6,6,24,24|Move,-3;Move,-2;Move,-1;Move,1;Move,2;Move,3;MoveTo,10;MoveTo,20
 Academic|C2|Sci2|320|0|{28,150,450,100,1200,1400}|200
 NonAcademic|REV|200|1|Residence
-MoneyBlock|NEEDLES HALL|200
+Card|NEEDLES HALL|7|18,9,6,3,6,9,18|Remove,200;Remove,100;Remove,50;Add,25;Add,50;Add,100;Add,200
 Academic|MC|Math|350|0|{35,175,500,1100,1300,1500}|200
 MoneyBlock|COOP FEE|200
 Academic|DC|Math|400|0|{50,200,600,1400,1700,2000}|200
 MoneyBlock|COLLECT OSAP|200
 Academic|AL|Arts1|40|0|{2,10,30,90,160,250}|50
-MovementBlock|SLC|10
+Card|SLC|8|8,6,6,8,6,6,24,24|Move,-3;Move,-2;Move,-1;Move,1;Move,2;Move,3;MoveTo,10;MoveTo,20
 Academic|ML|Arts1|60|0|{4,20,60,180,320,450}|50
 MoneyBlock|TUITION|100
 NonAcademic|MKV|200|1|Residence
 Academic|ECH|Arts2|100|0|{6,30,90,270,400,550}|50
-MoneyBlock|NEEDLES HALL|200
+Card|NEEDLES HALL|7|18,9,6,3,6,9,18|Remove,200;Remove,100;Remove,50;Add,25;Add,50;Add,100;Add,200
 Academic|PAS|Arts2|100|0|{6,30,90,270,400,550}|50
 Academic|HH|Arts2|120|0|{8,40,100,300,450,600}|50
 NonProperty|DC Tims Line
@@ -35,6 +35,6 @@ Academic|DWE|Eng|140|0|{10,50,150,450,625,750}|100
 Academic|CPH|Eng|160|0|{12,60,180,500,700,900}|100
 NonAcademic|UWP|200|1|Residence
 Academic|LHI|Health|180|0|{14,70,200,550,750,950}|100
-MovementBlock|SLC|10
+Card|SLC|8|8,6,6,8,6,6,24,24|Move,-3;Move,-2;Move,-1;Move,1;Move,2;Move,3;MoveTo,10;MoveTo,20
 Academic|BMH|Health|180|0|{14,70,200,550,750,950}|100
 Academic|OPT|Health|200|0|{6,80,110,600,800,1000}|100
