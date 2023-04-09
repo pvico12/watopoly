@@ -101,7 +101,7 @@ void auction(Property *prop, std::vector<Player *> &players) {
         cout << player->getName() << ", please enter your bid: ";
         cin >> bidStr;
         cout << endl;
-        bool b = isPosInt(bidStr);
+        bool b = (isPosInt(bidStr) || (bidStr == "0"));
         if (b) {
           break;
         } else {
