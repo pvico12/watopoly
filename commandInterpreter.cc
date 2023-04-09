@@ -95,11 +95,20 @@ void auction(Property *prop, std::vector<Player *> &players) {
       }
 
       cout << "Current highest bid: " << highestBid << endl;
-      cout << player->getName() << ", please enter your bid: ";
-      int bid;
-      cin >> bid;
-      cout << endl;
+      string bidStr;
+      while (true) {
+        cout << player->getName() << ", please enter your bid: ";
+        cin >> bidStr;
+        cout << endl;
+        bool b = isPosInt(bidStr);
+        if (b) {
+          break;
+        } else {
+          cout << "Invalid input, please enter a positive integer." << endl;
+        }
+      }
 
+      int bid = stoi(bidStr);
       if (bid > highestBid) {
         highestBidder = player;
         highestBid = bid;
@@ -355,7 +364,6 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
         cout << "Would you like to purchase this unowned property for $" << to_string(cost) << " (Yes/No)? ";
         cin >> purchase;
         cout << endl;
-        int cost = property->getFee();
 
         if (purchase == "Yes") {
           // case 2: unowned property, purchase
