@@ -152,8 +152,26 @@ void printFileToScreen(std::string filename) {
 
 void getPlayerData(int &numPlayers, vector<Player *> &players) {
   // determine number of players
-  cout << "Enter number of players (2-8): ";
-  cin >> numPlayers;  // add some precautions if user input is invalid
+  cout << "Enter number of players [2-7]: ";
+  string cmd;
+  cin >> cmd;
+  try {
+      numPlayers = std::stoi(cmd);
+  }
+  catch (const std::invalid_argument& e) {
+      std::cerr << "Error: Invalid argument. " << e.what() << std::endl;
+  }
+  catch (const std::out_of_range& e) {
+      std::cerr << "Error: Out of range. " << e.what() << std::endl;
+  }
+  if (numPlayers > 7) {
+    numPlayers = 7;
+    cout << endl << "Invalid input. Number of players set to 7." << endl;
+  }
+  if (numPlayers < 2) {
+    numPlayers = 2;
+    cout << endl << "Invalid input. Number of players set to 2." << endl;
+  }
   cout << endl;
 
   // print out player name options
@@ -311,23 +329,23 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
     // exception for the two roll options (testing or not)
     try {
         roll1 = std::stoi(option1);
-        std::cout << "std::stoi succeeded. Result: " << option1 << std::endl;
     }
     catch (const std::invalid_argument& e) {
-        std::cerr << "Error: Invalid argument. " << e.what() << std::endl;
+      roll1 = 3;
+      std::cerr << "Error: Invalid argument. Roll 1 set to 3." << e.what() << std::endl;
     }
     catch (const std::out_of_range& e) {
-        std::cerr << "Error: Out of range. " << e.what() << std::endl;
+      std::cerr << "Error: Out of range. " << e.what() << std::endl;
     }
     try {
         roll2 = std::stoi(option2);
-        std::cout << "std::stoi succeeded. Result: " << option2 << std::endl;
     }
     catch (const std::invalid_argument& e) {
-        std::cerr << "Error: Invalid argument. " << e.what() << std::endl;
+      roll2 = 4;
+      std::cerr << "Error: Invalid argument. Roll 2 set to 4." << e.what() << std::endl;
     }
     catch (const std::out_of_range& e) {
-        std::cerr << "Error: Out of range. " << e.what() << std::endl;
+      std::cerr << "Error: Out of range. " << e.what() << std::endl;
     }
   } else {
     srand(time(nullptr));
@@ -625,7 +643,13 @@ void WatopolyGame::save() {
 }
 
 void WatopolyGame::play() {
-  while (true) {
+  bool quit = false;
+  cout << board;
+  // collect OSAP for all players if the loaded position is COLLECT OSAP
+  for (int j = 0; j < numPlayers; j++) {
+    if (players.at(j)->getPosition() == 20) players.at(j)->addMoney(200);
+  }
+  while (true && !quit) {
     int i = 0;
     string startingPlayerName = players.at(0)->getName();
     cout << "Control is now given to " << startingPlayerName << endl;
@@ -708,6 +732,10 @@ void WatopolyGame::play() {
         save();
       } else {
         // undefined command
+        if (cmd == "quit") {
+          quit = true;
+          break;
+        }
         cout << "Invalid command. Use 'help' to see a list of commands and rules." << endl;
         continue;
       }
@@ -718,7 +746,6 @@ void WatopolyGame::play() {
         break;
       }
 
-      cout << board;
       for (Player *player : players) {
         vector<Property *> properties = player->getProperties();
         int money = player->getMoney();

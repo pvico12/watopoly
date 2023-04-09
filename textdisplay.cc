@@ -137,7 +137,8 @@ void TextDisplay::notify(Subject<BlockInfo, BlockState> &whoNotified) {
 			theDisplay[row+BLOCKHEIGHT-1][col+j] = ' ';
 		}
 	}
-	if (state.type == BlockStateType::Improvements) {
+	if (state.type == BlockStateType::Improvements &&
+		state.desc == BlockDesc::AcademicBuilding) {
 		// update the improvements of the block
 		for (int i = 1; i <= info.impLevel; i++) {
 			theDisplay[row+1][col+i] = 'I';
