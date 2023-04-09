@@ -120,8 +120,6 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 				cards.emplace_back(c);
 			}
 			b = new CardBlock(name, numCards, cards);
-		} else if (type == "Tims") {
-			b = new Tims(name);
 		} else if (type == "NonProperty") {
 			info.desc = BlockDesc::Other;
 			b = new MovementBlock(name, 0, MoveType::MOVE_N_STEPS);

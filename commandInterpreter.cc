@@ -332,9 +332,44 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
     roll2 = (rand() % 6 + 1);
   }
 
+  int timsRounds = p.getTimsRounds();
+  if (timsRounds != 0) {
+    if (p.getTimsCups() > 0) {
+      cout << "Would you like to use a Tims Cup (Yes/No)? ";
+      string response;
+      cin >> response;
+      cout << endl;
+      if (response == "Yes") {
+        p.spentRoundInTims(true);
+        p.useTimsCup();
+        cout << "You are now out of Tims." << endl;
+        return;  // break out of if
+      }
+    }
+    if (p.getMoney() >= GET_OUT_OF_TIMS_FEE) {
+      cout << "Would you like to use pay a $" << GET_OUT_OF_TIMS_FEE << " fee to get out of Tims (Yes/No)? ";
+      string response;
+      cin >> response;
+      cout << endl;
+      if (response == "Yes") {
+        p.spentRoundInTims(true);
+        cout << "You are now out of Tims." << endl;
+        return;  // break out of if
+      }
+    }
+    if (roll1 == roll2) {
+      p.spentRoundInTims(true);
+      cout << "You have rolled a double! You are now out of Tims." << endl;
+      return;  // break out of if
+    }
+    p.spentRoundInTims();
+    cout << "You have " << to_string(timsRounds) << " rounds left in Tims." << endl;
+  }
+
   std::cout << "First Dice:  " << roll1 << std::endl;
   std::cout << "Second Dice: " << roll2 << std::endl;
   int steps = roll1 + roll2;
+
   steps = 10;
 
   // set original block state, remove player from this block
@@ -425,43 +460,6 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
         NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
         nonProperty->action(p);
         break;
-      }
-    } else if (desc == BlockDesc::Tims) {
-      int timsRounds = p.getTimsRounds();
-      if (timsRounds != 0) {
-        if (p.getTimsCups() > 0) {
-          cout << "Would you like to use a Tims Cup (Yes/No)? ";
-          string response;
-          cin >> response;
-          cout << endl;
-          if (response == "Yes") {
-            p.spentRoundInTims(true);
-            p.useTimsCup();
-            cout << "You are now out of Tims." << endl;
-            p.move(steps);
-            continue;
-          }
-        }
-        if (p.getMoney() >= GET_OUT_OF_TIMS_FEE) {
-          cout << "Would you like to use pay a $" << GET_OUT_OF_TIMS_FEE << " fee to get out of Tims (Yes/No)? ";
-          string response;
-          cin >> response;
-          cout << endl;
-          if (response == "Yes") {
-            p.spentRoundInTims(true);
-            cout << "You are now out of Tims." << endl;
-            p.move(steps);
-            continue;
-          }
-        }
-        if (roll1 == roll2) {
-          p.spentRoundInTims(true);
-          cout << "You have rolled a double! You are now out of Tims." << endl;
-          p.move(steps);
-          continue;
-        }
-        p.spentRoundInTims();
-        cout << "You have " << to_string(timsRounds) << " rounds left in Tims." << endl;
       }
     } else {
       // should not be here
