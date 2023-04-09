@@ -334,7 +334,8 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
 
   int timsRounds = p.getTimsRounds();
   if (timsRounds != 0) {
-    if (p.getTimsCups() > 0) {
+    bool outOfTims = false;
+    if (!outOfTims && p.getTimsCups() > 0) {
       cout << "Would you like to use a Tims Cup (Yes/No)? ";
       string response;
       cin >> response;
@@ -343,10 +344,10 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
         p.spentRoundInTims(true);
         p.useTimsCup();
         cout << "You are now out of Tims." << endl;
-        return;  // break out of if
+        outOfTims = true;
       }
     }
-    if (p.getMoney() >= GET_OUT_OF_TIMS_FEE) {
+    if (!outOfTims && p.getMoney() >= GET_OUT_OF_TIMS_FEE) {
       cout << "Would you like to use pay a $" << GET_OUT_OF_TIMS_FEE << " fee to get out of Tims (Yes/No)? ";
       string response;
       cin >> response;
@@ -354,23 +355,26 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
       if (response == "Yes") {
         p.spentRoundInTims(true);
         cout << "You are now out of Tims." << endl;
-        return;  // break out of if
+        outOfTims = true;
       }
     }
-    if (roll1 == roll2) {
+    if (!outOfTims && roll1 == roll2) {
       p.spentRoundInTims(true);
+      std::cout << "First Dice:  " << roll1 << std::endl;
+      std::cout << "Second Dice: " << roll2 << std::endl;
       cout << "You have rolled a double! You are now out of Tims." << endl;
-      return;  // break out of if
+      outOfTims = true;
     }
-    p.spentRoundInTims();
-    cout << "You have " << to_string(timsRounds) << " rounds left in Tims." << endl;
+    if (!outOfTims) {
+      p.spentRoundInTims();
+      cout << "You have " << to_string(timsRounds) << " rounds left in Tims." << endl;
+      return;  // Move this line inside the if (!outOfTims) block
+    }
   }
 
   std::cout << "First Dice:  " << roll1 << std::endl;
   std::cout << "Second Dice: " << roll2 << std::endl;
   int steps = roll1 + roll2;
-
-  steps = 10;
 
   // set original block state, remove player from this block
   BlockState currPosState = blocks[pos]->getState();
