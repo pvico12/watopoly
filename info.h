@@ -7,7 +7,7 @@
 struct BlockInfo {
   std::string name = "";
   int position = 0;
-  BlockDesc desc = BlockDesc::Other;
+  BlockDesc desc = BlockDesc::CardBlock;
   Player *owner = nullptr;
   int impLevel = 0;
 

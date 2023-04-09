@@ -15,6 +15,8 @@ enum class BlockDesc {
   NonAcademicBuilding,
   MovementBlock,
   MoneyBlock,
+  CardBlock,
+  Tims,
   Other
 };
 

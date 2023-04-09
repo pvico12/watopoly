@@ -50,6 +50,7 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "numbers": "cpp",
-        "list": "cpp"
+        "list": "cpp",
+        "deque": "cpp"
     }
 }

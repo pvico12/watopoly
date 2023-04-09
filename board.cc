@@ -5,6 +5,7 @@
 #include "NonProperty/movement.h"
 #include "NonProperty/money.h"
 #include "NonProperty/card.h"
+#include "NonProperty/tims.h"
 #include "info.h"
 #include "state.h"
 #include <fstream>
@@ -64,41 +65,65 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 			info.desc = BlockDesc::MovementBlock;
 			b = new MovementBlock(name, move, mt);
 		} else if (type == "Card") {
-			// |Card|SLC|8|{8,6,6,8,6,6,24,24}|{(Move,-3),(Move,-2),(Move,-1),(Move,1),(Move,2),(Move,3),(MoveTo,10),(MoveTo,20)}
-			// |Card|Needles Hall|7|{18,9,6,3,6,9,18}|{(Remove,200),(Remove,100),(Remove,50),(Add,25),(Add,50),(Add,100),(Add,200)}
+			// Card|NEEDLES HALL|7|18,9,6,3,6,9,18|Remove,200;Remove,100;Remove,50;Add,25;Add,50;Add,100;Add,200
+			// Card|SLC|8|8,6,6,8,6,6,24,24|Move,-3;Move,-2;Move,-1;Move,1;Move,2;Move,3;MoveTo,10;MoveTo,20
 
-			// input
+			int numCards = std::stoi(blockParams[2]);
 
-			int numCards; // input the number of cards (8 for SLC, 7 for Needles Hall)
+			std::string probStr = blockParams[3];
+			std::string actionStr = blockParams[4];
+			std::vector<int> probablities;
+			std::vector<std::vector<std::string>> actionList;
+
+			// init the fields above
+			std::istringstream sProbStr{probStr};
+			std::istringstream sActionStr{actionStr};
+			std::string value;
+			// init probabilities
+			while (getline(sProbStr, value, ',')) { probablities.emplace_back(std::stoi(value)); }
+			// init actions
+			while (getline(sActionStr, value, ';')) {
+				std::istringstream pair{value};
+				std::vector<std::string> elem;
+				while (getline(pair, value, ',')) { elem.emplace_back(value); }
+				actionList.emplace_back(elem);
+			}
 			
+			// create vector of cards
 			std::vector<Card> cards;
 			for (int i = 0; i < numCards; i++) {
-				std::string cmd = ""; // temporary, you need to input value from file
-				int n = -1; // temporary, you need to input value from file
-				double chance = 0.125; // temporary, you need to input value from file
+				std::string cmd = actionList[i][0]; // temporary, you need to input value from file
+				int n = std::stoi(actionList[i][1]); // temporary, you need to input value from file
+				double chance = probablities[i]; // temporary, you need to input value from file
+
+				Card c;
+
 				if (cmd == "Move") {
-					cards[i].action = [n](Player &player) {
+					c.action = [n](Player &player) {
 						player.move(n);
 					};
 				} else if (cmd == "MoveTo") {
-					cards[i].action = [n](Player &player) {
+					c.action = [n](Player &player) {
 						player.moveTo(n);
 					};
 				} else if (cmd == "Remove") {
-					cards[i].action = [n](Player &player) {
+					c.action = [n](Player &player) {
 						player.removeMoney(n);
 					};
 				} else if (cmd == "Add") {
-					cards[i].action = [n](Player &player) {
+					c.action = [n](Player &player) {
 						player.addMoney(n);
 					};
 				}
-				cards[i].chance = 1.0 / chance;
+				c.chance = 1.0 / chance;
+				cards.emplace_back(c);
 			}
 			b = new CardBlock(name, numCards, cards);
 		} else if (type == "NonProperty") {
 			info.desc = BlockDesc::Other;
 			b = new MoneyBlock(name, 0, MoneyType::ADD);
+		} else {
+			// doesn't matter
 		}
 
 		b->setInfo(info);
