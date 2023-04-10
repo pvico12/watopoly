@@ -59,9 +59,9 @@ $200 has been added to Petar's account.
 $200 has been added to Milan's account.
 $200 has been added to Jeff's account.
 Control is now given to Petar
-First Dice:  3
-Second Dice: 5
-You have moved 8 steps forwards.
+First Dice:  1
+Second Dice: 2
+You have moved 3 steps forwards.
 _________________________________________________________________________________________
 |Goose  |       |NEEDLES|       |       |V1     |       |       |CIF    |       |GO TO  |
 |Nesting|-------|HALL   |-------|-------|       |-------|-------|       |-------|TIMS   |
@@ -116,15 +116,14 @@ ________________________________________________________________________________
 |DC Tims|       |       |NEEDLES|       |MKV    |TUITION|       |SLC    |       |COLLECT|
 |Line   |-------|-------|HALL   |-------|       |       |-------|       |-------|OSAP   |
 |       |HH     |PAS    |       |ECH    |       |       |ML     |       |AL     |       |
-|       |       |P      |       |       |       |       |       |       |       |$G     |
+|       |       |       |       |       |       |       |P      |       |       |$G     |
 |_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
-Would you like to purchase this unowned property for $100 (Yes/No)? 
-
-$100 has been removed from Petar's account.
-Purchase successful! You now own PAS.
+Would you like to purchase this unowned property for $60 (Yes/No)? 
+$60 has been removed from Petar's account.
+Purchase successful! You now own ML.
 Petar
-1600
-PAS
+1640
+ML
 
 Milan
 1700
@@ -132,15 +131,98 @@ Milan
 Jeff
 1700
 
-$500 has been removed from Milan's account.
-$500 has been added to Petar's account.
-You have successfully traded PAS for Milan's $500.
+Control is now given to Milan
 Petar
-2100
+1640
+ML
 
 Milan
-1200
-PAS
+1700
+
+Jeff
+1700
+
+First Dice:  2
+Second Dice: 3
+You have moved 5 steps forwards.
+_________________________________________________________________________________________
+|Goose  |       |NEEDLES|       |       |V1     |       |       |CIF    |       |GO TO  |
+|Nesting|-------|HALL   |-------|-------|       |-------|-------|       |-------|TIMS   |
+|       |EV1    |       |EV2    |EV3    |       |PHYS   |B1     |       |B2     |       |
+|       |       |       |       |       |       |       |       |       |       |       |
+|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
+|       |                                                                       |       |
+|-------|                                                                       |-------|
+|OPT    |                                                                       |EIT    |
+|       |                                                                       |       |
+|_______|                                                                       |_______|
+|       |                                                                       |       |
+|-------|                                                                       |-------|
+|BMH    |                                                                       |ESC    |
+|       |                                                                       |       |
+|_______|                                                                       |_______|
+|SLC    |                                                                       |SLC    |
+|       |                                                                       |       |
+|       |                                                                       |       |
+|       |                                                                       |       |
+|_______|                                                                       |_______|
+|       |                                                                       |       |
+|-------|                                                                       |-------|
+|LHI    |            _____________________________________________              |C2     |
+|       |           |                                             |             |       |
+|_______|           | #   #   ##  #####  ###  ###   ###  #  #   # |             |_______|
+|UWP    |           | #   #  #  #   #   #   # #  # #   # #  #   # |             |REV    |
+|       |           | # # #  ####   #   #   # ###  #   # #   # #  |             |       |
+|       |           | # # #  #  #   #   #   # #    #   # #    #   |             |       |
+|       |           | #####  #  #   #    ###  #     ###  ## # #   |             |       |
+|_______|           |_____________________________________________|             |_______|
+|       |                                                                       |NEEDLES|
+|-------|                                                                       |HALL   |
+|CPH    |                                                                       |       |
+|       |                                                                       |       |
+|_______|                                                                       |_______|
+|       |                                                                       |       |
+|-------|                                                                       |-------|
+|DWE    |                                                                       |MC     |
+|       |                                                                       |       |
+|_______|                                                                       |_______|
+|PAC    |                                                                       |COOP   |
+|       |                                                                       |FEE    |
+|       |                                                                       |       |
+|       |                                                                       |       |
+|_______|                                                                       |_______|
+|       |                                                                       |       |
+|-------|                                                                       |-------|
+|RCH    |                                                                       |DC     |
+|       |                                                                       |       |
+|_______|_______________________________________________________________________|_______|
+|DC Tims|       |       |NEEDLES|       |MKV    |TUITION|       |SLC    |       |COLLECT|
+|Line   |-------|-------|HALL   |-------|       |       |-------|       |-------|OSAP   |
+|       |HH     |PAS    |       |ECH    |       |       |ML     |       |AL     |       |
+|       |       |       |       |       |$      |       |P      |       |       |G      |
+|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
+Would you like to purchase this unowned property for $200 (Yes/No)? 
+$200 has been removed from Milan's account.
+Purchase successful! You now own MKV.
+Petar
+1640
+ML
+
+Milan
+1500
+MKV
+
+Jeff
+1700
+
+You have successfully traded MKV for Petar's ML.
+Petar
+1640
+MKV
+
+Milan
+1500
+ML
 
 Jeff
 1700

@@ -534,13 +534,31 @@ void WatopolyGame::trade(Player &p1, Player &p2) {
 if (b1) {
   Property *property2 = p2.getProperty(str2);
   success = p1.trade(p2, stoi(str1), *property2);
+  BlockInfo tradedInfo = property2->getInfo();
+  if (success) {
+    tradedInfo.owner = &p1;
+    property2->setInfo(tradedInfo);
+  }
 } else if (b2) {
   Property *property1 = p1.getProperty(str1);
   success = p1.trade(p2, *property1, stoi(str2));
+  BlockInfo tradedInfo = property1->getInfo();
+  if (success) {
+    tradedInfo.owner = &p2;
+    property1->setInfo(tradedInfo);
+  }
 } else {
   Property *property1 = p1.getProperty(str1);
   Property *property2 = p2.getProperty(str2);
   success = p1.trade(p2, *property1, *property2);
+  BlockInfo tradedInfo1 = property1->getInfo();
+  BlockInfo tradedInfo2 = property2->getInfo();
+  if (success) {
+    tradedInfo1.owner = &p2;
+    tradedInfo2.owner = &p1;
+    property1->setInfo(tradedInfo1);
+    property2->setInfo(tradedInfo2);
+  }
 }
 
   if (success) {
