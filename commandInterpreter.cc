@@ -509,9 +509,9 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
   while (true) {
     if (desc == BlockDesc::AcademicBuilding || desc == BlockDesc::NonAcademicBuilding) {
       Property *property = dynamic_cast<Property *>(blocks[newPosition]);
-      bool isMortagaged = property->isMortgaged();
-      if (isMortagaged) {
-        cout << "This property is mortaged. You do not owe any money" << endl;
+      bool isMortgaged = property->isMortgaged();
+      if (isMortgaged) {
+        cout << "This property is mortgaged. You do not owe any money" << endl;
         break;
       }
       if (owner && (p.getName() != owner->getName())) {
@@ -606,6 +606,8 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
           if (p.hasMoney(cost)) {
             p.removeMoney(cost);
             p.addProperty(*property);  // need to check if this works
+            owner = &p;
+            // ***** UPDATE HERE *****
             cout << "Purchase successful! You now own " << property->getName() << "." << endl;
             break;
           } else {
