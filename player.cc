@@ -8,7 +8,7 @@
 const int COLLECT_OSAP = 20;
 const int DC_TIMS_LINE = 30;
 
-Player::Player(std::string name, Token token, int money, int position,
+Player::Player(std::string name, Token token, int money, int position, int timsRounds,
                std::vector<Property *> props, int timsCups)
     : name{name},
       token{token},
@@ -16,16 +16,7 @@ Player::Player(std::string name, Token token, int money, int position,
       position{position},
       props{props},
       timsCups{timsCups},
-      timsRounds{0} {}
-
-/*
-Player::Player(const Player &o)
-  : name{o.name}, tokenChar{o.tokenChar}, token{o.token}, position{o.position}, money{o.money}, props{o.props} {}
-
-
-Player::Player(Player &&o)
-  : name{o.name}, tokenChar{o.tokenChar}, token{o.token}, position{o.position}, money{o.money}, props{o.props} {}
-*/
+      timsRounds{timsRounds} {}
 
 std::string Player::getName() {
   return name;

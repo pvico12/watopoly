@@ -26,12 +26,9 @@ class Player {
  public:
   Player(std::string name, Token token,
          int money = 0, int position = 0,
+         int timsRounds = 0,
          std::vector<Property *> props = {},
          int timsCups = 0);
-
-  // Player(const Player &o);
-
-  // Player(Player &&o);
 
   std::string getName();
 

@@ -281,9 +281,23 @@ WatopolyGame::WatopolyGame(string filename, bool testing)
       int timsCups = stoi(playerData[2]);
       int money = stoi(playerData[3]);
       int position = stoi(playerData[4]);
+      int numVals = playerData.size();
+      int timsRounds = 0;
+      if (position == 10) {
+        if (numVals == 6) {
+          if (playerData[5] == "0") {
+            timsRounds = 0;
+          }
+        }
+        if (numVals == 7) {
+          if (playerData[5] == "1") {
+            timsRounds = stoi(playerData[6]);
+          }
+        }
+      }
 
       Player *p;
-      p = new Player(playerName, charToTokenMap[playerChar], money, position, {}, timsCups);
+      p = new Player(playerName, charToTokenMap[playerChar], money, position, timsRounds, {}, timsCups);
       players.emplace_back(p);
 
       // update the block at player position for display
