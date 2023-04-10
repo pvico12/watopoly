@@ -17,6 +17,7 @@ class Board {
   Board();
   Board(TextDisplay &td);
   int getCupCount();
+  void setCupCount(int count);
   std::vector<Block*> *getBlocks();
   friend std::ostream &operator<<(std::ostream &out, const Board &b);
 };

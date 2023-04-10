@@ -148,6 +148,10 @@ int Board::getCupCount() {
 	return timsCupCount;
 }
 
+void Board::setCupCount(int count) {
+	timsCupCount = count;
+}
+
 std::vector<Block*> *Board::getBlocks() {
   return &blocks;
 }

@@ -835,9 +835,43 @@ void WatopolyGame::unmortgage(Player &p, string cmd) {
 }
 
 void WatopolyGame::bankrupt(Player &p, int &playerInd) {
-  // need to reset the owners of the properties that player owns
-  // remove from tims cups total
+  // check if the player's eligible to declare bankruptcy
+  string unable = "Unable to declare bankruptcy.";
+  if (p.getMoney() >= 0) {
+    cout << unable << endl;
+    cout << p.getName() << " still has money in his account." << endl;
+    return;
+  }
+
+  vector<Property *> properties = p.getProperties();
+  for (Property *property : properties) {
+    BlockInfo info = property->getInfo();
+    if (property->getLvl() != 0 && info.desc == BlockDesc::AcademicBuilding) {
+      cout << unable << endl;
+      cout << p.getName() << " still have improvements that can be sold." << endl;
+      return;
+    }
+    if (!property->isMortgaged()) {
+      cout << unable << endl;
+      cout << p.getName() << " still unmortgaged properties." << endl;
+      return;
+    }
+  }
+
+  // release the player's Tims cups
+  board.setCupCount(board.getCupCount() - p.getTimsCups());
+
+  // set all the owners to be 0
+  
+  for (Property *property : properties) {
+    BlockInfo info = property->getInfo();
+    info.owner = nullptr;
+  }
+
+  // reset player data
   p.reset();
+
+  // remove player from players
   players.erase(players.begin() + playerInd);
   numPlayers--;
 }
