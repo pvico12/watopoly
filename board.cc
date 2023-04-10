@@ -41,18 +41,19 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 			// create tuition array
 			std::string tuitions = blockParams[5];
 			std::vector<int> tuitionCosts;
-			int cost;
-			char c;
 			std::istringstream iss{tuitions};
-			while (iss >> c >> cost >> c) { tuitionCosts.emplace_back(cost); }
+			std::string c;
+			while (getline(iss, c, ',')) { tuitionCosts.emplace_back(std::stoi(c)); }
 
 			info.desc = BlockDesc::AcademicBuilding;
 			b = new Academic(name, blockParams[3], purchaseCost, improvLevel, tuitionCosts, improvCost);
 		} else if (type == "NonAcademic") {
 			int purchaseCost = std::stoi(blockParams[2]);
 			int improvLevel = std::stoi(blockParams[3]);
+			std::string typeStr = blockParams[4];
+			Type t = (typeStr == "Gym") ? Type::Gym : Type::Residence;
 			info.desc = BlockDesc::NonAcademicBuilding;
-			b = new NonAcademic(name, purchaseCost, improvLevel, Type::Gym);
+			b = new NonAcademic(name, purchaseCost, improvLevel, t);
 		} else if (type == "MoneyBlock") {
 			int money = std::stoi(blockParams[2]);
 			MoneyType mt = MoneyType::ADD;

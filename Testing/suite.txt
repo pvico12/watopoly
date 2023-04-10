@@ -4,3 +4,11 @@ Basic/purchaseNonacademic
 Auctions/academicAuction
 Auctions/nonAcademicAuction
 Auctions/noAuctionOutcome
+PayingTuitionRent/payTuitionWithImprovements
+PayingTuitionRent/payTuitionWithoutImprovements
+PayingTuitionRent/payRent1Gym
+PayingTuitionRent/payRent2Gym
+PayingTuitionRent/payRent1Residence
+PayingTuitionRent/payRent2Residence
+PayingTuitionRent/payRent3Residence
+PayingTuitionRent/payRent4Residence

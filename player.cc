@@ -125,12 +125,12 @@ bool Player::hasMoney(int amount) {
 
 void Player::addMoney(int amount) {
   money += amount;
-  std::cout << "$" << std::to_string(amount) << " has been added to your account." << std::endl;
+  std::cout << "$" << std::to_string(amount) << " has been added to " << name << "'s account." << std::endl;
 }
 
 void Player::removeMoney(int amount) {
   money -= amount;
-  std::cout << "$" << std::to_string(amount) << " has been removed from your account." << std::endl;
+  std::cout << "$" << std::to_string(amount) << " has been removed from " << name << "'s account." << std::endl;
   if (money < 0) {
     std::cout << "your account total is now -$" << std::to_string(-money) << "." << std::endl;
     std::cout << "Would you like to mortgage or trade with other players to prevent bankruptcy?" << std::endl;

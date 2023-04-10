@@ -15,6 +15,7 @@ class NonAcademic : public Property {
 
  public:
   NonAcademic(std::string name, int purchaseCost, int improvLvl, Type type);
+  Type getType();
   bool upgrade();
   int getFee();
 };
