@@ -127,6 +127,8 @@ void auction(Property *prop, std::vector<Player *> &players) {
   if (highestBidder != nullptr) {
     highestBidder->removeMoney(highestBid);
     highestBidder->addProperty(*prop);
+    BlockInfo info = prop->getInfo();
+    info.owner = highestBidder;
     cout << prop->getName() << " has been auctioned to " << highestBidder->getName() << endl;
   } else {
     cout << "No one bid, " << prop->getName() << " remains unowned." << endl;
@@ -866,6 +868,10 @@ void WatopolyGame::bankrupt(Player &p, int &playerInd) {
   for (Property *property : properties) {
     BlockInfo info = property->getInfo();
     info.owner = nullptr;
+    if (property->isMortgaged()) {
+      property->toggleMortgage();
+    }
+    auction(property, players);
   }
 
   // reset player data
