@@ -101,7 +101,7 @@ void auction(Property *prop, std::vector<Player *> &players) {
         cout << player->getName() << ", please enter your bid: ";
         cin >> bidStr;
         cout << endl;
-        bool b = isPosInt(bidStr);
+        bool b = (isPosInt(bidStr) || (bidStr == "0"));
         if (b) {
           break;
         } else {
@@ -408,8 +408,6 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
     }
     if (!outOfTims && roll1 == roll2) {
       p.spentRoundInTims(true);
-      std::cout << "First Dice:  " << roll1 << std::endl;
-      std::cout << "Second Dice: " << roll2 << std::endl;
       cout << "You have rolled a double! You are now out of Tims." << endl;
       outOfTims = true;
     }

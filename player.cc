@@ -125,12 +125,12 @@ bool Player::hasMoney(int amount) {
 
 void Player::addMoney(int amount) {
   money += amount;
-  std::cout << "$" << std::to_string(amount) << " has been added to your account." << std::endl;
+  std::cout << "$" << std::to_string(amount) << " has been added to " << name << "'s account." << std::endl;
 }
 
 void Player::removeMoney(int amount) {
   money -= amount;
-  std::cout << "$" << std::to_string(amount) << " has been removed from your account." << std::endl;
+  std::cout << "$" << std::to_string(amount) << " has been removed from " << name << "'s account." << std::endl;
   if (money < 0) {
     std::cout << "your account total is now -$" << std::to_string(-money) << "." << std::endl;
     std::cout << "Would you like to mortgage or trade with other players to prevent bankruptcy?" << std::endl;
@@ -186,8 +186,6 @@ bool Player::improve(Property &prop) {
 }
 
 bool Player::trade(Player &p2, Property &prop1, Property &prop2) {
-  // std::cout << getMoney() << " " << p2.getMoney();
-
   if (hasProperty(prop1) == -1) {
     return false;
   }
@@ -198,13 +196,10 @@ bool Player::trade(Player &p2, Property &prop1, Property &prop2) {
   p2.removeProperty(prop2);
   addProperty(prop2);
   p2.addProperty(prop1);
-  // std::cout << getMoney() << " " << p2.getMoney();
   return true;
 }
 
 bool Player::trade(Player &p2, int amount, Property &prop2) {
-  // std::cout << getMoney() << " " << p2.getMoney();
-
   if (!hasMoney(amount)) {
     return false;
   }
@@ -215,13 +210,10 @@ bool Player::trade(Player &p2, int amount, Property &prop2) {
   p2.removeProperty(prop2);
   addProperty(prop2);
   p2.addMoney(amount);
-  // std::cout << getMoney() << " " << p2.getMoney();
   return true;
 }
 
 bool Player::trade(Player &p2, Property &prop1, int amount) {
-  // std::cout << getMoney() << " " << p2.getMoney();
-
   if (hasProperty(prop1) == -1) {
     return false;
   }
@@ -232,7 +224,6 @@ bool Player::trade(Player &p2, Property &prop1, int amount) {
   p2.removeMoney(amount);
   addMoney(amount);
   p2.addProperty(prop1);
-  // std::cout << getMoney() << " " << p2.getMoney();
   return true;
 }
 
