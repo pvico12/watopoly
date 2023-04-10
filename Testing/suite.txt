@@ -19,6 +19,7 @@ Trading/tradeMoneyMoney
 NonProperties/landOnOSAP
 NonProperties/passByOSAP
 NonProperties/landOnTimsLine
+NonProperties/coopFee
 Tims/sentToTimsByBlock
 Tims/doublesFirstRound
 Tims/doublesSecondRound

@@ -56,7 +56,8 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 			b = new NonAcademic(name, purchaseCost, improvLevel, t);
 		} else if (type == "MoneyBlock") {
 			int money = std::stoi(blockParams[2]);
-			MoneyType mt = MoneyType::ADD;
+			MoneyType mt = (blockParams[2][0] == '-') ? MoneyType::REMOVE : MoneyType::ADD;
+			if (money < 0) money *= -1;
 			info.desc = BlockDesc::MoneyBlock;
 			b = new MoneyBlock(name, money, mt);
 		} else if (type == "MovementBlock") {
