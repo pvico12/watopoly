@@ -17,6 +17,7 @@ class Property : public Block {
   Property(std::string name, int purchaseCost, int improvLvl);
   int getLvl();
   int getPurCost();
+  void setLvl(int lvl);
   bool isMortgaged();
   void toggleMortgage();
   virtual bool upgrade() = 0;

@@ -1,0 +1,17 @@
+newGameStarting1700
+purchaseAcademic
+purchaseNonacademic
+academicAuction
+nonAcademicAuction
+noAuctionOutcome
+payTuitionWithImprovements
+payTuitionWithoutImprovements
+payRent1Gym
+payRent2Gym
+payRent1Residence
+payRent2Residence
+payRent3Residence
+payRent4Residence
+landOnOSAP
+passByOSAP
+landOnTimsLine
