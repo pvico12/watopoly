@@ -40,3 +40,4 @@ Mortgages/mortgageWhenNotOwner
 Mortgages/unMortgagedMustPay
 Mortgages/unMortgageWhenNotOwner
 Mortgages/improvementsSoldBeforeMortgage
+Bankrupt/bankruptPosWorth
