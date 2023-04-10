@@ -20,6 +20,7 @@ NonProperties/landOnOSAP
 NonProperties/passByOSAP
 NonProperties/landOnTimsLine
 NonProperties/coopFee
+NonProperties/tuitionBlock
 Tims/sentToTimsByBlock
 Tims/doublesFirstRound
 Tims/doublesSecondRound
