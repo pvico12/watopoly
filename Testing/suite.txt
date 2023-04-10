@@ -1,3 +1,7 @@
 newGameStarting1700
 purchaseAcademic
 purchaseNonacademic
+tradePropertyProperty
+tradePropertyMoney
+tradeMoneyProperty
+tradeMoneyMoney
