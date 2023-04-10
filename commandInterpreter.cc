@@ -157,21 +157,21 @@ void getPlayerData(int &numPlayers, vector<Player *> &players) {
   string cmd;
   cin >> cmd;
   try {
-      numPlayers = std::stoi(cmd);
-  }
-  catch (const std::invalid_argument& e) {
-      std::cerr << "Error: Invalid argument. " << e.what() << std::endl;
-  }
-  catch (const std::out_of_range& e) {
-      std::cerr << "Error: Out of range. " << e.what() << std::endl;
+    numPlayers = std::stoi(cmd);
+  } catch (const std::invalid_argument &e) {
+    std::cerr << "Error: Invalid argument. " << e.what() << std::endl;
+  } catch (const std::out_of_range &e) {
+    std::cerr << "Error: Out of range. " << e.what() << std::endl;
   }
   if (numPlayers > 7) {
     numPlayers = 7;
-    cout << endl << "Invalid input. Number of players set to 7." << endl;
+    cout << endl
+         << "Invalid input. Number of players set to 7." << endl;
   }
   if (numPlayers < 2) {
     numPlayers = 2;
-    cout << endl << "Invalid input. Number of players set to 2." << endl;
+    cout << endl
+         << "Invalid input. Number of players set to 2." << endl;
   }
   cout << endl;
 
@@ -361,7 +361,7 @@ WatopolyGame::WatopolyGame(string filename, bool testing)
     vector<Property *> props = p->getProperties();
     int gymCount = 0;
     int resCount = 0;
-    for (auto prop: props) {
+    for (auto prop : props) {
       BlockInfo propInfo = prop->getInfo();
       if (propInfo.desc == BlockDesc::NonAcademicBuilding) {
         NonAcademic *nonAcad = dynamic_cast<NonAcademic *>(prop);
@@ -374,7 +374,7 @@ WatopolyGame::WatopolyGame(string filename, bool testing)
     }
     // now we have a count for the gyms and residences they own
     // loop through and update their levels accordingly
-    for (auto prop: props) {
+    for (auto prop : props) {
       BlockInfo propInfo = prop->getInfo();
       if (propInfo.desc == BlockDesc::NonAcademicBuilding) {
         NonAcademic *nonAcad = dynamic_cast<NonAcademic *>(prop);
@@ -427,23 +427,19 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
     cin >> option2;
     // exception for the two roll options (testing or not)
     try {
-        roll1 = std::stoi(option1);
-    }
-    catch (const std::invalid_argument& e) {
+      roll1 = std::stoi(option1);
+    } catch (const std::invalid_argument &e) {
       roll1 = 3;
       std::cerr << "Error: Invalid argument. Roll 1 set to 3." << e.what() << std::endl;
-    }
-    catch (const std::out_of_range& e) {
+    } catch (const std::out_of_range &e) {
       std::cerr << "Error: Out of range. " << e.what() << std::endl;
     }
     try {
-        roll2 = std::stoi(option2);
-    }
-    catch (const std::invalid_argument& e) {
+      roll2 = std::stoi(option2);
+    } catch (const std::invalid_argument &e) {
       roll2 = 4;
       std::cerr << "Error: Invalid argument. Roll 2 set to 4." << e.what() << std::endl;
-    }
-    catch (const std::out_of_range& e) {
+    } catch (const std::out_of_range &e) {
       std::cerr << "Error: Out of range. " << e.what() << std::endl;
     }
   } else {
@@ -534,22 +530,18 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
               }
               try {
                 intVal1 = std::stoi(val1);
-              }
-              catch (const std::invalid_argument& e) {
+              } catch (const std::invalid_argument &e) {
                 intVal1 = 3;
                 std::cerr << "Error: Invalid argument. Roll 1 set to 3." << e.what() << std::endl;
-              }
-              catch (const std::out_of_range& e) {
+              } catch (const std::out_of_range &e) {
                 std::cerr << "Error: Out of range. " << e.what() << std::endl;
               }
               try {
                 intVal2 = std::stoi(val2);
-              }
-              catch (const std::invalid_argument& e) {
+              } catch (const std::invalid_argument &e) {
                 intVal2 = 4;
                 std::cerr << "Error: Invalid argument. Roll 2 set to 4." << e.what() << std::endl;
-              }
-              catch (const std::out_of_range& e) {
+              } catch (const std::out_of_range &e) {
                 std::cerr << "Error: Out of range. " << e.what() << std::endl;
               }
             } else {
@@ -573,7 +565,7 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
               amount = 10 * (intVal1 + intVal2);
               cout << "Your fee is 10*(" << intVal1 << "+" << intVal2 << ") = " << amount << endl;
             }
-          } else { // residence
+          } else {  // residence
             amount = nonAcad->getFee();
           }
         } else {
@@ -619,7 +611,7 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
       NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
       nonProperty->action(p);
       int updatedPosition = p.getPosition();
-      if (updatedPosition != newPosition) { // player was sent to tims
+      if (updatedPosition != newPosition) {  // player was sent to tims
         movePlayerOnDisplay(p, newPosition, updatedPosition);
         cout << board;
       }
@@ -635,7 +627,7 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
         NonProperty *nonProperty = dynamic_cast<NonProperty *>(blocks[newPosition]);
         nonProperty->action(p);
         int updatedPosition = p.getPosition();
-        if (updatedPosition != newPosition) { // player was moved
+        if (updatedPosition != newPosition) {  // player was moved
           movePlayerOnDisplay(p, newPosition, updatedPosition);
           cout << board;
         }
@@ -673,35 +665,69 @@ void WatopolyGame::trade(Player &p1, Player &p2) {
   }
 
   bool success;
-if (b1) {
-  Property *property2 = p2.getProperty(str2);
-  success = p1.trade(p2, stoi(str1), *property2);
-  BlockInfo tradedInfo = property2->getInfo();
-  if (success) {
-    tradedInfo.owner = &p1;
-    property2->setInfo(tradedInfo);
+  bool b = true;
+  if (b1) {
+    Property *property2 = p2.getProperty(str2);
+    if (p1.getMoney() < stoi(str1)) {
+      cout << p1.getName() << " doesn't have enough money." << endl;
+      b = false;
+    }
+    if (!property2) {
+      cout << p2.getName() << " doesn't own that property." << endl;
+      b = false;
+    }
+    if (!b) {
+      return;
+    }
+    success = p1.trade(p2, stoi(str1), *property2);
+    BlockInfo tradedInfo = property2->getInfo();
+    if (success) {
+      tradedInfo.owner = &p1;
+      property2->setInfo(tradedInfo);
+    }
+  } else if (b2) {
+    Property *property1 = p1.getProperty(str1);
+    if (!property1) {
+      cout << p1.getName() << " doesn't own that property." << endl;
+      b = false;
+    }
+    if (p2.getMoney() < stoi(str2)) {
+      cout << p2.getName() << " doesn't have enough money." << endl;
+      b = false;
+    }
+    if (!b) {
+      return;
+    }
+    success = p1.trade(p2, *property1, stoi(str2));
+    BlockInfo tradedInfo = property1->getInfo();
+    if (success) {
+      tradedInfo.owner = &p2;
+      property1->setInfo(tradedInfo);
+    }
+  } else {
+    Property *property1 = p1.getProperty(str1);
+    Property *property2 = p2.getProperty(str2);
+    if (!property1) {
+      cout << p1.getName() << " doesn't own that property." << endl;
+      b = false;
+    }
+    if (!property2) {
+      cout << p2.getName() << " doesn't own that property." << endl;
+      b = false;
+    }
+    if (!b) {
+      return;
+    }
+    success = p1.trade(p2, *property1, *property2);
+    BlockInfo tradedInfo1 = property1->getInfo();
+    BlockInfo tradedInfo2 = property2->getInfo();
+    if (success) {
+      tradedInfo1.owner = &p2;
+      tradedInfo2.owner = &p1;
+      property1->setInfo(tradedInfo1);
+      property2->setInfo(tradedInfo2);
+    }
   }
-} else if (b2) {
-  Property *property1 = p1.getProperty(str1);
-  success = p1.trade(p2, *property1, stoi(str2));
-  BlockInfo tradedInfo = property1->getInfo();
-  if (success) {
-    tradedInfo.owner = &p2;
-    property1->setInfo(tradedInfo);
-  }
-} else {
-  Property *property1 = p1.getProperty(str1);
-  Property *property2 = p2.getProperty(str2);
-  success = p1.trade(p2, *property1, *property2);
-  BlockInfo tradedInfo1 = property1->getInfo();
-  BlockInfo tradedInfo2 = property2->getInfo();
-  if (success) {
-    tradedInfo1.owner = &p2;
-    tradedInfo2.owner = &p1;
-    property1->setInfo(tradedInfo1);
-    property2->setInfo(tradedInfo2);
-  }
-}
 
   if (success) {
     cout << "You have successfully traded " << (b1 ? "$" : "") << str1 << " for "
@@ -763,12 +789,11 @@ void WatopolyGame::improve(Player &p, string choice, int pos) {
 
 void WatopolyGame::mortgage(Player &p, string cmd) {
   modifyProperty(p, cmd, [&p](Property *property) {
-
     if (property->getLvl() != 0) {
       cout << "Improvements must be sold before mortgaging this property." << endl;
       return;
     }
-    
+
     if (property->isMortgaged()) {
       cout << property->getName() << " is mortgaged already." << endl;
       return;
@@ -783,7 +808,6 @@ void WatopolyGame::mortgage(Player &p, string cmd) {
 
 void WatopolyGame::unmortgage(Player &p, string cmd) {
   modifyProperty(p, cmd, [&p](Property *property) {
-
     if (!property->isMortgaged()) {
       cout << property->getName() << " is not mortgaged." << endl;
       return;
