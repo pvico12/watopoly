@@ -47,7 +47,7 @@ do
 
 	./Watopoly $args < $infile > $temp
 
-	diff $temp Testing/"${line}".out &> /dev/null
+	diff $temp Testing/"${line}".out &> differences.txt
 	
 	result=$?
 	if [ $result == 1 ]; then

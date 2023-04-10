@@ -27,5 +27,7 @@ int NonAcademic::getFee() {
     // - lvl 2: 10 * sum
     // this is dealt with in commandInterpreter.cc
     return 0;
+  } else {
+    return 0;
   }
 }

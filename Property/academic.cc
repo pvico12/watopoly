@@ -60,6 +60,15 @@ bool Academic::upgrade() {
   return true;
 }
 
+bool Academic::worsen() {
+  if (improvLvl == 0) {
+    return false;
+  }
+
+  improvLvl--;
+  return true;
+}
+
 bool Academic::isMaxUpgrade() {
   return improvLvl >= MAXUPGRADES;
 }

@@ -185,6 +185,20 @@ bool Player::improve(Property &prop) {
   return true;
 }
 
+bool Player::worsen(Property &prop) {
+  Academic *academic = dynamic_cast<Academic *>(&prop);
+  if (academic == nullptr) {
+    return false;
+  }
+  if (money < academic->getImpCost() && academic->isMaxUpgrade()) {
+    // add print
+    return false;
+  }
+  money += (academic->getImpCost() / 2);
+  academic->worsen();
+  return true;
+}
+
 bool Player::trade(Player &p2, Property &prop1, Property &prop2) {
   if (hasProperty(prop1) == -1) {
     return false;
