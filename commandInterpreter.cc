@@ -673,35 +673,69 @@ void WatopolyGame::trade(Player &p1, Player &p2) {
   }
 
   bool success;
-if (b1) {
-  Property *property2 = p2.getProperty(str2);
-  success = p1.trade(p2, stoi(str1), *property2);
-  BlockInfo tradedInfo = property2->getInfo();
-  if (success) {
-    tradedInfo.owner = &p1;
-    property2->setInfo(tradedInfo);
+  bool b = true;
+  if (b1) {
+    Property *property2 = p2.getProperty(str2);
+    if (p1.getMoney() < stoi(str1)) {
+      cout << p1.getName() << " doesn't have enough money." << endl;
+      b = false;
+    }
+    if (!property2) {
+      cout << p2.getName() << " doesn't own that property." << endl;
+      b = false;
+    }
+    if (!b) {
+      return;
+    }
+    success = p1.trade(p2, stoi(str1), *property2);
+    BlockInfo tradedInfo = property2->getInfo();
+    if (success) {
+      tradedInfo.owner = &p1;
+      property2->setInfo(tradedInfo);
+    }
+  } else if (b2) {
+    Property *property1 = p1.getProperty(str1);
+    if (!property1) {
+      cout << p1.getName() << " doesn't own that property." << endl;
+      b = false;
+    }
+    if (p2.getMoney() < stoi(str2)) {
+      cout << p2.getName() << " doesn't have enough money." << endl;
+      b = false;
+    }
+    if (!b) {
+      return;
+    }
+    success = p1.trade(p2, *property1, stoi(str2));
+    BlockInfo tradedInfo = property1->getInfo();
+    if (success) {
+      tradedInfo.owner = &p2;
+      property1->setInfo(tradedInfo);
+    }
+  } else {
+    Property *property1 = p1.getProperty(str1);
+    Property *property2 = p2.getProperty(str2);
+    if (!property1) {
+      cout << p1.getName() << " doesn't own that property." << endl;
+      b = false;
+    }
+    if (!property2) {
+      cout << p2.getName() << " doesn't own that property." << endl;
+      b = false;
+    }
+    if (!b) {
+      return;
+    }
+    success = p1.trade(p2, *property1, *property2);
+    BlockInfo tradedInfo1 = property1->getInfo();
+    BlockInfo tradedInfo2 = property2->getInfo();
+    if (success) {
+      tradedInfo1.owner = &p2;
+      tradedInfo2.owner = &p1;
+      property1->setInfo(tradedInfo1);
+      property2->setInfo(tradedInfo2);
+    }
   }
-} else if (b2) {
-  Property *property1 = p1.getProperty(str1);
-  success = p1.trade(p2, *property1, stoi(str2));
-  BlockInfo tradedInfo = property1->getInfo();
-  if (success) {
-    tradedInfo.owner = &p2;
-    property1->setInfo(tradedInfo);
-  }
-} else {
-  Property *property1 = p1.getProperty(str1);
-  Property *property2 = p2.getProperty(str2);
-  success = p1.trade(p2, *property1, *property2);
-  BlockInfo tradedInfo1 = property1->getInfo();
-  BlockInfo tradedInfo2 = property2->getInfo();
-  if (success) {
-    tradedInfo1.owner = &p2;
-    tradedInfo2.owner = &p1;
-    property1->setInfo(tradedInfo1);
-    property2->setInfo(tradedInfo2);
-  }
-}
 
   if (success) {
     cout << "You have successfully traded " << (b1 ? "$" : "") << str1 << " for "
