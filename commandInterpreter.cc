@@ -607,7 +607,7 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
             p.removeMoney(cost);
             p.addProperty(*property);  // need to check if this works
             owner = &p;
-            // ***** UPDATE HERE *****
+            blocks[newPosition]->setInfo(info);
             cout << "Purchase successful! You now own " << property->getName() << "." << endl;
             break;
           } else {
