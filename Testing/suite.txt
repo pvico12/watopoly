@@ -12,3 +12,7 @@ PayingTuitionRent/payRent1Residence
 PayingTuitionRent/payRent2Residence
 PayingTuitionRent/payRent3Residence
 PayingTuitionRent/payRent4Residence
+Trading/tradePropertyProperty
+Trading/tradePropertyMoney
+Trading/tradeMoneyProperty
+Trading/tradeMoneyMoney

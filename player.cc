@@ -186,8 +186,6 @@ bool Player::improve(Property &prop) {
 }
 
 bool Player::trade(Player &p2, Property &prop1, Property &prop2) {
-  // std::cout << getMoney() << " " << p2.getMoney();
-
   if (hasProperty(prop1) == -1) {
     return false;
   }
@@ -198,13 +196,10 @@ bool Player::trade(Player &p2, Property &prop1, Property &prop2) {
   p2.removeProperty(prop2);
   addProperty(prop2);
   p2.addProperty(prop1);
-  // std::cout << getMoney() << " " << p2.getMoney();
   return true;
 }
 
 bool Player::trade(Player &p2, int amount, Property &prop2) {
-  // std::cout << getMoney() << " " << p2.getMoney();
-
   if (!hasMoney(amount)) {
     return false;
   }
@@ -215,13 +210,10 @@ bool Player::trade(Player &p2, int amount, Property &prop2) {
   p2.removeProperty(prop2);
   addProperty(prop2);
   p2.addMoney(amount);
-  // std::cout << getMoney() << " " << p2.getMoney();
   return true;
 }
 
 bool Player::trade(Player &p2, Property &prop1, int amount) {
-  // std::cout << getMoney() << " " << p2.getMoney();
-
   if (hasProperty(prop1) == -1) {
     return false;
   }
@@ -232,7 +224,6 @@ bool Player::trade(Player &p2, Property &prop1, int amount) {
   p2.removeMoney(amount);
   addMoney(amount);
   p2.addProperty(prop1);
-  // std::cout << getMoney() << " " << p2.getMoney();
   return true;
 }
 
