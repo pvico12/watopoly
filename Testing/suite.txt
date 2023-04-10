@@ -16,3 +16,6 @@ Trading/tradePropertyProperty
 Trading/tradePropertyMoney
 Trading/tradeMoneyProperty
 Trading/tradeMoneyMoney
+NonProperties/landOnOSAP
+NonProperties/passByOSAP
+NonProperties/landOnTimsLine
