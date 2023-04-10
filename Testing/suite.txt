@@ -18,6 +18,7 @@ Trading/tradeMoneyProperty
 Trading/tradeMoneyMoney
 Trading/tradeUnownedP
 Trading/tradeUnownedM
+Trading/tradeBothUnownedP
 NonProperties/landOnOSAP
 NonProperties/passByOSAP
 NonProperties/landOnTimsLine
