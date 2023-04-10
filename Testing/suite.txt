@@ -1,6 +1,6 @@
-newGameStarting1700
-purchaseAcademic
-purchaseNonacademic
-academicAuction
-nonAcademicAuction
-noAuctionOutcome
+Basic/newGameStarting1700
+Basic/purchaseAcademic
+Basic/purchaseNonacademic
+Auctions/academicAuction
+Auctions/nonAcademicAuction
+Auctions/noAuctionOutcome

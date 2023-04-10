@@ -43,8 +43,9 @@ do
 
 	temp=$(mktemp)
 	args=$(cat Testing/"$line".args)
+	infile=$(echo Testing/"$line".in)
 
-	./Watopoly $args < Testing/"$line".in > $temp
+	./Watopoly $args < $infile > $temp
 
 	diff $temp Testing/"${line}".out &> /dev/null
 	
