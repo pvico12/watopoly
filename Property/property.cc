@@ -12,6 +12,10 @@ int Property::getPurCost() {
   return purchaseCost;
 }
 
+void Property::setLvl(int lvl) {
+  improvLvl = lvl;
+}
+
 bool Property::isMortgaged() {
   return mortgaged;
 }

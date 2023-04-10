@@ -101,7 +101,7 @@ void auction(Property *prop, std::vector<Player *> &players) {
         cout << player->getName() << ", please enter your bid: ";
         cin >> bidStr;
         cout << endl;
-        bool b = isPosInt(bidStr);
+        bool b = (isPosInt(bidStr) || (bidStr == "0"));
         if (b) {
           break;
         } else {
@@ -301,18 +301,57 @@ WatopolyGame::WatopolyGame(string filename, bool testing)
         if (currPlayer->getName() == owner) {
           info.owner = currPlayer;
           info.impLevel = numImp;
+          Property *prop = dynamic_cast<Property *>(blocks[position]);
+          if (info.desc == BlockDesc::AcademicBuilding) {
+            prop->setLvl(numImp);
+          } else {
+            prop->setLvl(0);
+          }
+          currPlayer->addProperty(*prop);
         }
       }
       blocks[position]->setInfo(info);
       // update block state so it shows on the display
       BlockState state = blocks[position]->getState();
       state.type = BlockStateType::Improvements;
+      state.desc = info.desc;
       blocks[position]->setState(state);
     }
     lineNum++;
   }
 
   gameStateFile.close();
+
+  // update gym and residence levels
+  for (auto p : players) {
+    vector<Property *> props = p->getProperties();
+    int gymCount = 0;
+    int resCount = 0;
+    for (auto prop: props) {
+      BlockInfo propInfo = prop->getInfo();
+      if (propInfo.desc == BlockDesc::NonAcademicBuilding) {
+        NonAcademic *nonAcad = dynamic_cast<NonAcademic *>(prop);
+        if (nonAcad->getType() == Type::Gym) {
+          gymCount++;
+        } else {
+          resCount++;
+        }
+      }
+    }
+    // now we have a count for the gyms and residences they own
+    // loop through and update their levels accordingly
+    for (auto prop: props) {
+      BlockInfo propInfo = prop->getInfo();
+      if (propInfo.desc == BlockDesc::NonAcademicBuilding) {
+        NonAcademic *nonAcad = dynamic_cast<NonAcademic *>(prop);
+        if (nonAcad->getType() == Type::Gym) {
+          prop->setLvl(gymCount);
+        } else {
+          prop->setLvl(resCount);
+        }
+      }
+    }
+  }
 }
 
 void WatopolyGame::movePlayerOnDisplay(Player &p, int oldPos, int newPos) {
@@ -438,7 +477,71 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
       Property *property = dynamic_cast<Property *>(blocks[newPosition]);
       if (owner) {
         // case 1: steps on someone else's property
-        int amount = property->getFee();
+        int amount;
+        // check if its a gym, residence, or academic building
+        if (desc == BlockDesc::NonAcademicBuilding) {
+          NonAcademic *nonAcad = dynamic_cast<NonAcademic *>(blocks[newPosition]);
+          if (nonAcad->getType() == Type::Gym) {
+            int intVal1;
+            int intVal2;
+            if (testing) {
+              cout << "You are in testing mode. Please roll <num1> <num2> to determine the Gym fee." << endl;
+              string cmd;
+              string val1;
+              string val2;
+              cin >> cmd;
+              cin >> val1;
+              cin >> val2;
+              if (cmd != "roll") {
+                cout << "Invalid command. We will roll the followed values." << endl;
+              }
+              try {
+                intVal1 = std::stoi(val1);
+              }
+              catch (const std::invalid_argument& e) {
+                intVal1 = 3;
+                std::cerr << "Error: Invalid argument. Roll 1 set to 3." << e.what() << std::endl;
+              }
+              catch (const std::out_of_range& e) {
+                std::cerr << "Error: Out of range. " << e.what() << std::endl;
+              }
+              try {
+                intVal2 = std::stoi(val2);
+              }
+              catch (const std::invalid_argument& e) {
+                intVal2 = 4;
+                std::cerr << "Error: Invalid argument. Roll 2 set to 4." << e.what() << std::endl;
+              }
+              catch (const std::out_of_range& e) {
+                std::cerr << "Error: Out of range. " << e.what() << std::endl;
+              }
+            } else {
+              cout << "Please use the roll command to roll two dice to determine your gym fee." << endl;
+              string rollCmd;
+              cin >> rollCmd;
+              if (rollCmd != "roll") {
+                cout << "Invalid command. The computer will roll for you." << endl;
+              }
+              intVal1 = rand() % 6 + 1;
+              intVal2 = rand() % 6 + 1;
+            }
+            // print results
+            cout << "Roll 1: " << intVal1 << endl;
+            cout << "Roll 2: " << intVal2 << endl;
+            int lvl = nonAcad->getLvl();
+            if (lvl == 1) {
+              amount = 4 * (intVal1 + intVal2);
+              cout << "Your fee is 4*(" << intVal1 << "+" << intVal2 << ") = " << amount << endl;
+            } else if (lvl == 2) {
+              amount = 10 * (intVal1 + intVal2);
+              cout << "Your fee is 10*(" << intVal1 << "+" << intVal2 << ") = " << amount << endl;
+            }
+          } else { // residence
+            amount = nonAcad->getFee();
+          }
+        } else {
+          amount = property->getFee();
+        }
         Player *player2ptr = findPlayer2(players, owner->getName());
         Player player2 = *player2ptr;
         bool isBankrupt = !p.hasMoney(amount);
@@ -446,7 +549,7 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
           cout << "Would you like to mortgage or trade with other players to prevent bankruptcy?" << endl;
         }
         p.removeMoney(amount);
-        player2.addMoney(amount);
+        player2ptr->addMoney(amount);
       } else {
         // check if it's the current player's property
         if (owner == &p) {
