@@ -32,3 +32,8 @@ Improvements/improveNonMonopoly
 Improvements/improveMoreThan5
 Improvements/sellImprovements
 Improvements/sellWhenNoImprovements
+Mortgages/noPayWhenMortgaged
+Mortgages/mortgageWhenNotOwner
+Mortgages/unMortgagedMustPay
+Mortgages/unMortgageWhenNotOwner
+Mortgages/improvementsSoldBeforeMortgage

@@ -48,13 +48,13 @@ bool isPosInt(const string str) {
 }
 
 void modifyProperty(Player &player, const string cmd, function<void(Property *)> lambda) {
-  cout << "Choose your property: ";
   string propertyName;
   cin >> propertyName;
   cout << endl;
   Property *property = player.getProperty(propertyName);
 
   if (property == nullptr) {
+    cout << "Player does not own this property." << endl;
     return;
   }
 
@@ -493,6 +493,11 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
   while (true) {
     if (desc == BlockDesc::AcademicBuilding || desc == BlockDesc::NonAcademicBuilding) {
       Property *property = dynamic_cast<Property *>(blocks[newPosition]);
+      bool isMortagaged = property->isMortgaged();
+      if (isMortagaged) {
+        cout << "This property is mortaged. You do not owe any money" << endl;
+        break;
+      }
       if (owner && (p.getName() != owner->getName())) {
         // case 1: steps on someone else's property
         int amount;
@@ -744,14 +749,17 @@ void WatopolyGame::improve(Player &p, string choice, int pos) {
 
 void WatopolyGame::mortgage(Player &p, string cmd) {
   modifyProperty(p, cmd, [&p](Property *property) {
-    if (p.hasProperty(*property) == -1) {
-      cout << "You don't own " << property->getName() << "." << endl;
+
+    if (property->getLvl() != 0) {
+      cout << "Improvements must be sold before mortgaging this property." << endl;
       return;
     }
+    
     if (property->isMortgaged()) {
       cout << property->getName() << " is mortgaged already." << endl;
       return;
     }
+
     int mortgageFee = property->getPurCost() * MORTGAGE_RATE;
     p.addMoney(mortgageFee);
     property->toggleMortgage();
@@ -761,10 +769,7 @@ void WatopolyGame::mortgage(Player &p, string cmd) {
 
 void WatopolyGame::unmortgage(Player &p, string cmd) {
   modifyProperty(p, cmd, [&p](Property *property) {
-    if (p.hasProperty(*property) == -1) {
-      cout << "You don't own " << property->getName() << "." << endl;
-      return;
-    }
+
     if (!property->isMortgaged()) {
       cout << property->getName() << " is not mortgaged." << endl;
       return;
