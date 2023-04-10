@@ -421,6 +421,11 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
   int timsRounds = p.getTimsRounds();
   if (timsRounds != 0) {
     bool outOfTims = false;
+    if (!outOfTims && roll1 == roll2) {
+      p.spentRoundInTims(true);
+      cout << "You have rolled a double! You are now out of Tims." << endl;
+      outOfTims = true;
+    }
     if (!outOfTims && p.getTimsCups() > 0) {
       cout << "Would you like to use a Tims Cup (Yes/No)? ";
       string response;
@@ -444,11 +449,6 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
         cout << "You are now out of Tims." << endl;
         outOfTims = true;
       }
-    }
-    if (!outOfTims && roll1 == roll2) {
-      p.spentRoundInTims(true);
-      cout << "You have rolled a double! You are now out of Tims." << endl;
-      outOfTims = true;
     }
     if (!outOfTims) {
       p.spentRoundInTims();

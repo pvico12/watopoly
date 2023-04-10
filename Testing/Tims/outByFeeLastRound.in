@@ -1,0 +1,20 @@
+roll 3 4
+next
+roll 2 2
+Yes
+next
+roll 1 2
+next
+roll 2 3
+No
+next
+roll 1 1
+Yes
+next
+roll 2 3
+Yes
+next
+roll 1 4
+Yes
+Yes
+quit
