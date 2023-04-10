@@ -27,3 +27,8 @@ Tims/doublesSecondRound
 Tims/doublesThirdRound
 Tims/outByFeeLastRound
 Tims/noDoublesOutByFee
+Improvements/improveNotOwned
+Improvements/improveNonMonopoly
+Improvements/improveMoreThan5
+Improvements/sellImprovements
+Improvements/sellWhenNoImprovements

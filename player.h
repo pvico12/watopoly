@@ -73,6 +73,8 @@ class Player {
 
   bool improve(Property &prop);
 
+  bool worsen(Property &prop);
+
   bool trade(Player &p2, Property &prop1, Property &prop2);
   bool trade(Player &p2, int amount, Property &prop2);
   bool trade(Player &p2, Property &prop1, int amount);

@@ -34,6 +34,7 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 		BlockInfo info{name, currPos};
 
 		if (type == "Academic") {
+			std::string monopoly = blockParams[2];
 			int purchaseCost = std::stoi(blockParams[3]);
 			int improvLevel = std::stoi(blockParams[4]);
 			int improvCost = std::stoi(blockParams[6]);;
@@ -46,7 +47,7 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 			while (getline(iss, c, ',')) { tuitionCosts.emplace_back(std::stoi(c)); }
 
 			info.desc = BlockDesc::AcademicBuilding;
-			b = new Academic(name, blockParams[3], purchaseCost, improvLevel, tuitionCosts, improvCost);
+			b = new Academic(name, monopoly, purchaseCost, improvLevel, tuitionCosts, improvCost);
 		} else if (type == "NonAcademic") {
 			int purchaseCost = std::stoi(blockParams[2]);
 			int improvLevel = std::stoi(blockParams[3]);

@@ -21,6 +21,7 @@ class Academic : public Property {
   int getImpCost();
 	std::string getMonBlock();
   bool upgrade();
+  bool worsen();
   bool isMaxUpgrade();
   int getFee();
 };

@@ -142,7 +142,7 @@ void printProperties(Player *player) {
   }
 }
 
-void printFileToScreen(std::string filename) {
+void printFileToScreen(string filename) {
   ifstream file{filename};
   string line;
   while (getline(file, line)) {
@@ -203,6 +203,26 @@ void getPlayerData(int &numPlayers, vector<Player *> &players) {
     Player *p;
     p = new Player(playerName, charToTokenMap[chosenToken[0]], 1500, STARTING_BLOCK);  // put players at Collect OSAP block
     players.emplace_back(p);
+  }
+}
+
+bool hasMonopoly(Player *player, string monopoly) {
+  vector<Property *> properties = player->getProperties();
+  int monopolyTypeCount = 0;
+  for (auto prop : properties) {
+    BlockInfo info = prop->getInfo();
+    if (info.desc == BlockDesc::AcademicBuilding) {
+      Academic *academic = dynamic_cast<Academic *>(prop);
+      string monopolyBlock = academic->getMonBlock();
+      if (monopolyBlock == monopoly) monopolyTypeCount++;
+    }
+  }
+  if (monopolyTypeCount == 3) {
+    return true;
+  } else if (monopolyTypeCount == 2 && (monopoly == "Arts1" || monopoly == "Math")) {
+    return true;
+  } else {
+    return false;
   }
 }
 
@@ -473,7 +493,7 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
   while (true) {
     if (desc == BlockDesc::AcademicBuilding || desc == BlockDesc::NonAcademicBuilding) {
       Property *property = dynamic_cast<Property *>(blocks[newPosition]);
-      if (owner) {
+      if (owner && (p.getName() != owner->getName())) {
         // case 1: steps on someone else's property
         int amount;
         // check if its a gym, residence, or academic building
@@ -551,7 +571,7 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
       } else {
         // check if it's the current player's property
         if (owner == &p) {
-          continue;
+          break;
         }
 
         int cost = property->getPurCost();
@@ -679,37 +699,47 @@ void WatopolyGame::improve(Player &p, string choice, int pos) {
   Player *owner = info.owner;
 
   if (desc == BlockDesc::AcademicBuilding) {
+    Academic *academic = dynamic_cast<Academic *>(blocks[pos]);
+    string monopoly = academic->getMonBlock();
     if (owner) {
-      if (owner->getName() == p.getName()) {
-        // TO ADD: Check if player has monopoly
-        if (choice == "buy") {
-          state.type = BlockStateType::Improvements;
-          info.impLevel++;
-        } else if (choice == "sell") {
-          state.type = BlockStateType::Improvements;
-          info.impLevel--;
+      if (owner->getName() == p.getName() && hasMonopoly(&p, monopoly)) {
+        if (academic->getLvl() < 5) {
+          if (choice == "buy") {
+            state.type = BlockStateType::Improvements;
+            info.impLevel++;
+            p.improve(*academic);
+          } else if (choice == "sell") {
+            if (info.impLevel != 0) {
+              state.type = BlockStateType::Improvements;
+              info.impLevel--;
+              p.worsen(*academic);
+            } else {
+              cout << "You can not worsen this property further." << endl;
+            }
+          } else {
+            cout << "Invalid command." << endl;
+            return;
+          }
+          blocks[pos]->setInfo(info);
+          blocks[pos]->setState(state);
+          cout << board;
+          return;
         } else {
-          cerr << "Invalid command." << endl;
+          cout << "Invalid command. This property has reached maximum improvements." << endl;
+          return;
         }
-        blocks[pos]->setInfo(info);
-        blocks[pos]->setState(state);
       } else {
-        cerr << "Invalid command. You do not own this property." << endl;
+        cout << "Invalid command. You do not own this property or you do not have a monopoly." << endl;
+        return;
       }
     } else {
-      cerr << "Invalid command. You do not own this property." << endl;
+      cout << "Invalid command. You do not own this property." << endl;
+      return;
     }
   } else {
-    cerr << "Invalid command. You can only improve Academic Properties that you own." << endl;
+    cout << "Invalid command. You can only improve Academic Properties that you own." << endl;
+    return;
   }
-  /*
-  modifyProperty(p, cmd, [&p](Property *property) {
-      Academic *academic = dynamic_cast<Academic *>(property);
-      if (academic != nullptr) {
-      p.improve(*academic);
-      }
-  });
-  */
 }
 
 void WatopolyGame::mortgage(Player &p, string cmd) {
@@ -859,8 +889,9 @@ void WatopolyGame::play() {
         if (!rolled) {
           cout << "Invalid command. You have not rolled yet." << endl;
           continue;
+        } else {
+          next(i);
         }
-        next(i);
       } else if (cmd == "trade") {
         string player2Name;
         cin >> player2Name;
@@ -892,7 +923,7 @@ void WatopolyGame::play() {
           currInd++;
         }
         if (propIndex == -1) {
-          cerr << "Invalid command." << endl;
+          cerr << "Invalid command. This property does not exist." << endl;
           continue;
         }
 
