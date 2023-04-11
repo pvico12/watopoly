@@ -403,7 +403,9 @@ void WatopolyGame::movePlayerOnDisplay(Player &p, int oldPos, int newPos) {
   visitors.erase(visitors.begin() + targetIndex);
   blocks[oldPos]->setState(currPosState);
 
-  p.move(newPos - oldPos);  // move
+  int steps = (newPos - oldPos >= 0) ? newPos-oldPos : NUMSQUARES-(oldPos-newPos);
+
+  p.move(steps);  // move
 
   // update block state that player is moving to
   BlockState newPosState = blocks[newPos]->getState();
