@@ -1,0 +1,9 @@
+roll 4 4
+Yes
+next
+mortgage B1
+roll 3 4
+next
+unmortgage B1
+quit
+ 

@@ -1,0 +1,73 @@
+#!/bin/bash
+
+failed=0
+total=0
+for line in $(cat "$1");
+do
+	(( total += 1 ))
+	#.in file cant be read
+	if [ ! -r "Testing/${line}.in" ] ; then
+		echo " "${line}.in" file is not readable!" 1>&2 
+		exit 
+	fi
+	
+	#.in file does not exist
+	if [ ! -e "Testing/${line}.in" ] ; then
+                echo " "${line}.in" file does not exist!" 1>&2
+                exit 
+        fi
+
+	#.args file cant be read
+	if [ ! -r "Testing/${line}.args" ] ; then
+		echo " "${line}.args" file is not readable!" 1>&2
+		exit 
+	fi
+
+	#.args file does not exist
+	if [ ! -e "Testing/${line}.args" ] ; then
+		echo " "${line}.args" file doesn't exist!" 1>&2
+		exit 
+	fi
+
+	#.out file cant be read
+	if [ ! -r "Testing/${line}.out" ] ; then
+		echo " "${line}.out" file is not readable!" 1>&2
+		exit 
+	fi
+
+	#.out file does not exist
+	if [ ! -e "Testing/${line}.out" ] ; then
+		echo " "${line}.out" file doesn't exist!" 1>&2
+		exit 
+	fi
+
+	temp=$(mktemp)
+	args=$(cat Testing/"$line".args)
+	infile=$(echo Testing/"$line".in)
+
+	./watopoly $args < $infile > $temp
+
+	diff $temp Testing/"${line}".out &> differences.txt
+	
+	result=$?
+	if [ $result == 1 ]; then
+		(( failed += 1 ))
+		echo "========================================================="
+   		echo "Test failed: ${line}"
+		echo "========================================================="
+		echo "Args:"
+		cat Testing/"${line}.args"
+		echo "Input:"
+		cat Testing/"${line}.in"
+		echo "Expected:"
+		cat Testing/"${line}.out"
+		echo "Actual:"
+		cat ${temp}
+		echo "========================================================="
+	fi
+
+	rm $temp
+
+done
+passed=$(($total - $failed))
+echo "Tests Passed: $passed / $total"
