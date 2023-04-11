@@ -45,7 +45,7 @@ do
 	args=$(cat Testing/"$line".args)
 	infile=$(echo Testing/"$line".in)
 
-	./Watopoly $args < $infile > $temp
+	./watopoly $args < $infile > $temp
 
 	diff $temp Testing/"${line}".out &> differences.txt
 	
