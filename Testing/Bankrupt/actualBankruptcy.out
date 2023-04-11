@@ -1,14 +1,14 @@
 The saved state file has been succesfully loaded.
 _________________________________________________________________________________________
-|Goose  |       |NEEDLES|       |       |V1     |III    |       |CIF    |II     |GO TO  |
+|Goose  |       |NEEDLES|       |       |V1     |       |       |CIF    |       |GO TO  |
 |Nesting|-------|HALL   |-------|-------|       |-------|-------|       |-------|TIMS   |
 |       |EV1    |       |EV2    |EV3    |       |PHYS   |B1     |       |B2     |       |
-|       |       |       |P      |       |       |       |       |       |       |       |
+|       |       |       |       |       |       |       |       |       |       |       |
 |_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
 |       |                                                                       |       |
 |-------|                                                                       |-------|
 |OPT    |                                                                       |EIT    |
-|       |                                                                       |$      |
+|       |                                                                       |       |
 |_______|                                                                       |_______|
 |       |                                                                       |       |
 |-------|                                                                       |-------|
@@ -28,7 +28,7 @@ ________________________________________________________________________________
 |UWP    |           | #   #  #  #   #   #   # #  # #   # #  #   # |             |REV    |
 |       |           | # # #  ####   #   #   # ###  #   # #   # #  |             |       |
 |       |           | # # #  #  #   #   #   # #    #   # #    #   |             |       |
-|       |           | #####  #  #   #    ###  #     ###  ## # #   |             |G      |
+|       |           | #####  #  #   #    ###  #     ###  ## # #   |             |       |
 |_______|           |_____________________________________________|             |_______|
 |       |                                                                       |NEEDLES|
 |-------|                                                                       |HALL   |
@@ -53,22 +53,25 @@ ________________________________________________________________________________
 |DC Tims|       |       |NEEDLES|       |MKV    |TUITION|       |SLC    |       |COLLECT|
 |Line   |-------|-------|HALL   |-------|       |       |-------|       |-------|OSAP   |
 |       |HH     |PAS    |       |ECH    |       |       |ML     |       |AL     |       |
-|       |       |       |       |       |       |       |       |       |       |       |
+|       |       |       |       |       |       |       |       |       |       |P$G    |
 |_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
+$200 has been added to Petar's account.
+$200 has been added to Milan's account.
+$200 has been added to Jeff's account.
 Control is now given to Petar
 First Dice:  1
-Second Dice: 1
-You have moved 2 steps forwards.
+Second Dice: 2
+You have moved 3 steps forwards.
 _________________________________________________________________________________________
-|Goose  |       |NEEDLES|       |       |V1     |III    |       |CIF    |II     |GO TO  |
+|Goose  |       |NEEDLES|       |       |V1     |       |       |CIF    |       |GO TO  |
 |Nesting|-------|HALL   |-------|-------|       |-------|-------|       |-------|TIMS   |
 |       |EV1    |       |EV2    |EV3    |       |PHYS   |B1     |       |B2     |       |
-|       |       |       |       |       |P      |       |       |       |       |       |
+|       |       |       |       |       |       |       |       |       |       |       |
 |_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
 |       |                                                                       |       |
 |-------|                                                                       |-------|
 |OPT    |                                                                       |EIT    |
-|       |                                                                       |$      |
+|       |                                                                       |       |
 |_______|                                                                       |_______|
 |       |                                                                       |       |
 |-------|                                                                       |-------|
@@ -88,7 +91,7 @@ ________________________________________________________________________________
 |UWP    |           | #   #  #  #   #   #   # #  # #   # #  #   # |             |REV    |
 |       |           | # # #  ####   #   #   # ###  #   # #   # #  |             |       |
 |       |           | # # #  #  #   #   #   # #    #   # #    #   |             |       |
-|       |           | #####  #  #   #    ###  #     ###  ## # #   |             |G      |
+|       |           | #####  #  #   #    ###  #     ###  ## # #   |             |       |
 |_______|           |_____________________________________________|             |_______|
 |       |                                                                       |NEEDLES|
 |-------|                                                                       |HALL   |
@@ -113,62 +116,66 @@ ________________________________________________________________________________
 |DC Tims|       |       |NEEDLES|       |MKV    |TUITION|       |SLC    |       |COLLECT|
 |Line   |-------|-------|HALL   |-------|       |       |-------|       |-------|OSAP   |
 |       |HH     |PAS    |       |ECH    |       |       |ML     |       |AL     |       |
-|       |       |       |       |       |       |       |       |       |       |       |
+|       |       |       |       |       |       |       |P      |       |       |$G     |
 |_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
-Would you like to purchase this unowned property for $200 (Yes/No)? 
-$200 has been removed from Petar's account.
-Purchase successful! You now own V1.
+Would you like to purchase this unowned property for $60 (Yes/No)? 
+$60 has been removed from Petar's account.
+Purchase successful! You now own ML.
 Petar
-800
-V1
+1640
+ML
 
 Milan
-900
-PHYS
-B1
-B2
+1700
 
 Jeff
-1200
+1700
+
+$1700 has been removed from Jeff's account.
+$1700 has been added to Petar's account.
+You have successfully traded ML for Jeff's $1700.
+Petar
+3340
+
+Milan
+1700
+
+Jeff
+0
+ML
+
+$1 has been removed from Petar's account.
+$1 has been added to Jeff's account.
+You have successfully traded $1 for Jeff's ML.
+Petar
+3339
+ML
+
+Milan
+1700
+
+Jeff
+1
 
 Control is now given to Milan
 Petar
-800
-V1
+3339
+ML
 
 Milan
-900
-PHYS
-B1
-B2
+1700
 
 Jeff
-1200
-
-
-$130 has been added to Milan's account.
-Mortgaged property B1 successfully.
-Petar
-800
-V1
-
-Milan
-1030
-PHYS
-B1
-B2
-
-Jeff
-1200
+1
 
 First Dice:  2
-Second Dice: 1
-You have moved 3 steps forwards.
+Second Dice: 4
+You have moved 6 steps forwards.
 _________________________________________________________________________________________
-|Goose  |       |NEEDLES|       |       |V1     |III    |       |CIF    |II     |GO TO  |
+|Goose  |       |NEEDLES|       |       |V1     |       |       |CIF    |       |GO TO  |
 |Nesting|-------|HALL   |-------|-------|       |-------|-------|       |-------|TIMS   |
 |       |EV1    |       |EV2    |EV3    |       |PHYS   |B1     |       |B2     |       |
-|       |       |       |       |       |P      |       |       |       |       |       |
+|       |       |       |       |       |       |       |       |       |       |       |
 |_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
 |       |                                                                       |       |
 |-------|                                                                       |-------|
@@ -188,12 +195,12 @@ ________________________________________________________________________________
 |       |                                                                       |       |
 |-------|                                                                       |-------|
 |LHI    |            _____________________________________________              |C2     |
-|       |           |                                             |             |$      |
+|       |           |                                             |             |       |
 |_______|           | #   #   ##  #####  ###  ###   ###  #  #   # |             |_______|
 |UWP    |           | #   #  #  #   #   #   # #  # #   # #  #   # |             |REV    |
 |       |           | # # #  ####   #   #   # ###  #   # #   # #  |             |       |
 |       |           | # # #  #  #   #   #   # #    #   # #    #   |             |       |
-|       |           | #####  #  #   #    ###  #     ###  ## # #   |             |G      |
+|       |           | #####  #  #   #    ###  #     ###  ## # #   |             |       |
 |_______|           |_____________________________________________|             |_______|
 |       |                                                                       |NEEDLES|
 |-------|                                                                       |HALL   |
@@ -218,48 +225,42 @@ ________________________________________________________________________________
 |DC Tims|       |       |NEEDLES|       |MKV    |TUITION|       |SLC    |       |COLLECT|
 |Line   |-------|-------|HALL   |-------|       |       |-------|       |-------|OSAP   |
 |       |HH     |PAS    |       |ECH    |       |       |ML     |       |AL     |       |
-|       |       |       |       |       |       |       |       |       |       |       |
+|       |       |       |       |$      |       |       |P      |       |       |G      |
 |_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
-Would you like to purchase this unowned property for $320 (Yes/No)? 
-$320 has been removed from Milan's account.
-Purchase successful! You now own C2.
+Would you like to purchase this unowned property for $100 (Yes/No)? 
+$100 has been removed from Milan's account.
+Purchase successful! You now own ECH.
 Petar
-800
-V1
+3339
+ML
 
 Milan
-710
-PHYS
-B1
-B2
-C2
+1600
+ECH
 
 Jeff
-1200
+1
 
 Control is now given to Jeff
 Petar
-800
-V1
+3339
+ML
 
 Milan
-710
-PHYS
-B1
-B2
-C2
+1600
+ECH
 
 Jeff
-1200
+1
 
 First Dice:  2
-Second Dice: 2
-You have moved 4 steps forwards.
+Second Dice: 4
+You have moved 6 steps forwards.
 _________________________________________________________________________________________
-|Goose  |       |NEEDLES|       |       |V1     |III    |       |CIF    |II     |GO TO  |
+|Goose  |       |NEEDLES|       |       |V1     |       |       |CIF    |       |GO TO  |
 |Nesting|-------|HALL   |-------|-------|       |-------|-------|       |-------|TIMS   |
 |       |EV1    |       |EV2    |EV3    |       |PHYS   |B1     |       |B2     |       |
-|       |       |       |       |       |P      |       |       |       |       |       |
+|       |       |       |       |       |       |       |       |       |       |       |
 |_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
 |       |                                                                       |       |
 |-------|                                                                       |-------|
@@ -279,7 +280,7 @@ ________________________________________________________________________________
 |       |                                                                       |       |
 |-------|                                                                       |-------|
 |LHI    |            _____________________________________________              |C2     |
-|       |           |                                             |             |$      |
+|       |           |                                             |             |       |
 |_______|           | #   #   ##  #####  ###  ###   ###  #  #   # |             |_______|
 |UWP    |           | #   #  #  #   #   #   # #  # #   # #  #   # |             |REV    |
 |       |           | # # #  ####   #   #   # ###  #   # #   # #  |             |       |
@@ -304,119 +305,36 @@ ________________________________________________________________________________
 |       |                                                                       |       |
 |-------|                                                                       |-------|
 |RCH    |                                                                       |DC     |
-|       |                                                                       |G      |
+|       |                                                                       |       |
 |_______|_______________________________________________________________________|_______|
 |DC Tims|       |       |NEEDLES|       |MKV    |TUITION|       |SLC    |       |COLLECT|
 |Line   |-------|-------|HALL   |-------|       |       |-------|       |-------|OSAP   |
 |       |HH     |PAS    |       |ECH    |       |       |ML     |       |AL     |       |
-|       |       |       |       |       |       |       |       |       |       |       |
+|       |       |       |       |$G     |       |       |P      |       |       |       |
 |_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
-Would you like to purchase this unowned property for $400 (Yes/No)? 
-$400 has been removed from Jeff's account.
-Purchase successful! You now own DC.
+$6 has been removed from Jeff's account.
+your account total is now -$5.
+Would you like to mortgage or trade with other players to prevent bankruptcy?
+$6 has been added to Milan's account.
 Petar
-800
-V1
+3339
+ML
 
 Milan
-710
-PHYS
-B1
-B2
-C2
+1606
+ECH
 
 Jeff
-800
-DC
+-5
+
+Jeff has dropped out of UW because the bills are too expensive :(
+
+Petar
+3339
+ML
+
+Milan
+1606
+ECH
 
 Control is now given to Petar
-Petar
-800
-V1
-
-Milan
-710
-PHYS
-B1
-B2
-C2
-
-Jeff
-800
-DC
-
-First Dice:  1
-Second Dice: 1
-You have moved 2 steps forwards.
-_________________________________________________________________________________________
-|Goose  |       |NEEDLES|       |       |V1     |III    |       |CIF    |II     |GO TO  |
-|Nesting|-------|HALL   |-------|-------|       |-------|-------|       |-------|TIMS   |
-|       |EV1    |       |EV2    |EV3    |       |PHYS   |B1     |       |B2     |       |
-|       |       |       |       |       |       |       |P      |       |       |       |
-|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
-|       |                                                                       |       |
-|-------|                                                                       |-------|
-|OPT    |                                                                       |EIT    |
-|       |                                                                       |       |
-|_______|                                                                       |_______|
-|       |                                                                       |       |
-|-------|                                                                       |-------|
-|BMH    |                                                                       |ESC    |
-|       |                                                                       |       |
-|_______|                                                                       |_______|
-|SLC    |                                                                       |SLC    |
-|       |                                                                       |       |
-|       |                                                                       |       |
-|       |                                                                       |       |
-|_______|                                                                       |_______|
-|       |                                                                       |       |
-|-------|                                                                       |-------|
-|LHI    |            _____________________________________________              |C2     |
-|       |           |                                             |             |$      |
-|_______|           | #   #   ##  #####  ###  ###   ###  #  #   # |             |_______|
-|UWP    |           | #   #  #  #   #   #   # #  # #   # #  #   # |             |REV    |
-|       |           | # # #  ####   #   #   # ###  #   # #   # #  |             |       |
-|       |           | # # #  #  #   #   #   # #    #   # #    #   |             |       |
-|       |           | #####  #  #   #    ###  #     ###  ## # #   |             |       |
-|_______|           |_____________________________________________|             |_______|
-|       |                                                                       |NEEDLES|
-|-------|                                                                       |HALL   |
-|CPH    |                                                                       |       |
-|       |                                                                       |       |
-|_______|                                                                       |_______|
-|       |                                                                       |       |
-|-------|                                                                       |-------|
-|DWE    |                                                                       |MC     |
-|       |                                                                       |       |
-|_______|                                                                       |_______|
-|PAC    |                                                                       |COOP   |
-|       |                                                                       |FEE    |
-|       |                                                                       |       |
-|       |                                                                       |       |
-|_______|                                                                       |_______|
-|       |                                                                       |       |
-|-------|                                                                       |-------|
-|RCH    |                                                                       |DC     |
-|       |                                                                       |G      |
-|_______|_______________________________________________________________________|_______|
-|DC Tims|       |       |NEEDLES|       |MKV    |TUITION|       |SLC    |       |COLLECT|
-|Line   |-------|-------|HALL   |-------|       |       |-------|       |-------|OSAP   |
-|       |HH     |PAS    |       |ECH    |       |       |ML     |       |AL     |       |
-|       |       |       |       |       |       |       |       |       |       |       |
-|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
-This property is mortgaged. You do not owe any money
-Petar
-800
-V1
-
-Milan
-710
-PHYS
-B1
-B2
-C2
-
-Jeff
-800
-DC
-

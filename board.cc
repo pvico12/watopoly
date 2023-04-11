@@ -123,7 +123,7 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 			}
 			b = new CardBlock(name, numCards, cards);
 		} else if (type == "NonProperty") {
-			info.desc = BlockDesc::Other;
+			info.desc = BlockDesc::MovementBlock;
 			b = new MovementBlock(name, 0, MoveType::MOVE_N_STEPS);
 		} else {
 			// doesn't matter
@@ -146,6 +146,10 @@ Board::Board(TextDisplay &td) : timsCupCount{0}, td{&td}{
 
 int Board::getCupCount() {
 	return timsCupCount;
+}
+
+void Board::setCupCount(int count) {
+	timsCupCount = count;
 }
 
 std::vector<Block*> *Board::getBlocks() {

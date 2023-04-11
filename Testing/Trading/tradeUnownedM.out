@@ -59,9 +59,9 @@ $200 has been added to Petar's account.
 $200 has been added to Milan's account.
 $200 has been added to Jeff's account.
 Control is now given to Petar
-First Dice:  6
-Second Dice: 4
-You have moved 10 steps forwards.
+First Dice:  1
+Second Dice: 2
+You have moved 3 steps forwards.
 _________________________________________________________________________________________
 |Goose  |       |NEEDLES|       |       |V1     |       |       |CIF    |       |GO TO  |
 |Nesting|-------|HALL   |-------|-------|       |-------|-------|       |-------|TIMS   |
@@ -116,14 +116,52 @@ ________________________________________________________________________________
 |DC Tims|       |       |NEEDLES|       |MKV    |TUITION|       |SLC    |       |COLLECT|
 |Line   |-------|-------|HALL   |-------|       |       |-------|       |-------|OSAP   |
 |       |HH     |PAS    |       |ECH    |       |       |ML     |       |AL     |       |
-|P      |       |       |       |       |       |       |       |       |       |$G     |
+|       |       |       |       |       |       |       |P      |       |       |$G     |
 |_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
-You remain in your current position.
+Would you like to purchase this unowned property for $60 (Yes/No)? 
+$60 has been removed from Petar's account.
+Purchase successful! You now own ML.
 Petar
-1700
+1640
+ML
 
 Milan
 1700
+
+Jeff
+1700
+
+Milan doesn't have enough money.
+Petar
+1640
+ML
+
+Milan
+1700
+
+Jeff
+1700
+
+$100 has been removed from Milan's account.
+$100 has been added to Petar's account.
+You have successfully traded ML for Milan's $100.
+Petar
+1740
+
+Milan
+1600
+ML
+
+Jeff
+1700
+
+Petar doesn't have enough money.
+Petar
+1740
+
+Milan
+1600
+ML
 
 Jeff
 1700
