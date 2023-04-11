@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "../block.h"
-#include "../player.h"
+#include "block.h"
+#include "player.h"
 
 class NonProperty : public Block {
   // Decorator Pattern

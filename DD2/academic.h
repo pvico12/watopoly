@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "property.h"
-#include "../info.h"
-#include "../state.h"
+#include "info.h"
+#include "state.h"
 
 extern const int MAXUPGRADES;
 extern const std::string DASHEDLINE;

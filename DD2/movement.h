@@ -2,7 +2,7 @@
 #define MOVEMENTBLOCK_H
 
 #include "nonproperty.h"
-#include "../player.h"
+#include "player.h"
 
 enum MoveType {
   MOVE_N_STEPS,

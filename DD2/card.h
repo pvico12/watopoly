@@ -2,7 +2,7 @@
 #define CARDBLOCK_H
 
 #include "nonproperty.h"
-#include "../player.h"
+#include "player.h"
 #include <functional>
 
 struct Card {

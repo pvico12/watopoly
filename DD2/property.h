@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "../block.h"
-#include "../info.h"
-#include "../state.h"
+#include "block.h"
+#include "info.h"
+#include "state.h"
 
 class Property : public Block {
  protected:
