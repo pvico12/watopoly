@@ -119,7 +119,6 @@ ________________________________________________________________________________
 |       |       |       |       |       |       |       |P      |       |       |$G     |
 |_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
 Would you like to purchase this unowned property for $60 (Yes/No)? 
-
 $60 has been removed from Petar's account.
 Purchase successful! You now own ML.
 Petar
@@ -132,7 +131,6 @@ Milan
 Jeff
 1700
 
-trade Jeff ML 1700
 $1700 has been removed from Jeff's account.
 $1700 has been added to Petar's account.
 You have successfully traded ML for Jeff's $1700.
@@ -230,7 +228,6 @@ ________________________________________________________________________________
 |       |       |       |       |$      |       |       |P      |       |       |G      |
 |_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|_______|
 Would you like to purchase this unowned property for $100 (Yes/No)? 
-
 $100 has been removed from Milan's account.
 Purchase successful! You now own ECH.
 Petar
@@ -341,4 +338,3 @@ Milan
 ECH
 
 Control is now given to Petar
-
