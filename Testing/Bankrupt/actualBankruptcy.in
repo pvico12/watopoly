@@ -1,0 +1,11 @@
+roll 1 2
+Yes
+trade Jeff ML 1700
+trade Jeff 1 ML
+next
+roll 2 4
+Yes
+next
+roll 2 4
+bankrupt
+quit

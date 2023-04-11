@@ -41,3 +41,5 @@ Mortgages/unMortgagedMustPay
 Mortgages/unMortgageWhenNotOwner
 Mortgages/improvementsSoldBeforeMortgage
 Bankrupt/bankruptPosWorth
+Bankrupt/actualBankruptcy
+Bankrupt/bankruptCanMortgage

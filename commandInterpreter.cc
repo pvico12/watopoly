@@ -583,10 +583,6 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
         }
         Player *player2ptr = findPlayer2(players, owner->getName());
         Player player2 = *player2ptr;
-        bool isBankrupt = !p.hasMoney(amount);
-        if (isBankrupt) {
-          cout << "Would you like to mortgage or trade with other players to prevent bankruptcy?" << endl;
-        }
         p.removeMoney(amount);
         player2ptr->addMoney(amount);
       } else {
@@ -606,7 +602,7 @@ void WatopolyGame::roll(Player &p, int &pos, bool &rolled) {
           if (p.hasMoney(cost)) {
             p.removeMoney(cost);
             p.addProperty(*property);  // need to check if this works
-            owner = &p;
+            info.owner = &p;
             blocks[newPosition]->setInfo(info);
             cout << "Purchase successful! You now own " << property->getName() << "." << endl;
             break;
@@ -861,6 +857,8 @@ void WatopolyGame::bankrupt(Player &p, int &playerInd) {
       return;
     }
   }
+
+  cout << p.getName() << " has dropped out of UW because the bills are too expensive :(\n" << endl;
 
   // release the player's Tims cups
   board.setCupCount(board.getCupCount() - p.getTimsCups());
