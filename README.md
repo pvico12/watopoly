@@ -1,13 +1,14 @@
-Welcome to Petar and Jeff's Watopoly project!
+# Watopoly
+
 This project is an analogy to the classic Monopoly game, implemented in C++.
 
-*Rules*
+## Rules
 This game allows up to 8 players. Each player starts with a certain sum of money and take turns to roll the dice and travel around the board. Equipped with actions such as purchasing, auctioning, trading properties, every player can strategically spend their money and try to become the last player remaining by making other players go bankrupt. The game ends when there is only one player left standing.
 
-*Getting Started*
+## Getting Started
 To start the game, run `make` command in your terminal (make sure you are in the `..\watopolyPetarJeff` directory). You can then either load a saved game or start a new game. If you choose a saved game, the game will start immediately; if a new game is chosen, you would need to enter the number of players and their names before the game can start.
 
-*Features*
+## Features
 Our version of Watopoly has the following features
 - Purchase properties that others need to pay rent if they were to land on it
 - Increase the tuition of an academic property by building up to 4 bathrooms and a cafeteria on it
@@ -23,5 +24,3 @@ Our version of Watopoly has the following features
   - Pay $50
   - Use a Roll Up the Rim cup
 
-*Versions & Improvements*
-To be written.
